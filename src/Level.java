@@ -5,21 +5,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Level extends Pane {
-	public final char BOUNDARY = '#';
-	public final char WALL = '*';
-
-	public final int SIZE = 25;
-
 	private int[] dimensions;
 	private char[][] levelArray;
 	private File level;
+	private int levelLength;
+	private int levelHeight;
+	private int[] playerSpawn;
 
-	private ArrayList<Rectangle> obstacles;
+	private ArrayList<Node> obstacles;
 
 	public Level(File level) {
 		super();
@@ -29,27 +28,41 @@ public class Level extends Pane {
 		this.dimensions = getLevelDimensions(this.level);
 		this.levelArray = readLevelFromFile(this.level);
 
-		this.setHeight(dimensions[Dimensions.HEIGHT.getIndex()] * SIZE);
-		this.setWidth(dimensions[Dimensions.WIDTH.getIndex()] * SIZE);
+		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
+		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
 
+		playerSpawn = new int[2];
+		
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
 	}
-	
-	public ArrayList<Rectangle> getObstacles(){
+
+	public ArrayList<Node> getObstacles() {
 		return obstacles;
+	}
+	
+	public int getLevelLength() {
+		return levelLength;
+	}
+	
+	public int getLevelHeight() {
+		return levelHeight;
+	}
+	
+	public int[] getPlayerSpawn() {
+		return playerSpawn;
 	}
 
 	private char[][] readLevelFromFile(File level) {
 		String line;
 		int lineCounter = 0;
 		int[] dimensions = getLevelDimensions(level);
-		char[][] levelArray = new char[dimensions[Dimensions.HEIGHT.getIndex()]][dimensions[Dimensions.WIDTH
+		char[][] levelArray = new char[dimensions[Dimensions.Y.getIndex()]][dimensions[Dimensions.X
 				.getIndex()]];
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(level))) {
 			while ((line = reader.readLine()) != null && lineCounter < levelArray.length) {
-				if (line.startsWith(Character.toString(BOUNDARY))) {
+				if (!line.contains(Character.toString(Config.COMMENT))) {
 					levelArray[lineCounter++] = toSimpleCharArray(line.split(""));
 				}
 			}
@@ -64,27 +77,30 @@ public class Level extends Pane {
 		return levelArray;
 	}
 
+	/**
+	 * 
+	 * @param level
+	 * @return
+	 */
 	private int[] getLevelDimensions(File level) {
 		int[] dimensions = { 0, 0 };
 		String line;
-		boolean started = false;
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(level))) {
 			line = reader.readLine();
-			dimensions[Dimensions.HEIGHT.getIndex()]++;
+			while (line.contains(Character.toString(Config.COMMENT)))
+				line = reader.readLine();
+
+			dimensions[Dimensions.Y.getIndex()]++;
 
 			for (char c : line.toCharArray()) {
-				if (c == BOUNDARY) {
-					started = true;
-					dimensions[Dimensions.WIDTH.getIndex()]++;
-				}
-				if (started && c != BOUNDARY) {
-					break;
-				}
+				dimensions[Dimensions.X.getIndex()]++;
 			}
 
 			while ((line = reader.readLine()) != null) {
-				dimensions[Dimensions.HEIGHT.getIndex()]++;
+				if (!line.contains(Character.toString(Config.COMMENT))) {
+					dimensions[Dimensions.Y.getIndex()]++;
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -112,14 +128,15 @@ public class Level extends Pane {
 		for (int y = 0; y < levelArray.length; y++) {
 			for (int x = 0; x < levelArray[y].length; x++) {
 				switch (levelArray[y][x]) {
-				case WALL:
-					if (levelArray[y][x - 1] == WALL) {
-						break;
-					}
-					Rectangle newRect = new Rectangle(x * SIZE, y * SIZE,
-							determineBlockSize(levelArray, y, x, WALL) * SIZE, SIZE);
-					newRect.setFill(Color.BLACK);
-					obstacles.add(newRect);
+				case Config.WALL:
+					Node newWall = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.BLACK);
+					newWall.setTranslateX(x * Config.BLOCK_SIZE);
+					newWall.setTranslateY(y * Config.BLOCK_SIZE);
+					obstacles.add(newWall);
+					break;
+				case Config.PLAYER:
+					playerSpawn[Dimensions.X.getIndex()] = x * Config.BLOCK_SIZE;
+					playerSpawn[Dimensions.Y.getIndex()] = (y-2) * Config.BLOCK_SIZE;
 					break;
 				}
 			}

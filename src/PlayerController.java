@@ -2,16 +2,16 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class UserController {
-	private User user;
+public class PlayerController {
+	private Player user;
 	
-	public UserController() {
-		user = new User();
+	public PlayerController() {
+		user = new Player();
 		
 		init();
 	}
 	
-	public User getRoot() {
+	public Player getRoot() {
 		return user;
 	}
 	

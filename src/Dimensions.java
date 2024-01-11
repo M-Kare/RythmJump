@@ -1,6 +1,6 @@
 
 public enum Dimensions {
-	HEIGHT(1), WIDTH(0);
+	Y(1), X(0);
 	
 	private int index;
 	
