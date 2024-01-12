@@ -36,6 +36,25 @@ public class Level extends Pane {
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
 	}
+	
+	public Level(char[][] levelArray) {
+		super();
+		this.dimensions = new int[2];
+		this.obstacles = new ArrayList<>();
+		
+		this.dimensions[Dimensions.X.getIndex()] = levelArray[0].length;
+		this.dimensions[Dimensions.Y.getIndex()] = levelArray.length;
+		
+		this.levelArray = levelArray;
+		
+		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
+		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
+		
+		playerSpawn = new int[2];
+		
+		addChildren(this.levelArray);
+		this.getChildren().addAll(obstacles);
+	}
 
 	public ArrayList<Node> getObstacles() {
 		return obstacles;
