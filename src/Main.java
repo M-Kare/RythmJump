@@ -21,7 +21,7 @@ public class Main extends Application {
 //	private Rectangle wall;
 
 	private Level level;
-
+	
 	private HashMap<KeyCode, Boolean> keybindings;
 
 	@Override
@@ -31,7 +31,7 @@ public class Main extends Application {
 		userController = new PlayerController();
 		player = userController.getRoot();
 		
-		level = new Level(findFile("1-1.lvl", "."));
+		level = new Level(findFile("doodleJump.lvl", "."));
 
 		level.getChildren().add(player);
 		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
@@ -43,6 +43,7 @@ public class Main extends Application {
 		primaryStage.setTitle("Wonder-Player 3000");
 		primaryStage.setResizable(false);;
 
+		level.setLayoutY(-level.getLevelHeight() + scene.getHeight() + Config.PLAYER_SIZE*2);
 		primaryStage.show();
 
 		init(scene);
@@ -87,6 +88,7 @@ public class Main extends Application {
 		keybindings.put(KeyCode.LEFT, false);
 		keybindings.put(KeyCode.A, false);
 		keybindings.put(KeyCode.SPACE, false);
+		keybindings.put(KeyCode.R, false);
 
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -110,8 +112,14 @@ public class Main extends Application {
 //					player.setY(player.getY() - Config.PLAYER_SPEED);
 //				if (keybindings.get(KeyCode.DOWN) || keybindings.get(KeyCode.S))
 //					player.setY(player.getY() + Config.PLAYER_SPEED);
-				if (keybindings.get(KeyCode.SPACE)) {
+				if (keybindings.get(KeyCode.SPACE) || keybindings.get(KeyCode.W) || keybindings.get(KeyCode.UP)) {
 					jump();
+				}
+				
+				if (keybindings.get(KeyCode.R)) {
+					player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
+					player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
+					level.setLayoutX(-(0));
 				}
 
 				if ((keybindings.get(KeyCode.RIGHT) || keybindings.get(KeyCode.D))
@@ -123,15 +131,15 @@ public class Main extends Application {
 					movePlayerX(-(Config.PLAYER_SPEED));
 				}
 
-				if(player.getVelocity().getY() < 5) {
-					player.setVelocity(0, 0.75);
+				if(player.getVelocity() < 5) {
+					player.addVelocity(0.75);
 				} else
-				if (player.getVelocity().getY() < 15) {
-					player.setVelocity(0, 1);
+				if (player.getVelocity() < 15) {
+					player.addVelocity(1);
 				}
 
 				if (player.getTranslateY() + (Config.PLAYER_SIZE * 2) <= level.getLevelHeight() - 5) {
-					movePlayerY((int) player.getVelocity().getY());
+					movePlayerY((int)player.getVelocity());
 				}
 			}
 		};
@@ -139,7 +147,7 @@ public class Main extends Application {
 
 		player.translateXProperty().addListener((obs, oldValue, newValue) -> {
 			int playerPosX = newValue.intValue();
-			if (playerPosX > scene.getWidth()/3 && playerPosX < level.getLevelLength() - scene.getWidth()/3) {
+			if (playerPosX > scene.getWidth()/3 && playerPosX < level.getLevelLength() - scene.getWidth()/3*2) {
 				level.setLayoutX(-(playerPosX - scene.getWidth()/3));
 			}
 		});
@@ -155,7 +163,7 @@ public class Main extends Application {
 
 	public void jump() {
 		if (player.getJumpable()) {
-			player.setVelocity(0, (int)(-player.getVelocity().getY()) - 18);
+			player.setVelocity(- Config.JUMP_HEIGHT);
 			player.setJumpable(false);
 		}
 	}
@@ -186,7 +194,7 @@ public class Main extends Application {
 
 	public void movePlayerY(int value) {
 		boolean movingDown = value > 0;
-		
+		 
 		for (int i = 0; i < Math.abs(value); i++) {
 			for (Node obstacle : level.getObstacles()) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
@@ -195,14 +203,14 @@ public class Main extends Application {
 						if (player.getTranslateY() + (Config.PLAYER_SIZE * 2) == obstacle.getTranslateY()
 								) {
 							player.setTranslateY(player.getTranslateY() - 1);
-//							player.setVelocity(0, (int)-player.getVelocity().getY());    zu laggy
+							player.setVelocity(0);
 							player.setJumpable(true);
 							return;
 						}
 					} else {
 						if (player.getTranslateY() == obstacle.getTranslateY() + Config.BLOCK_SIZE) {
 							player.setTranslateY(player.getTranslateY() + 1);
-							player.setVelocity(0, 1);
+							player.addVelocity(1);
 							return;
 						}
 					}

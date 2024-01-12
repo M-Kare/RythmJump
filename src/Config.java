@@ -8,6 +8,7 @@ public class Config {
 	public static final int BLOCK_SIZE = 40;
 	
 	public static final int PLAYER_SIZE = 30;
-	public static final int PLAYER_SPEED = 8;
+	public static final int PLAYER_SPEED = 8; //8
+	public static final int JUMP_HEIGHT = 19; //19
 	
 }
