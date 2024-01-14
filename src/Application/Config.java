@@ -1,3 +1,4 @@
+package Application;
 
 public class Config {
 
@@ -10,5 +11,8 @@ public class Config {
 	public static final int PLAYER_SIZE = 30;
 	public static final int PLAYER_SPEED = 8; //8
 	public static final int JUMP_HEIGHT = 19; //19
+	
+	public static final int WINDOW_WIDTH = 1600;
+	public static final int WINDOW_HEIGHT = 800;
 	
 }

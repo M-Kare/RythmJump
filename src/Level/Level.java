@@ -1,3 +1,4 @@
+package Level;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -5,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Application.Config;
+import Application.Dimensions;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -13,20 +16,20 @@ import javafx.scene.shape.Rectangle;
 public class Level extends Pane {
 	private int[] dimensions;
 	private char[][] levelArray;
-	private File level;
+	private File levelFile;
 	private int levelLength;
 	private int levelHeight;
 	private int[] playerSpawn;
 
 	private ArrayList<Node> obstacles;
-
+	
 	public Level(File level) {
 		super();
-		this.level = level;
+		this.levelFile = level;
 		this.obstacles = new ArrayList<>();
 
-		this.dimensions = getLevelDimensions(this.level);
-		this.levelArray = readLevelFromFile(this.level);
+		this.dimensions = getLevelDimensions(levelFile);
+		this.levelArray = readLevelFromFile(levelFile);
 
 		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
 		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
@@ -58,6 +61,10 @@ public class Level extends Pane {
 
 	public ArrayList<Node> getObstacles() {
 		return obstacles;
+	}
+	
+	public char[][] getLevelArray(){
+		return levelArray;
 	}
 	
 	public int getLevelLength() {

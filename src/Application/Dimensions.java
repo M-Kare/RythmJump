@@ -1,3 +1,4 @@
+package Application;
 
 public enum Dimensions {
 	Y(1), X(0);

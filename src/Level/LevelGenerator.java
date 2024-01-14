@@ -1,3 +1,5 @@
+package Level;
+import Application.Config;
 
 public class LevelGenerator {
 	private final int MAX_IN_ROW = 4;
@@ -57,13 +59,7 @@ public class LevelGenerator {
 				
 				//get platform position
 				sektor = getRandomNumber(1, MAX_IN_ROW);
-				oldPos = position;
 				position = getRandomNumber(1, areaSize-platformLength);
-				if(Math.abs(oldPos - position) >= 8) {
-					while(oldPos - position >= 8) {
-						position = getRandomNumber(1, areaSize-platformLength);
-					}
-				}
 				
 				for(int i = 0; i < platformLength; i++) {
 					levelArray[y][(areaSize*(sektor-1))+position+i] = Config.WALL;
