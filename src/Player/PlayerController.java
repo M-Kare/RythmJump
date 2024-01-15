@@ -17,7 +17,7 @@ public class PlayerController {
 
 	private Level level;
 	private ArrayList<Node> obstacles;
-
+	
 	private HashMap<KeyCode, Boolean> keybindsPlayer;
 
 	public PlayerController(Level level) {
@@ -153,10 +153,11 @@ public class PlayerController {
 				 */
 				if (player.getVelocity() < 5) {
 					player.addVelocity(0.75);
-				} else if (player.getVelocity() < 15) {
+				} else if (player.getVelocity() < Config.MAX_GRAVITY) {
 					player.addVelocity(1);
 				}
 				if (player.getTranslateY() + (Config.PLAYER_SIZE * 2) <= level.getLevelHeight() - 5) {
+					System.out.println(player.getVelocity());
 					movePlayerY((int) player.getVelocity());
 				}
 			}
@@ -210,7 +211,8 @@ public class PlayerController {
 	 */
 	public void movePlayerY(int value) {
 		boolean movingDown = value > 0;
-
+		int counter = 0;
+		
 		for (int i = 0; i < Math.abs(value); i++) {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
@@ -235,7 +237,9 @@ public class PlayerController {
 				}
 			}
 			player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-			player.setJumpable(false);
+			if(counter >= Config.COYOTE_TIME)
+				player.setJumpable(false);
+			counter++;
 		}
 	}
 

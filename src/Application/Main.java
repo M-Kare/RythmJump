@@ -28,8 +28,8 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		levelGen = new LevelGenerator(800, 18);
 //		levelController = new LevelController(levelGen.getLevelArray(), player);
-		level = new Level(levelGen.getLevelArray());
-//		level = new Level(findFile("doodleJump.lvl", "."));
+//		level = new Level(levelGen.getLevelArray());
+		level = new Level(findFile("1-1.lvl", "."));
 		
 		playerController = new PlayerController(level);
 		player = playerController.getPlayer();
