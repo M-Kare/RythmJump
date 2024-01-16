@@ -2,15 +2,22 @@ package Application;
 import java.io.File;
 import java.io.IOException;
 
+import org.w3c.dom.css.Rect;
+
 import Level.Level;
 import Level.LevelController;
 import Level.LevelGenerator;
 import Player.Player;
 import Player.PlayerController;
+import ddf.minim.AudioPlayer;
+import ddf.minim.analysis.BeatDetect;
+import de.hsrm.mi.eibo.simpleplayer.SimpleAudioPlayer;
+import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -24,14 +31,21 @@ public class Main extends Application {
 	private LevelGenerator levelGen;
 	private Level level;
 	
+	private SimpleMinim minim;
+	private AudioPlayer audioPlayer;
+	private AudioPlayer audioPlayerSilent;
+	private BeatDetect beat;
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		initBeat();
+		
 		levelGen = new LevelGenerator(800, 18);
 //		levelController = new LevelController(levelGen.getLevelArray(), player);
-//		level = new Level(levelGen.getLevelArray());
-		level = new Level(findFile("1-1.lvl", "."));
+		level = new Level(levelGen.getLevelArray());
+//		level = new Level(findFile("1-1.lvl", "."));
 		
-		playerController = new PlayerController(level);
+		playerController = new PlayerController(level, audioPlayerSilent, beat);
 		player = playerController.getPlayer();
 //		playerController.setObstacles(level.getObstacles());
 		
@@ -43,7 +57,7 @@ public class Main extends Application {
 		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
 		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
 		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-		level.getChildren().addAll(player, player.getSkin());
+		level.getChildren().addAll(player);
 		
 		/**
 		 * STAGE
@@ -60,6 +74,19 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public void initBeat() throws IOException, InterruptedException {
+		minim = new SimpleMinim(true);
+		audioPlayerSilent = minim.loadFile(findFile("60bpm.mp3", ".").getCanonicalPath());
+		audioPlayerSilent.mute();
+		audioPlayer = minim.loadFile(findFile("60bpm.mp3", ".").getCanonicalPath());
+		audioPlayer.setGain(-20);
+		audioPlayerSilent.play();
+		Thread.currentThread().sleep(1000/10);
+		audioPlayer.play();
+		beat = new BeatDetect();
+		beat.setSensitivity(50);
 	}
 
 	/**
