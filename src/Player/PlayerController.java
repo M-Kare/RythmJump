@@ -18,7 +18,7 @@ import javafx.scene.shape.Rectangle;
 public class PlayerController {
 
 	private Player player;
-//	private Node skin;
+	private Node skin;
 
 	private Level level;
 	private ArrayList<Node> obstacles;
@@ -36,7 +36,7 @@ public class PlayerController {
 		onBeat = true;
 		this.audioPlayer = audioPlayer;
 		player = new Player();
-//		skin = player.getSkin();
+		skin = player.getSkin();
 
 		this.level = level;
 		this.obstacles = level.getObstacles();
@@ -71,6 +71,11 @@ public class PlayerController {
 
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public void setLevel(Level level) {
+		this.level = level;
+		this.obstacles = this.level.getObstacles();
 	}
 
 	public HashMap<KeyCode, Boolean> getKeybinds() {
@@ -126,22 +131,22 @@ public class PlayerController {
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				beat.detect(audioPlayer.mix);
-				if (beat.isOnset()) {
+//				beat.detect(audioPlayer.mix);
+//				if (beat.isOnset()) {
 //					player.setFill(Color.GREEN);
 //					onBeat = true;
-//					System.out.println(onBeat);
-					jump();
-				}
-				if (onBeat) {
-					counter++;
-				}
-				if (counter > 12) {
+////					System.out.println(onBeat);
+////					jump();
+//				}
+//				if (onBeat) {
+//					counter++;
+//				}
+//				if (counter > 12) {
 //					player.setFill(Color.RED);
 //					onBeat = false;
 //					counter = 0;
 //					System.out.println(onBeat);
-				}
+//				}
 
 				/**
 				 * JUMPING
@@ -169,7 +174,7 @@ public class PlayerController {
 				/*
 				 * && player.getTranslateX() + Config.PLAYER_SIZE <= level.getLevelLength() - 5
 				 */) {
-					if (player.getTranslateX() + Config.PLAYER_SIZE >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
+					if (player.getTranslateX() + player.getWidth() >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
 						player.setTranslateX(Config.BLOCK_SIZE + 2);
 					}
 					movePlayerX(Config.PLAYER_SPEED);
@@ -177,7 +182,7 @@ public class PlayerController {
 				if ((keybindsPlayer.get(KeyCode.LEFT)
 						|| keybindsPlayer.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
 					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
-						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - Config.PLAYER_SIZE);
+						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getWidth());
 					}
 					movePlayerX(-(Config.PLAYER_SPEED));
 				}
@@ -202,7 +207,7 @@ public class PlayerController {
 	 * JUMP Springen Methode
 	 */
 	public void jump() {
-		if (player.getJumpable() && onBeat) {
+		if (player.getJumpable() /*&& onBeat*/) {
 			player.setVelocity(-Config.JUMP_HEIGHT);
 			player.setJumpable(false);
 		} else if (player.getJumpable()) {
@@ -223,7 +228,7 @@ public class PlayerController {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
 					if (movingRight) {
-						if (player.getTranslateX() + Config.PLAYER_SIZE == obstacle.getTranslateX()) {
+						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
 							player.setTranslateX(player.getTranslateX() - 1);
 							return;
 						}
@@ -253,11 +258,11 @@ public class PlayerController {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
 				/*
-				 * || player.getTranslateY() + (Config.PLAYER_SIZE * 2) >=
+				 * || player.getTranslateY() + player.getHeight() >=
 				 * level.getLevelHeight() - 5
 				 */) {
 					if (movingDown) {
-						if (player.getTranslateY() + (Config.PLAYER_SIZE * 2) == obstacle.getTranslateY()) {
+						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
 							player.setTranslateY(player.getTranslateY() - 1);
 							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
 							player.setJumpable(true);

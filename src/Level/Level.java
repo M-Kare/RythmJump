@@ -1,4 +1,5 @@
 package Level;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import Application.Config;
 import Application.Dimensions;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -20,13 +22,17 @@ public class Level extends Pane {
 	private int levelLength;
 	private int levelHeight;
 	private int[] playerSpawn;
+	private String levelName;
+
+	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
-	
+
 	public Level(File level) {
 		super();
 		this.levelFile = level;
 		this.obstacles = new ArrayList<>();
+		levelName = level.getName().split(".lvl")[0];
 
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
@@ -35,46 +41,59 @@ public class Level extends Pane {
 		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
 
 		playerSpawn = new int[2];
-		
+
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
+
+		thumbnail = this.snapshot(null, null);
 	}
-	
-	public Level(char[][] levelArray) {
+
+	public Level(char[][] levelArray, String levelName) {
 		super();
 		this.dimensions = new int[2];
 		this.obstacles = new ArrayList<>();
-		
+		this.levelName = levelName;
+
 		this.dimensions[Dimensions.X.getIndex()] = levelArray[0].length;
 		this.dimensions[Dimensions.Y.getIndex()] = levelArray.length;
-		
+
 		this.levelArray = levelArray;
-		
+
 		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
 		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
-		
+
 		playerSpawn = new int[2];
-		
+
 		addChildren(this.levelArray);
 		this.getChildren().addAll(obstacles);
+		
+		thumbnail = this.snapshot(null, null);
+	}
+
+	public Image getThumbnail() {
+		return thumbnail;
+	}
+
+	public String getLevelName() {
+		return levelName;
 	}
 
 	public ArrayList<Node> getObstacles() {
 		return obstacles;
 	}
-	
-	public char[][] getLevelArray(){
+
+	public char[][] getLevelArray() {
 		return levelArray;
 	}
-	
+
 	public int getLevelLength() {
 		return levelLength;
 	}
-	
+
 	public int getLevelHeight() {
 		return levelHeight;
 	}
-	
+
 	public int[] getPlayerSpawn() {
 		return playerSpawn;
 	}
@@ -83,8 +102,7 @@ public class Level extends Pane {
 		String line;
 		int lineCounter = 0;
 		int[] dimensions = getLevelDimensions(level);
-		char[][] levelArray = new char[dimensions[Dimensions.Y.getIndex()]][dimensions[Dimensions.X
-				.getIndex()]];
+		char[][] levelArray = new char[dimensions[Dimensions.Y.getIndex()]][dimensions[Dimensions.X.getIndex()]];
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(level))) {
 			while ((line = reader.readLine()) != null && lineCounter < levelArray.length) {
@@ -162,7 +180,7 @@ public class Level extends Pane {
 					break;
 				case Config.PLAYER:
 					playerSpawn[Dimensions.X.getIndex()] = x * Config.BLOCK_SIZE;
-					playerSpawn[Dimensions.Y.getIndex()] = (y-2) * Config.BLOCK_SIZE;
+					playerSpawn[Dimensions.Y.getIndex()] = (y - 2) * Config.BLOCK_SIZE;
 					break;
 				}
 			}

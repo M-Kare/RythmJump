@@ -1,73 +1,76 @@
 package Application;
+
 import java.io.File;
 import java.io.IOException;
-
-import org.w3c.dom.css.Rect;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import Level.Level;
-import Level.LevelController;
 import Level.LevelGenerator;
 import Player.Player;
 import Player.PlayerController;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
-import de.hsrm.mi.eibo.simpleplayer.SimpleAudioPlayer;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import presentation.LevelSelect.LevelListView;
+import presentation.LevelSelect.LevelListViewController;
 
 public class Main extends Application {
 
 	private Scene scene;
-	
+
 	private PlayerController playerController;
 	private Player player;
 
-//	private LevelController levelController;
-	private LevelGenerator levelGen;
 	private Level level;
-	
+
 	private SimpleMinim minim;
 	private AudioPlayer audioPlayer;
 	private AudioPlayer audioPlayerSilent;
 	private BeatDetect beat;
+
+	private LevelListViewController levelListViewController;
+	private LevelListView levelListView;
 	
+	private HashMap<String, Level> levelMap;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		initBeat();
+		levelMap = new HashMap<>();
+//		initBeat();
+
+		initLevel();
 		
-		levelGen = new LevelGenerator(800, 18);
-//		levelController = new LevelController(levelGen.getLevelArray(), player);
-		level = new Level(levelGen.getLevelArray());
-//		level = new Level(findFile("1-1.lvl", "."));
-		
+		level = levelMap.get("Random Level");
+
 		playerController = new PlayerController(level, audioPlayerSilent, beat);
-		player = playerController.getPlayer();
-//		playerController.setObstacles(level.getObstacles());
+//		player = playerController.getPlayer();
 		
+		levelListViewController = new LevelListViewController(new ArrayList<Level>(levelMap.values()), playerController);
+		levelListView = levelListViewController.getRoot();
+
 		/**
-		 * SCENE + LEVEL
-		 * Spieler im Level setzten
+		 * SCENE + LEVEL Spieler im Level setzten
 		 */
-		scene = new Scene(level, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
-		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-		level.getChildren().addAll(player);
-		
+		scene = new Scene(levelListView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+//		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
+//		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
+//		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
+//		level.getChildren().add(player);
+
 		/**
-		 * STAGE
-		 * Stage wird gesetzt
+		 * STAGE Stage wird gesetzt
 		 */
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Wonder-Player 3000");
+		primaryStage.setTitle("RythmJump");
 		primaryStage.setResizable(false);
 		primaryStage.show();
-
 
 		init(scene);
 	}
@@ -75,22 +78,42 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
+	/**
+	 * Sucht alle .lvl Dateien im Projekt und fügt sie einer HashMap hinzu
+	 */
+	public void initLevel() {
+		Level tempLevel;
+		for (File levelFile : findFilesBySuffix(Config.LEVEL_SUFFIX, ".")) {
+			tempLevel = new Level(levelFile);
+			levelMap.put(tempLevel.getLevelName(), tempLevel);
+		}
+		levelMap.put("Random Level", new Level(new LevelGenerator(800, 18).getLevelArray(), "Random Level"));
+	}
+
+	/**
+	 * Testweise Methode für die Musik und Beat-Erkennung Spielt die Musik und eine
+	 * lautlose Version ab, die versetzt ist, damit der Beat frühzeitig erkannt
+	 * werden kann.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void initBeat() throws IOException, InterruptedException {
 		minim = new SimpleMinim(true);
 		audioPlayerSilent = minim.loadFile(findFile("60bpm.mp3", ".").getCanonicalPath());
 		audioPlayerSilent.mute();
 		audioPlayer = minim.loadFile(findFile("60bpm.mp3", ".").getCanonicalPath());
 		audioPlayer.setGain(-20);
-		audioPlayerSilent.play();
-		Thread.currentThread().sleep(1000/10);
+		audioPlayerSilent.play(1000 / 10);
 		audioPlayer.play();
 		beat = new BeatDetect();
 		beat.setSensitivity(50);
+		beat.detect(audioPlayerSilent.mix);
 	}
 
 	/**
-	 * Zum Suchen einer Datei im angegebenen Pfad
+	 * Sucht die erste Datei, im angegebenen Pfad, die mit dem Namen übereinstimmt
 	 * 
 	 * @param fileName        Name der zu suchenden Datei
 	 * @param searchDirectory Pfad des Verzeichnisses, in dem gesucht werden soll
@@ -99,8 +122,8 @@ public class Main extends Application {
 	 */
 	public File findFile(String fileName, String searchDirectory) throws IOException {
 		File dir = new File(searchDirectory);
-
 		File[] fileList = dir.listFiles();
+
 		for (File file : fileList) {
 			System.out.println(file.getName());
 			if (!file.getName().startsWith(".")) {
@@ -121,46 +144,56 @@ public class Main extends Application {
 		return null;
 	}
 
+	/**
+	 * Sucht alle Dateien im angegebenen Pfad, die mit dem suffix übereinstimmen und
+	 * packt sie in eine ArrayList
+	 * 
+	 * @param suffix
+	 * @param dir
+	 * @return
+	 */
+	public ArrayList<File> findFilesBySuffix(String suffix, String dir) {
+		ArrayList<File> foundFiles = new ArrayList<>();
+		File directory = new File(dir);
+		System.out.println(dir);
+		File[] fileList = directory.listFiles();
+
+		for (File file : fileList) {
+			if (file.isFile()) {
+				if (file.getName().endsWith(suffix)) {
+					foundFiles.add(file);
+				}
+			} else if (file.isDirectory()) {
+				for (File recFile : findFilesBySuffix(suffix, file.getAbsolutePath())) {
+					foundFiles.add(recFile);
+				}
+			}
+		}
+		return foundFiles;
+	}
+
 	public void init(Scene scene) {
 		/**
-		 * PRESSED
-		 * aktualisiert, dass der Knopf gedrückt wird
+		 * PRESSED aktualisiert, dass der Knopf gedrückt wird
 		 */
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				playerController.getKeybinds().put(event.getCode(), true);
-//				levelController.getKeybinds().put(event.getCode(), true);
+				if(event.getCode() == KeyCode.ESCAPE) {
+					scene.setRoot(levelListView);
+				}
 			}
 		});
 
 		/**
-		 * UNPRESSED
-		 * aktualisiert, dass der Knopf nicht mehr gedrückt wird
+		 * UNPRESSED aktualisiert, dass der Knopf nicht mehr gedrückt wird
 		 */
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				playerController.getKeybinds().put(event.getCode(), false);
-//				levelController.getKeybinds().put(event.getCode(), false);
 			}
 		});
-
-		/**
-		 * SET_LAYOUT
-		 * Damit die "Kamera" dem Spieler folgt
-		 */
-//		player.translateXProperty().addListener((obs, oldValue, newValue) -> {
-//			int playerPosX = newValue.intValue();
-//			if (playerPosX > scene.getWidth() / 3 && playerPosX < level.getLevelLength() - scene.getWidth() / 100 * 66) {
-//				level.setLayoutX(-(playerPosX - scene.getWidth() / 3));
-//			}
-//		});
-//		player.translateYProperty().addListener((obs, oldValue, newValue) -> {
-//			int playerPosY = newValue.intValue();
-//			if (playerPosY > 0 && playerPosY < level.getLevelHeight() - (scene.getHeight() / 100 * 55)) {
-//				level.setLayoutY(-(playerPosY - (scene.getHeight() / 2)));
-//			}
-//		});
 	}
 }
