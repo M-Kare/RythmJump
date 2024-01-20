@@ -1,0 +1,21 @@
+.menuTitle {
+    -fx-font-size: 8em;
+    -fx-font-weight: bold;
+}
+
+.oddTile {
+    -fx-background-color: white;
+}
+
+.evenTile {
+    -fx-background-color: rgb(230, 230, 230);
+}
+
+.selected {
+    -fx-background-color: rgb(95, 216, 244);
+
+}
+
+#levelSelectButton {
+
+}

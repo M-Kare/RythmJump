@@ -9,11 +9,14 @@ import java.util.ArrayList;
 
 import Application.Config;
 import Application.Dimensions;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 
 public class Level extends Pane {
 	private int[] dimensions;
@@ -45,7 +48,7 @@ public class Level extends Pane {
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
 
-		thumbnail = this.snapshot(null, null);
+		takeThumbnail();
 	}
 
 	public Level(char[][] levelArray, String levelName) {
@@ -67,7 +70,7 @@ public class Level extends Pane {
 		addChildren(this.levelArray);
 		this.getChildren().addAll(obstacles);
 		
-		thumbnail = this.snapshot(null, null);
+		takeThumbnail();
 	}
 
 	public Image getThumbnail() {
@@ -96,6 +99,18 @@ public class Level extends Pane {
 
 	public int[] getPlayerSpawn() {
 		return playerSpawn;
+	}
+	
+	public void takeThumbnail() {
+		double vpHeight = 400, vpWidth = 400;
+		SnapshotParameters sp = new SnapshotParameters();
+		sp.setTransform(Transform.scale(0.31, 0.31));
+		sp.setFill(Color.TRANSPARENT);
+		if(levelHeight < (400/0.31)) vpHeight = levelHeight*0.31;
+		if(levelLength < (400/0.31)) vpWidth = levelLength*0.31;
+		
+		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
+		thumbnail = this.snapshot(sp, null);
 	}
 
 	private char[][] readLevelFromFile(File level) {

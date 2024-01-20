@@ -1,4 +1,4 @@
-package presentation.LevelSelect;
+package presentation.LevelSelect_depricated;
 
 import Application.Config;
 import Level.Level;
