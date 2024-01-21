@@ -17,16 +17,21 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import presentation.LevelSelect.LevelListView;
-import presentation.LevelSelect.LevelListViewController;
+import presentation.LevelSelectView.LevelSelectView;
+import presentation.LevelSelectView.LevelSelectViewController;
+import presentation.LevelSelect_depricated.LevelListView;
+import presentation.LevelSelect_depricated.LevelListViewController;
+import presentation.betterSelector.LevelTilePane;
+import presentation.betterSelector.LevelTilePaneController;
 
 public class Main extends Application {
 
 	private Scene scene;
 
 	private PlayerController playerController;
-	private Player player;
+//	private Player player;
 
 	private Level level;
 
@@ -34,9 +39,13 @@ public class Main extends Application {
 	private AudioPlayer audioPlayer;
 	private AudioPlayer audioPlayerSilent;
 	private BeatDetect beat;
-
-	private LevelListViewController levelListViewController;
-	private LevelListView levelListView;
+	
+	private LevelSelectViewController levelSelectViewController;
+	private LevelSelectView levelSelectView;
+	
+//	private LevelTilePaneController levelTilePaneController;
+//	private LevelTilePane levelTilePane;
+//	private HBox levelSelectBox;
 	
 	private HashMap<String, Level> levelMap;
 
@@ -52,13 +61,18 @@ public class Main extends Application {
 		playerController = new PlayerController(level, audioPlayerSilent, beat);
 //		player = playerController.getPlayer();
 		
-		levelListViewController = new LevelListViewController(new ArrayList<Level>(levelMap.values()), playerController);
-		levelListView = levelListViewController.getRoot();
-
+		levelSelectViewController = new LevelSelectViewController(new ArrayList<>(levelMap.values()), playerController);
+		levelSelectView = levelSelectViewController.getRoot();
+		
+//		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
+//		levelTilePane = levelTilePaneController.getRoot();
+//		levelSelectBox = new HBox(levelTilePane);
+		
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
-		scene = new Scene(levelListView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+		scene = new Scene(levelSelectView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 //		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
 //		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
 //		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
@@ -181,7 +195,7 @@ public class Main extends Application {
 			public void handle(KeyEvent event) {
 				playerController.getKeybinds().put(event.getCode(), true);
 				if(event.getCode() == KeyCode.ESCAPE) {
-					scene.setRoot(levelListView);
+					scene.setRoot(levelSelectView);
 				}
 			}
 		});

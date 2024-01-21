@@ -1,7 +1,9 @@
-package presentation.LevelSelect;
+package presentation.LevelSelect_depricated;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import Application.Config;
 import Application.Dimensions;
@@ -10,31 +12,35 @@ import Player.Player;
 import Player.PlayerController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 
 public class LevelListViewController {
 	private LevelListView root;
 	private ListView<Level> levelListView;
 	private ObservableList<Level> items;
-	
+
 	private PlayerController playerController;
-	
+
 	private ArrayList<Level> levelArray;
-	
+
 	public LevelListViewController(ArrayList<Level> levelArray, PlayerController playerController) {
 		this.levelArray = levelArray;
-		
+
 		this.playerController = playerController;
 		root = new LevelListView();
 		levelListView = root.getListView();
 		items = FXCollections.observableArrayList(levelArray);
 		levelListView.setItems(items);
-		
+
 		init();
 	}
-	
+
 	public LevelListViewController(File[] fileArray, PlayerController playerController) {
 		levelArray = new ArrayList<>();
 		for (File file : fileArray) {
@@ -45,14 +51,14 @@ public class LevelListViewController {
 		levelListView = root.getListView();
 		items = FXCollections.observableArrayList(levelArray);
 		levelListView.setItems(items);
-		
+
 		init();
 	}
-	
+
 	public LevelListView getRoot() {
 		return root;
 	}
-	
+
 	public void init() {
 		levelListView.setCellFactory(new Callback<ListView<Level>, ListCell<Level>>() {
 			@Override
@@ -60,14 +66,60 @@ public class LevelListViewController {
 				return new LevelListCell();
 			}
 		});
-		
+
 		levelListView.getSelectionModel().selectedItemProperty().addListener((obs, oldLevel, newLevel) -> {
-			newLevel.setLayoutY(-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
+			newLevel.setLayoutY(
+					-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
 			playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
 			playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
 			playerController.setLevel(newLevel);
 			newLevel.getChildren().add(playerController.getPlayer());
 			root.getScene().setRoot(newLevel);
 		});
+
+		levelListView.setOnDragOver(new EventHandler<DragEvent>() {
+			public void handle(DragEvent event) {
+				boolean dropSupported = true;
+				boolean copySupported = true;
+				Dragboard dragboard;
+				Set<TransferMode> modes;
+
+				dragboard = event.getDragboard();
+				if (!dragboard.hasFiles())
+					dropSupported = false;
+
+				modes = dragboard.getTransferModes();
+				for (TransferMode mode : modes) {
+					copySupported = copySupported || TransferMode.COPY == mode;
+				}
+				
+				for (File file : dragboard.getFiles()) {
+					if (!file.getName().contains(".lvl"))
+						dropSupported = false;
+				}
+				
+				if (copySupported && dropSupported)
+					event.acceptTransferModes(TransferMode.COPY);
+				event.consume();
+			}
+		});
+
+		levelListView.setOnDragDropped(new EventHandler<DragEvent>() {
+
+			public void handle(DragEvent event) {
+				Dragboard dragboard = event.getDragboard();
+
+				List<File> files = dragboard.getFiles();
+				for (File file : files) {
+//					levelArray.add(new Level(file));
+					items.add(new Level(file));
+				}
+				event.setDropCompleted(true);
+
+				event.consume();
+			}
+
+		});
+
 	}
 }

@@ -16,7 +16,7 @@ public class Player extends Rectangle {
 		skin = new Rectangle(this.getWidth() + 2, this.getHeight() + 2, Color.RED);
 	}
 	
-	public Node getSkin() {
+	public Rectangle getSkin() {
 		return skin;
 	}
 	
