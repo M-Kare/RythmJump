@@ -36,7 +36,7 @@ public class PlayerController {
 		onBeat = true;
 		this.audioPlayer = audioPlayer;
 		player = new Player();
-		skin = player.getSkin();
+//		skin = player.getSkin();
 
 		this.level = level;
 		this.obstacles = level.getObstacles();
@@ -97,9 +97,9 @@ public class PlayerController {
 		keybindsPlayer.put(KeyCode.SPACE, false);
 		keybindsPlayer.put(KeyCode.R, false);
 
-		/**
-		 * Stick Skin to Player
-		 */
+//		/**
+//		 * Stick Skin to Player
+//		 */
 //		player.translateXProperty().addListener((obs, oldValue, newValue) -> {
 //			skin.setTranslateX(newValue.doubleValue() - 1);
 //		});

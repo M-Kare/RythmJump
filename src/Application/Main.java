@@ -47,21 +47,21 @@ public class Main extends Application {
 //	private LevelTilePane levelTilePane;
 //	private HBox levelSelectBox;
 	
-	private HashMap<String, Level> levelMap;
+	private ArrayList<Level> levelArray;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		levelMap = new HashMap<>();
+		levelArray = new ArrayList<>();
 //		initBeat();
 
 		initLevel();
 		
-		level = levelMap.get("Random Level");
+		level = levelArray.get(levelArray.size() - 1);
 
 		playerController = new PlayerController(level, audioPlayerSilent, beat);
 //		player = playerController.getPlayer();
 		
-		levelSelectViewController = new LevelSelectViewController(new ArrayList<>(levelMap.values()), playerController);
+		levelSelectViewController = new LevelSelectViewController(levelArray, playerController);
 		levelSelectView = levelSelectViewController.getRoot();
 		
 //		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
@@ -83,7 +83,7 @@ public class Main extends Application {
 		 */
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("RythmJump");
-		primaryStage.setResizable(false);
+//		primaryStage.setResizable(false);
 		primaryStage.show();
 
 		init(scene);
@@ -100,9 +100,10 @@ public class Main extends Application {
 		Level tempLevel;
 		for (File levelFile : findFilesBySuffix(Config.LEVEL_SUFFIX, ".")) {
 			tempLevel = new Level(levelFile);
-			levelMap.put(tempLevel.getLevelName(), tempLevel);
+			System.out.println(levelFile.getName());
+			levelArray.add(tempLevel);
 		}
-		levelMap.put("Random Level", new Level(new LevelGenerator(800, 18).getLevelArray(), "Random Level"));
+		levelArray.add(new Level(new LevelGenerator(800, 18).getLevelArray(), "Random Level"));
 	}
 
 	/**
@@ -169,17 +170,20 @@ public class Main extends Application {
 	public ArrayList<File> findFilesBySuffix(String suffix, String dir) {
 		ArrayList<File> foundFiles = new ArrayList<>();
 		File directory = new File(dir);
-		System.out.println(dir);
 		File[] fileList = directory.listFiles();
 
 		for (File file : fileList) {
-			if (file.isFile()) {
-				if (file.getName().endsWith(suffix)) {
-					foundFiles.add(file);
-				}
-			} else if (file.isDirectory()) {
-				for (File recFile : findFilesBySuffix(suffix, file.getAbsolutePath())) {
-					foundFiles.add(recFile);
+			if (!file.getName().startsWith(".")) {
+				if (file.isFile()) {
+					if (file.getName().endsWith(suffix)) {
+//						System.out.println(file.getName() + "here");
+						foundFiles.add(file);
+					}
+				} else if (file.isDirectory()) {
+					for (File recFile : findFilesBySuffix(suffix, file.getAbsolutePath())) {
+//						System.out.println(recFile.getName());
+						foundFiles.add(recFile);
+					}
 				}
 			}
 		}
