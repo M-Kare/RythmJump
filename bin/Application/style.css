@@ -8,7 +8,7 @@
 }
 
 .evenTile {
-    -fx-background-color: white/*rgb(230, 230, 230)*/;
+    -fx-background-color: rgb(230, 230, 230);
 }
 
 .selected {

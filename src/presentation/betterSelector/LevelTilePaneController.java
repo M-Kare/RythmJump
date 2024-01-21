@@ -17,7 +17,7 @@ public class LevelTilePaneController {
 
 	public LevelTilePaneController(ArrayList<Level> levelArray, PlayerController playerController) {
 		root = new LevelTilePane(levelArray);
-		tileNodes = root.getTileNodes();
+		tileNodes = root.nodes;
 
 		selectedNode = tileNodes.get(0);
 
@@ -37,6 +37,7 @@ public class LevelTilePaneController {
 	public void init() {
 		for (TileNode node : tileNodes) {
 			node.setOnMouseClicked(e -> {
+//				tileNodes = root.nodes;
 				if (selectedNode == node) {
 					clearSelection();
 				} else {
@@ -47,6 +48,32 @@ public class LevelTilePaneController {
 			});
 		}
 
+	}
+	
+	public void addTileNode(Level level) {
+		root.oddTile = !root.oddTile;
+
+		TileNode tileNode = new TileNode(level, root.nodeWidth, root.nodeHeight);
+
+		if (root.oddTile) {
+			tileNode.getImagePane().getStyleClass().add("oddTile");
+		} else {
+			tileNode.getImagePane().getStyleClass().add("evenTile");
+		}
+
+		tileNodes.add(tileNode);
+		root.tilePane.getChildren().add(tileNode);
+		
+		tileNode.setOnMouseClicked(e -> {
+//			tileNodes = root.nodes;
+			if (selectedNode == tileNode) {
+				clearSelection();
+			} else {
+				clearSelection();
+				selectNode(tileNode);
+//				loadLevel();
+			}
+		});
 	}
 
 	public void loadLevel() {

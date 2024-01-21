@@ -3,27 +3,33 @@ package presentation.betterSelector;
 import java.util.ArrayList;
 
 import Level.Level;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.TilePane;
-import javafx.scene.paint.Color;
 
-public class LevelTilePane extends TilePane {
-	private int nodeWidth;
-	private int nodeHeight;
+public class LevelTilePane extends ScrollPane {
+	protected int nodeWidth;
+	protected int nodeHeight;
+	
+	protected TilePane tilePane;
 
 	private ArrayList<Level> levelArray;
-	private ArrayList<TileNode> nodes;
-	private boolean oddTile = true;
+	protected ArrayList<TileNode> nodes;
+	SimpleObjectProperty<TileNode>[] no;
+	protected boolean oddTile = true;
 
 	public LevelTilePane(ArrayList<Level> levelArray, int nodeWidth, int nodeHeight) {
 		super();
 		this.levelArray = levelArray;
 		nodes = new ArrayList<>();
 
-		this.setVgap(100);
-		this.setHgap(100);
-		this.setPrefColumns(3);
-		this.setAlignment(Pos.TOP_CENTER);
+		tilePane = new TilePane();
+		
+		tilePane.setVgap(100);
+		tilePane.setHgap(100);
+		tilePane.setPrefColumns(3);
+		tilePane.setAlignment(Pos.TOP_LEFT);
 
 		this.nodeHeight = nodeHeight;
 		this.nodeWidth = nodeWidth;
@@ -31,6 +37,8 @@ public class LevelTilePane extends TilePane {
 		for (Level level : this.levelArray) {
 			addTileNode(level);
 		}
+		
+		this.setContent(tilePane);
 	}
 
 	public LevelTilePane(ArrayList<Level> levelArray) {
@@ -51,10 +59,9 @@ public class LevelTilePane extends TilePane {
 		} else {
 			tileNode.getImagePane().getStyleClass().add("evenTile");
 		}
-//			tileNode.setBackgroundColor(Color.LIGHTGRAY);
 
 		nodes.add(tileNode);
-		this.getChildren().add(tileNode);
+		tilePane.getChildren().add(tileNode);
 	}
 
 }

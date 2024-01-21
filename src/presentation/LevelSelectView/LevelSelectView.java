@@ -18,7 +18,7 @@ import presentation.betterSelector.LevelTilePaneController;
 
 public class LevelSelectView extends BorderPane{
 	protected LevelTilePaneController levelTilePaneController;
-	private LevelTilePane levelTilePane;
+	protected LevelTilePane levelTilePane;
 	private HBox levelBox;
 	
 	private Label menuText;
