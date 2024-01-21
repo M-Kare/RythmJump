@@ -35,7 +35,7 @@ public class LevelSelectView extends BorderPane{
 		levelTilePaneController = new LevelTilePaneController(levelArray, playerController);
 		levelTilePane = levelTilePaneController.getRoot();
 		levelBox = new HBox(levelTilePane);
-		playerSkin =  clonePlayerSkin(playerController.getPlayer().getSkin());
+		playerSkin =  clonePlayerSkin(playerController.getPlayer());
 		
 		menuText = new Label("Level Select");
 		menuText.getStyleClass().add("menuTitle");

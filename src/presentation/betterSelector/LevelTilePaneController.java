@@ -58,9 +58,9 @@ public class LevelTilePaneController {
 		playerController.setLevel(newLevel);
 		
 		if (newLevel.getChildren().contains(playerController.getPlayer()))
-			newLevel.getChildren().remove(playerController.getPlayer());
+			newLevel.getChildren().removeAll(playerController.getPlayer());
 		
-		newLevel.getChildren().add(playerController.getPlayer());
+		newLevel.getChildren().addAll(playerController.getPlayer());
 		root.getScene().setRoot(newLevel);
 	}
 
