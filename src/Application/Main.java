@@ -33,7 +33,7 @@ public class Main extends Application {
 	private Scene scene;
 
 	private PlayerController playerController;
-//	private Player player;
+	private Player player;
 
 	private Level level;
 
@@ -53,7 +53,8 @@ public class Main extends Application {
 //	private HBox levelSelectBox;
 	
 	private ArrayList<Level> levelArray;
-
+	private HBox hbox;
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		levelArray = new ArrayList<>();
@@ -64,7 +65,6 @@ public class Main extends Application {
 		level = levelArray.get(levelArray.size() - 1);
 
 		playerController = new PlayerController(level, audioPlayerSilent, beat);
-//		player = playerController.getPlayer();
 		
 		levelSelectViewController = new LevelSelectViewController(levelArray, playerController);
 		levelSelectView = levelSelectViewController.getRoot();
@@ -220,6 +220,10 @@ public class Main extends Application {
 			public void handle(KeyEvent event) {
 				playerController.getKeybinds().put(event.getCode(), false);
 			}
+		});
+		
+		levelArray.get(0).getImageView().setOnMouseClicked(e -> {
+			System.out.println(e.getSceneX());
 		});
 	}
 }

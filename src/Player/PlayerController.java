@@ -10,7 +10,9 @@ import Level.Level;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -22,6 +24,7 @@ public class PlayerController {
 
 	private Level level;
 	private ArrayList<Node> obstacles;
+	private ImageView png;
 
 	private BeatDetect beat;
 	private boolean onBeat;
@@ -40,6 +43,7 @@ public class PlayerController {
 
 		this.level = level;
 		this.obstacles = level.getObstacles();
+		this.png = level.getImageView();
 		keybindsPlayer = new HashMap<>();
 
 		counter = 0;
@@ -75,7 +79,7 @@ public class PlayerController {
 	
 	public void setLevel(Level level) {
 		this.level = level;
-		this.obstacles = this.level.getObstacles();
+		this.png = level.getImageView();
 	}
 
 	public HashMap<KeyCode, Boolean> getKeybinds() {
@@ -131,6 +135,11 @@ public class PlayerController {
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				
+				if(png.contains(player.getTranslateX(), player.getTranslateY() + player.getHeight())){
+					System.out.println("hi");
+				}
+				
 //				beat.detect(audioPlayer.mix);
 //				if (beat.isOnset()) {
 //					player.setFill(Color.GREEN);
@@ -225,22 +234,22 @@ public class PlayerController {
 		boolean movingRight = value > 0;
 
 		for (int i = 0; i < Math.abs(value); i++) {
-			for (Node obstacle : obstacles) {
-				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
+//			for (Node obstacle : obstacles) {
+				if (png.contains(player.getTranslateX(), player.getTranslateY())) {
 					if (movingRight) {
-						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
+						if (player.getTranslateX() + player.getWidth() == png.getTranslateX()) {
 							player.setTranslateX(player.getTranslateX() - 1);
 							return;
 						}
 
 					} else {
-						if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
+						if (player.getTranslateX() == png.getTranslateX() + Config.BLOCK_SIZE) {
 							player.setTranslateX(player.getTranslateX() + 1);
 							return;
 						}
 					}
 				}
-			}
+//			}
 			player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
 		}
 	}
@@ -255,28 +264,28 @@ public class PlayerController {
 		int counter = 0;
 
 		for (int i = 0; i < Math.abs(value); i++) {
-			for (Node obstacle : obstacles) {
-				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
+//			for (Node obstacle : obstacles) {
+				if (png.contains(player.getTranslateX(), player.getTranslateY() + player.getHeight() + 1)
 				/*
 				 * || player.getTranslateY() + player.getHeight() >=
 				 * level.getLevelHeight() - 5
 				 */) {
 					if (movingDown) {
-						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
+						if (player.getTranslateY() + (player.getHeight()) == png.getTranslateY()) {
 							player.setTranslateY(player.getTranslateY() - 1);
 							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
 							player.setJumpable(true);
 							return;
 						}
 					} else {
-						if (player.getTranslateY() == obstacle.getTranslateY() + Config.BLOCK_SIZE) {
+						if (player.getTranslateY() == png.getTranslateY() + Config.BLOCK_SIZE) {
 							player.setTranslateY(player.getTranslateY() + 1);
 							player.addVelocity(2);
 							return;
 						}
 					}
 				}
-			}
+//			}
 			player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
 			if (counter >= Config.COYOTE_TIME)
 				player.setJumpable(false);

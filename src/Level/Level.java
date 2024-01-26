@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -63,8 +64,6 @@ public class Level extends Pane {
 
 		removeChildren();
 		this.getChildren().add(snapshotView);
-		obstacles.clear();
-		obstacles.add(snapshotView);
 	}
 
 	public Level(char[][] levelArray, String levelName) {
@@ -89,11 +88,12 @@ public class Level extends Pane {
 		this.getChildren().addAll(obstacles);
 
 		SnapshotParameters levelSnap = new SnapshotParameters();
-		levelSnap.setFill(Color.TRANSPARENT);
+		levelSnap.setFill(Color.GREEN);
 		snapshot = this.snapshot(levelSnap, null);
 		snapshotView = new ImageView(snapshot);
+//		snapshotView.setScaleX(1);
 		takeThumbnail();
-	
+		
 		removeChildren();
 		this.getChildren().add(snapshotView);
 	}
