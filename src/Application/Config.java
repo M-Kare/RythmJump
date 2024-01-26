@@ -19,4 +19,6 @@ public class Config {
 	
 	public static final String LEVEL_SUFFIX = ".lvl";
 	
+	public static final int DISTRICT_SIZE = 10;
+	
 }

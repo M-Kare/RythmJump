@@ -27,6 +27,8 @@ public class PlayerController {
 	private boolean onBeat;
 	private AudioPlayer audioPlayer;
 
+	private Node[][][] d;
+
 	private int counter;
 
 	private HashMap<KeyCode, Boolean> keybindsPlayer;
@@ -40,6 +42,7 @@ public class PlayerController {
 
 		this.level = level;
 		this.obstacles = level.getObstacles();
+		d = level.getD();
 		keybindsPlayer = new HashMap<>();
 
 		counter = 0;
@@ -72,10 +75,11 @@ public class PlayerController {
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public void setLevel(Level level) {
 		this.level = level;
 		this.obstacles = this.level.getObstacles();
+		this.d = this.level.getD();
 	}
 
 	public HashMap<KeyCode, Boolean> getKeybinds() {
@@ -207,7 +211,7 @@ public class PlayerController {
 	 * JUMP Springen Methode
 	 */
 	public void jump() {
-		if (player.getJumpable() /*&& onBeat*/) {
+		if (player.getJumpable() /* && onBeat */) {
 			player.setVelocity(-Config.JUMP_HEIGHT);
 			player.setJumpable(false);
 		}
@@ -226,18 +230,29 @@ public class PlayerController {
 		boolean movingRight = value > 0;
 
 		for (int i = 0; i < Math.abs(value); i++) {
-			for (Node obstacle : obstacles) {
-				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
-					if (movingRight) {
-						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
-							player.setTranslateX(player.getTranslateX() - 1);
-							return;
-						}
+			int distX = (int) (player.getTranslateX() / Config.BLOCK_SIZE) / Config.DISTRICT_SIZE;
+			int distY = (int) (player.getTranslateY() / Config.BLOCK_SIZE) / Config.DISTRICT_SIZE;
 
-					} else {
-						if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
-							player.setTranslateX(player.getTranslateX() + 1);
-							return;
+			System.out.println(d.length + " | " + d[0].length);
+			if (distX < 0 || distY < 0 || distX >= d[0].length || distY >= d.length) {
+				
+				return;
+			}
+
+			for (Node obstacle : d[distY][distX]) {
+				if (obstacle != null) {
+					if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
+						if (movingRight) {
+							if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
+								player.setTranslateX(player.getTranslateX() - 1);
+								return;
+							}
+
+						} else {
+							if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
+								player.setTranslateX(player.getTranslateX() + 1);
+								return;
+							}
 						}
 					}
 				}
@@ -259,8 +274,7 @@ public class PlayerController {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
 				/*
-				 * || player.getTranslateY() + player.getHeight() >=
-				 * level.getLevelHeight() - 5
+				 * || player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5
 				 */) {
 					if (movingDown) {
 						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {

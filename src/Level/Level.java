@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import Application.Config;
 import Application.Dimensions;
@@ -37,6 +38,7 @@ public class Level extends Pane {
 	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
+	private Node[][][] d;
 
 	public Level(File level) {
 		super();
@@ -46,6 +48,8 @@ public class Level extends Pane {
 
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
+
+		d = new Node[(int)Math.ceil((double)levelArray.length / Config.DISTRICT_SIZE)][(int)Math.ceil((double)levelArray[0].length / Config.DISTRICT_SIZE)][Config.DISTRICT_SIZE*Config.DISTRICT_SIZE];
 
 		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
 		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
@@ -68,6 +72,7 @@ public class Level extends Pane {
 		this.dimensions[Dimensions.Y.getIndex()] = levelArray.length;
 
 		this.levelArray = levelArray;
+		d = new Node[(int)Math.ceil((double)levelArray.length / Config.DISTRICT_SIZE)][(int)Math.ceil((double)levelArray[0].length / Config.DISTRICT_SIZE)][Config.DISTRICT_SIZE*Config.DISTRICT_SIZE];
 
 		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
 		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
@@ -88,6 +93,10 @@ public class Level extends Pane {
 
 	public String getLevelName() {
 		return levelName;
+	}
+
+	public Node[][][] getD() {
+		return d;
 	}
 
 	public ArrayList<Node> getObstacles() {
@@ -197,14 +206,26 @@ public class Level extends Pane {
 	}
 
 	private void addChildren(char[][] levelArray) {
+		int cXDist = 0, cYDist = 0;
+		int countWall;
 		for (int y = 0; y < levelArray.length; y++) {
+			cXDist = 0;
+			if (y % Config.DISTRICT_SIZE == 0 && y > 0) {
+				cYDist++;
+			}
 			for (int x = 0; x < levelArray[y].length; x++) {
+				countWall = 0;
 				switch (levelArray[y][x]) {
 				case Config.WALL:
+					if (x % Config.DISTRICT_SIZE == 0 && x > 0) {
+						cXDist++;
+					}
 					Node newWall = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.BLACK);
 					newWall.setTranslateX(x * Config.BLOCK_SIZE);
 					newWall.setTranslateY(y * Config.BLOCK_SIZE);
 					obstacles.add(newWall);
+					d[cYDist][cXDist][countWall] = newWall;
+					countWall++;
 					break;
 				case Config.PLAYER:
 					playerSpawn[Dimensions.X.getIndex()] = x * Config.BLOCK_SIZE;
