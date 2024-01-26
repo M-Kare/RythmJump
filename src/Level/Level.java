@@ -60,6 +60,7 @@ public class Level extends Pane {
 		levelSnap.setFill(Color.TRANSPARENT);
 		snapshot = this.snapshot(levelSnap, null);
 		snapshotView = new ImageView(snapshot);
+		
 		takeThumbnail();
 
 		removeChildren();
@@ -88,10 +89,10 @@ public class Level extends Pane {
 		this.getChildren().addAll(obstacles);
 
 		SnapshotParameters levelSnap = new SnapshotParameters();
-		levelSnap.setFill(Color.GREEN);
+		levelSnap.setFill(Color.TRANSPARENT);
 		snapshot = this.snapshot(levelSnap, null);
 		snapshotView = new ImageView(snapshot);
-//		snapshotView.setScaleX(1);
+
 		takeThumbnail();
 		
 		removeChildren();

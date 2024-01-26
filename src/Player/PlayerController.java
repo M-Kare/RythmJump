@@ -216,9 +216,10 @@ public class PlayerController {
 	 * JUMP Springen Methode
 	 */
 	public void jump() {
-//		if (player.getJumpable() /*&& onBeat*/) {
+		if (player.getJumpable() /*&& onBeat*/) {
 			player.setVelocity(-Config.JUMP_HEIGHT);
 			player.setJumpable(false);
+		}
 //		} else if (player.getJumpable()) {
 //			player.setVelocity(-Config.JUMP_HEIGHT / 5);
 //			player.setJumpable(false);
@@ -235,18 +236,18 @@ public class PlayerController {
 
 		for (int i = 0; i < Math.abs(value); i++) {
 //			for (Node obstacle : obstacles) {
-				if (png.contains(player.getTranslateX(), player.getTranslateY())) {
+				if (png.contains(player.getTranslateX(), player.getTranslateY() - 1) || // oben links
+						png.contains(player.getTranslateX() + player.getWidth(), player.getTranslateY() - 1) ||  // oben rechts
+						png.contains(player.getTranslateX(), player.getTranslateY() + player.getHeight() + 1) || // unten links
+						png.contains(player.getTranslateX() + player.getWidth(), player.getTranslateY() + player.getHeight() + 1) || 
+						png.contains(player.getTranslateX(), player.getTranslateY() + (player.getHeight()/2) + 1) || 
+						png.contains(player.getTranslateX() + player.getWidth(), player.getTranslateY() + (player.getHeight()/2) + 1)){// unten rechts
 					if (movingRight) {
-						if (player.getTranslateX() + player.getWidth() == png.getTranslateX()) {
 							player.setTranslateX(player.getTranslateX() - 1);
 							return;
-						}
-
 					} else {
-						if (player.getTranslateX() == png.getTranslateX() + Config.BLOCK_SIZE) {
 							player.setTranslateX(player.getTranslateX() + 1);
 							return;
-						}
 					}
 				}
 //			}
@@ -265,24 +266,25 @@ public class PlayerController {
 
 		for (int i = 0; i < Math.abs(value); i++) {
 //			for (Node obstacle : obstacles) {
-				if (png.contains(player.getTranslateX(), player.getTranslateY() + player.getHeight() + 1)
+				if (png.contains(player.getTranslateX(), player.getTranslateY() - 1) || 
+						png.contains(player.getTranslateX() + player.getWidth(), player.getTranslateY() - 1) || 
+						png.contains(player.getTranslateX(), player.getTranslateY() + player.getHeight() + 1) || 
+						png.contains(player.getTranslateX() + player.getWidth(), player.getTranslateY() + player.getHeight() + 1) || 
+						png.contains(player.getTranslateX(), player.getTranslateY() + (player.getHeight()/2) + 1) || 
+						png.contains(player.getTranslateX() + player.getWidth(), player.getTranslateY() + (player.getHeight()/2) + 1)
 				/*
 				 * || player.getTranslateY() + player.getHeight() >=
 				 * level.getLevelHeight() - 5
 				 */) {
 					if (movingDown) {
-						if (player.getTranslateY() + (player.getHeight()) == png.getTranslateY()) {
 							player.setTranslateY(player.getTranslateY() - 1);
 							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
 							player.setJumpable(true);
 							return;
-						}
 					} else {
-						if (player.getTranslateY() == png.getTranslateY() + Config.BLOCK_SIZE) {
 							player.setTranslateY(player.getTranslateY() + 1);
 							player.addVelocity(2);
 							return;
-						}
 					}
 				}
 //			}

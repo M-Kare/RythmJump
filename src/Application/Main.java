@@ -111,7 +111,7 @@ public class Main extends Application {
 			System.out.println(levelFile.getName());
 			levelArray.add(tempLevel);
 		}
-		levelArray.add(new Level(new LevelGenerator(800, 18).getLevelArray(), "Random Level"));
+		levelArray.add(new Level(new LevelGenerator(5000, 18).getLevelArray(), "Random Level"));
 	}
 
 	/**
