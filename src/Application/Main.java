@@ -25,6 +25,8 @@ import presentation.LevelSelect_depricated.LevelListView;
 import presentation.LevelSelect_depricated.LevelListViewController;
 import presentation.betterSelector.LevelTilePane;
 import presentation.betterSelector.LevelTilePaneController;
+import presentation.endview.TheEnd;
+import presentation.endview.TheEndController;
 
 public class Main extends Application {
 
@@ -42,6 +44,9 @@ public class Main extends Application {
 	
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
+	
+	private TheEnd theEnd;
+	private TheEndController theEndController;
 	
 //	private LevelTilePaneController levelTilePaneController;
 //	private LevelTilePane levelTilePane;
@@ -67,6 +72,9 @@ public class Main extends Application {
 //		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
 //		levelTilePane = levelTilePaneController.getRoot();
 //		levelSelectBox = new HBox(levelTilePane);
+		
+		theEndController = new TheEndController(levelSelectView);
+		theEnd = theEndController.getRoot();
 		
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten

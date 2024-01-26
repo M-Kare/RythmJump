@@ -61,6 +61,7 @@ public class LevelTilePaneController {
 			tileNode.getImagePane().getStyleClass().add("evenTile");
 		}
 
+		tileNode.getStyleClass().add("tileNode");
 		tileNodes.add(tileNode);
 		root.tilePane.getChildren().add(tileNode);
 		

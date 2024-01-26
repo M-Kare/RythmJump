@@ -9,10 +9,15 @@ import java.util.ArrayList;
 
 import Application.Config;
 import Application.Dimensions;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,6 +32,8 @@ public class Level extends Pane {
 	private int[] playerSpawn;
 	private String levelName;
 
+	private ImageView snapshotView;
+	private Image snapshot;
 	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
@@ -67,9 +74,11 @@ public class Level extends Pane {
 
 		playerSpawn = new int[2];
 
+		this.setBackground(new Background(new BackgroundFill(Color.AQUA, new CornerRadii(0), new Insets(0))));
+
 		addChildren(this.levelArray);
 		this.getChildren().addAll(obstacles);
-		
+
 		takeThumbnail();
 	}
 
@@ -100,15 +109,17 @@ public class Level extends Pane {
 	public int[] getPlayerSpawn() {
 		return playerSpawn;
 	}
-	
+
 	public void takeThumbnail() {
 		double vpHeight = 400, vpWidth = 400;
 		SnapshotParameters sp = new SnapshotParameters();
 		sp.setTransform(Transform.scale(0.31, 0.31));
 		sp.setFill(Color.TRANSPARENT);
-		if(levelHeight < (400/0.31)) vpHeight = levelHeight*0.31;
-		if(levelLength < (400/0.31)) vpWidth = levelLength*0.31;
-		
+		if (levelHeight < (400 / 0.31))
+			vpHeight = levelHeight * 0.31;
+		if (levelLength < (400 / 0.31))
+			vpWidth = levelLength * 0.31;
+
 		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
 		thumbnail = this.snapshot(sp, null);
 	}
@@ -146,7 +157,9 @@ public class Level extends Pane {
 		String line;
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(level))) {
-			line = reader.readLine();
+			if ((line = reader.readLine()) == null)
+				return dimensions;
+
 			while (line.contains(Character.toString(Config.COMMENT)))
 				line = reader.readLine();
 
@@ -200,6 +213,10 @@ public class Level extends Pane {
 				}
 			}
 		}
+	}
+
+	private void removeChildren() {
+		this.getChildren().clear();
 	}
 
 	public int determineBlockSize(char[][] levelArray, int currentLine, int currentChar, char symbol) {
