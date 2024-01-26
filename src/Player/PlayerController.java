@@ -207,9 +207,10 @@ public class PlayerController {
 	 * JUMP Springen Methode
 	 */
 	public void jump() {
-//		if (player.getJumpable() /*&& onBeat*/) {
+		if (player.getJumpable() /*&& onBeat*/) {
 			player.setVelocity(-Config.JUMP_HEIGHT);
 			player.setJumpable(false);
+		}
 //		} else if (player.getJumpable()) {
 //			player.setVelocity(-Config.JUMP_HEIGHT / 5);
 //			player.setJumpable(false);

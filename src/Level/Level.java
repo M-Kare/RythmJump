@@ -55,16 +55,7 @@ public class Level extends Pane {
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
 
-		SnapshotParameters levelSnap = new SnapshotParameters();
-		levelSnap.setFill(Color.TRANSPARENT);
-		snapshot = this.snapshot(levelSnap, null);
-		snapshotView = new ImageView(snapshot);
 		takeThumbnail();
-
-		removeChildren();
-		this.getChildren().add(snapshotView);
-		obstacles.clear();
-		obstacles.add(snapshotView);
 	}
 
 	public Level(char[][] levelArray, String levelName) {
@@ -88,22 +79,7 @@ public class Level extends Pane {
 		addChildren(this.levelArray);
 		this.getChildren().addAll(obstacles);
 
-		SnapshotParameters levelSnap = new SnapshotParameters();
-		levelSnap.setFill(Color.TRANSPARENT);
-		snapshot = this.snapshot(levelSnap, null);
-		snapshotView = new ImageView(snapshot);
 		takeThumbnail();
-	
-		removeChildren();
-		this.getChildren().add(snapshotView);
-	}
-	
-	public ImageView getImageView() {
-		return snapshotView;
-	}
-
-	public Image getSnapshot() {
-		return snapshot;
 	}
 
 	public Image getThumbnail() {
