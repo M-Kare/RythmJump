@@ -59,7 +59,8 @@ public class LevelTilePane extends ScrollPane {
 		} else {
 			tileNode.getImagePane().getStyleClass().add("evenTile");
 		}
-
+		
+		tileNode.getStyleClass().add("tileNode");
 		nodes.add(tileNode);
 		tilePane.getChildren().add(tileNode);
 	}
