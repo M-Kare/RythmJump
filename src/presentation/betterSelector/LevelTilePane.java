@@ -3,6 +3,7 @@ package presentation.betterSelector;
 import java.util.ArrayList;
 
 import Level.Level;
+import Level.LevelController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -37,7 +38,6 @@ public class LevelTilePane extends ScrollPane {
 		for (Level level : this.levelArray) {
 			addTileNode(level);
 		}
-		
 		this.setContent(tilePane);
 	}
 

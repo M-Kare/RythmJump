@@ -22,6 +22,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
+import presentation.endview.TheEnd;
+import presentation.endview.TheEndController;
 
 public class Level extends Pane {
 	private int[] dimensions;
@@ -32,17 +34,23 @@ public class Level extends Pane {
 	private int[] playerSpawn;
 	private String levelName;
 
-	private ImageView snapshotView;
-	private Image snapshot;
+	private int jumpCount;
+	private int deathCount;
+
 	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
+	private ArrayList<Node> winArea;
 
 	public Level(File level) {
 		super();
 		this.levelFile = level;
 		this.obstacles = new ArrayList<>();
+		this.winArea = new ArrayList<>();
 		levelName = level.getName().split(".lvl")[0];
+
+		jumpCount = 0;
+		deathCount = 0;
 
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
@@ -54,32 +62,41 @@ public class Level extends Pane {
 
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
+		this.getChildren().addAll(winArea);
 
 		takeThumbnail();
 	}
 
-	public Level(char[][] levelArray, String levelName) {
-		super();
-		this.dimensions = new int[2];
-		this.obstacles = new ArrayList<>();
-		this.levelName = levelName;
+	public ArrayList<Node> getWinArea() {
+		return winArea;
+	}
 
-		this.dimensions[Dimensions.X.getIndex()] = levelArray[0].length;
-		this.dimensions[Dimensions.Y.getIndex()] = levelArray.length;
+	public File getFile() {
+		return levelFile;
+	}
 
-		this.levelArray = levelArray;
+	public int getJumpCount() {
+		return jumpCount;
+	}
 
-		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
-		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
+	public int getDeathCount() {
+		return deathCount;
+	}
 
-		playerSpawn = new int[2];
+	public void setDeathCount(int count) {
+		deathCount = count;
+	}
 
-		this.setBackground(new Background(new BackgroundFill(Color.AQUA, new CornerRadii(0), new Insets(0))));
+	public void addDeathCount(int value) {
+		deathCount += value;
+	}
 
-		addChildren(this.levelArray);
-		this.getChildren().addAll(obstacles);
+	public void setJumpCount(int count) {
+		jumpCount = count;
+	}
 
-		takeThumbnail();
+	public void addJumpCount(int value) {
+		jumpCount += value;
 	}
 
 	public Image getThumbnail() {
@@ -209,6 +226,12 @@ public class Level extends Pane {
 				case Config.PLAYER:
 					playerSpawn[Dimensions.X.getIndex()] = x * Config.BLOCK_SIZE;
 					playerSpawn[Dimensions.Y.getIndex()] = (y - 2) * Config.BLOCK_SIZE;
+					break;
+				case Config.WIN:
+					Node newWin = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.GOLD);
+					newWin.setTranslateX(x * Config.BLOCK_SIZE);
+					newWin.setTranslateY(y * Config.BLOCK_SIZE);
+					winArea.add(newWin);
 					break;
 				}
 			}

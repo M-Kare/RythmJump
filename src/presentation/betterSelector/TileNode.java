@@ -1,6 +1,7 @@
 package presentation.betterSelector;
 
 import Level.Level;
+import Level.LevelController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;

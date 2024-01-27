@@ -14,6 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import presentation.LevelSelectView.LevelSelectView;
+import presentation.endview.TheEnd;
+import presentation.endview.TheEndController;
 
 public class PlayerController {
 
@@ -21,6 +24,7 @@ public class PlayerController {
 
 	private Level level;
 	private ArrayList<Node> obstacles;
+	private ArrayList<Node> winArea;
 
 	private int counter;
 
@@ -31,7 +35,6 @@ public class PlayerController {
 
 		this.level = level;
 		this.obstacles = level.getObstacles();
-		
 		keybindsPlayer = new HashMap<>();
 
 		counter = 0;

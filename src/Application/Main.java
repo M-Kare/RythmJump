@@ -6,15 +6,13 @@ import java.util.ArrayList;
 
 import Level.Level;
 import Level.LevelGenerator;
-import Player.PlayerController;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
@@ -22,10 +20,6 @@ import presentation.LevelSelectView.LevelSelectViewController;
 public class Main extends Application {
 
 	private Scene scene;
-
-	private PlayerController playerController;
-
-	private Level level;
 
 	private SimpleMinim minim;
 	private AudioPlayer audioPlayer;
@@ -42,19 +36,17 @@ public class Main extends Application {
 		levelArray = new ArrayList<>();
 //		initBeat();
 
+		new LevelGenerator(20, 18);
 		initLevel();
 
-		level = levelArray.get(levelArray.size() - 1);
-
-		playerController = new PlayerController(level, audioPlayerSilent, beat);
-
-		levelSelectViewController = new LevelSelectViewController(levelArray, playerController);
+		levelSelectViewController = new LevelSelectViewController(levelArray);
 		levelSelectView = levelSelectViewController.getRoot();
 
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
 		scene = new Scene(levelSelectView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+		levelSelectView.requestFocus();
 		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
 		/**
@@ -64,8 +56,6 @@ public class Main extends Application {
 		primaryStage.setTitle("RythmJump");
 //		primaryStage.setResizable(false);
 		primaryStage.show();
-
-		init(scene);
 	}
 
 	public static void main(String[] args) {
@@ -82,7 +72,6 @@ public class Main extends Application {
 			System.out.println(levelFile.getName());
 			levelArray.add(tempLevel);
 		}
-		levelArray.add(new Level(new LevelGenerator(800, 18).getLevelArray(), "Random Level"));
 	}
 
 	/**
@@ -167,30 +156,5 @@ public class Main extends Application {
 			}
 		}
 		return foundFiles;
-	}
-
-	public void init(Scene scene) {
-		/**
-		 * PRESSED aktualisiert, dass der Knopf gedrückt wird
-		 */
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				playerController.getKeybinds().put(event.getCode(), true);
-				if (event.getCode() == KeyCode.ESCAPE) {
-					scene.setRoot(levelSelectView);
-				}
-			}
-		});
-
-		/**
-		 * UNPRESSED aktualisiert, dass der Knopf nicht mehr gedrückt wird
-		 */
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				playerController.getKeybinds().put(event.getCode(), false);
-			}
-		});
 	}
 }
