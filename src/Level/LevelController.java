@@ -260,11 +260,15 @@ public class LevelController {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
 					if (movingRight) {
-						player.setTranslateX(player.getTranslateX() - 1);
-						return;
+						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
+							player.setTranslateX(player.getTranslateX() - 1);
+							return;
+						}
 					} else {
-						player.setTranslateX(player.getTranslateX() + 1);
-						return;
+						if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
+							player.setTranslateX(player.getTranslateX() + 1);
+							return;
+						}
 					}
 				}
 			}
@@ -286,14 +290,18 @@ public class LevelController {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
 						|| player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5) {
 					if (movingDown) {
-						player.setTranslateY(player.getTranslateY() - 1);
-						player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
-						player.setJumpable(true);
-						return;
+						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
+							player.setTranslateY(player.getTranslateY() - 1);
+							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
+							player.setJumpable(true);
+							return;
+						}
 					} else {
-						player.setTranslateY(player.getTranslateY() + 1);
-						player.addVelocity(2);
-						return;
+						if (player.getTranslateY() == obstacle.getTranslateY() + Config.BLOCK_SIZE) {
+							player.setTranslateY(player.getTranslateY() + 1);
+							player.addVelocity(2);
+							return;
+						}
 					}
 				}
 			}

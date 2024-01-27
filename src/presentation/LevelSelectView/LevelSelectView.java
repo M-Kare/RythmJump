@@ -3,18 +3,13 @@ package presentation.LevelSelectView;
 import java.util.ArrayList;
 
 import Level.Level;
-import Level.LevelController;
 import Player.Player;
-import Player.PlayerController;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import presentation.betterSelector.LevelTilePane;
 import presentation.betterSelector.LevelTilePaneController;
 
@@ -32,7 +27,6 @@ public class LevelSelectView extends BorderPane {
 	private HBox bottomBox;
 
 	public LevelSelectView(ArrayList<Level> levelArray) {
-		this.setFocusTraversable(true);
 		levelTilePaneController = new LevelTilePaneController(levelArray);
 		levelTilePane = levelTilePaneController.getRoot();
 		levelBox = new HBox(levelTilePane);
@@ -42,6 +36,7 @@ public class LevelSelectView extends BorderPane {
 
 		selectButton = new Button("Select");
 		selectButton.setId("levelSelectButton");
+		selectButton.setFocusTraversable(false);
 
 		Player player = new Player();
 		player.setHeight(player.getHeight()*5);
