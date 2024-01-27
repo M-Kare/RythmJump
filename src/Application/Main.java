@@ -3,11 +3,9 @@ package Application;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import Level.Level;
 import Level.LevelGenerator;
-import Player.Player;
 import Player.PlayerController;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
@@ -17,23 +15,15 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
-import presentation.LevelSelect_depricated.LevelListView;
-import presentation.LevelSelect_depricated.LevelListViewController;
-import presentation.betterSelector.LevelTilePane;
-import presentation.betterSelector.LevelTilePaneController;
-import presentation.endview.TheEnd;
-import presentation.endview.TheEndController;
 
 public class Main extends Application {
 
 	private Scene scene;
 
 	private PlayerController playerController;
-//	private Player player;
 
 	private Level level;
 
@@ -41,17 +31,10 @@ public class Main extends Application {
 	private AudioPlayer audioPlayer;
 	private AudioPlayer audioPlayerSilent;
 	private BeatDetect beat;
-	
+
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
-	
-	private TheEnd theEnd;
-	private TheEndController theEndController;
-	
-//	private LevelTilePaneController levelTilePaneController;
-//	private LevelTilePane levelTilePane;
-//	private HBox levelSelectBox;
-	
+
 	private ArrayList<Level> levelArray;
 
 	@Override
@@ -60,31 +43,19 @@ public class Main extends Application {
 //		initBeat();
 
 		initLevel();
-		
+
 		level = levelArray.get(levelArray.size() - 1);
 
 		playerController = new PlayerController(level, audioPlayerSilent, beat);
-//		player = playerController.getPlayer();
-		
+
 		levelSelectViewController = new LevelSelectViewController(levelArray, playerController);
 		levelSelectView = levelSelectViewController.getRoot();
-		
-//		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
-//		levelTilePane = levelTilePaneController.getRoot();
-//		levelSelectBox = new HBox(levelTilePane);
-		
-		theEndController = new TheEndController(levelSelectView);
-		theEnd = theEndController.getRoot();
-		
+
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
 		scene = new Scene(levelSelectView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-//		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-//		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
-//		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-//		level.getChildren().add(player);
 
 		/**
 		 * STAGE Stage wird gesetzt
@@ -206,7 +177,7 @@ public class Main extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				playerController.getKeybinds().put(event.getCode(), true);
-				if(event.getCode() == KeyCode.ESCAPE) {
+				if (event.getCode() == KeyCode.ESCAPE) {
 					scene.setRoot(levelSelectView);
 				}
 			}
