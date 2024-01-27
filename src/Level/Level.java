@@ -44,7 +44,6 @@ public class Level extends Pane {
 
 	public Level(File level) {
 		super();
-		this.setFocusTraversable(true);;
 		this.levelFile = level;
 		this.obstacles = new ArrayList<>();
 		this.winArea = new ArrayList<>();

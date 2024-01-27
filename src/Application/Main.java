@@ -3,7 +3,6 @@ package Application;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import Level.Level;
 import Level.LevelGenerator;
@@ -31,12 +30,9 @@ public class Main extends Application {
 	private LevelSelectView levelSelectView;
 
 	private ArrayList<Level> levelArray;
-	
-	private HashMap<KeyCode, SimpleBooleanProperty> keybinds;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		keybinds = new HashMap<>();
 		levelArray = new ArrayList<>();
 //		initBeat();
 
