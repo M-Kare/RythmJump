@@ -1,17 +1,28 @@
 package Level;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import Application.Config;
 
 public class LevelGenerator {
 	private final int MAX_IN_ROW = 4;
 
 	private char[][] levelArray;
+	private File levelFile;
 
 	public LevelGenerator(int height, int width) {
 		levelArray = new char[height][width];
 
 		createRandomPlatforms();
 		addSideWalls();
+
+		levelFile = writeFile(levelArray);
+	}
+	
+	public File getLevelFile() {
+		return levelFile;
 	}
 
 	public char[][] getLevelArray() {
@@ -23,6 +34,29 @@ public class LevelGenerator {
 			levelArray[i][0] = Config.WALL;
 			levelArray[i][levelArray[i].length - 1] = Config.WALL;
 		}
+	}
+
+	public File writeFile(char[][] levelArray) {
+		FileWriter writer = null;
+		File levelFile = new File("./assets/level/randomLevel.lvl");
+		try {
+			writer = new FileWriter(levelFile);
+			for(int y = 0; y < levelArray.length; y++) {
+//				for (int x = 0; x < levelArray[0].length; x++) {
+					writer.write(levelArray[y]);
+					writer.write("\n");
+//				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return levelFile;
 	}
 
 	public void createRandomPlatforms() {

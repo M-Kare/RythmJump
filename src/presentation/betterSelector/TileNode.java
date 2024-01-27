@@ -17,13 +17,13 @@ public class TileNode extends VBox{
 	private StackPane stack;
 //	private Rectangle background;
 	
-	private LevelController levelController;
+	private Level level;
 	
-	public TileNode(LevelController levelController, int width, int height, Color color) {
+	public TileNode(Level level, int width, int height, Color color) {
 		super();
-		this.levelController = levelController;
-		levelName = new Label(this.levelController.getRoot().getLevelName());
-		imageView = new ImageView(levelController.getRoot().getThumbnail());
+		this.level = level;
+		levelName = new Label(this.level.getLevelName());
+		imageView = new ImageView(level.getThumbnail());
 		stack = new StackPane();
 //		background = new Rectangle(width, height, color);
 		
@@ -41,20 +41,20 @@ public class TileNode extends VBox{
 		this.setSpacing(3);
 	}
 	
-	public TileNode(LevelController levelController) {
-		this(levelController, 200, 200, Color.WHITE);
+	public TileNode(Level level) {
+		this(level, 200, 200, Color.WHITE);
 	}
 	
-	public TileNode(LevelController levelController, int width, int height) {
-		this(levelController, width, height, Color.WHITE);
+	public TileNode(Level level, int width, int height) {
+		this(level, width, height, Color.WHITE);
 	}
 	
 	public Pane getImagePane() {
 		return stack;
 	}
 	
-	public LevelController getLevelController() {
-		return levelController;
+	public Level getLevel() {
+		return level;
 	}
 	
 //	public Rectangle getTileBackground() {

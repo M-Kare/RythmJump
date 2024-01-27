@@ -32,8 +32,8 @@ public class LevelSelectView extends BorderPane{
 	private HBox bottomBox;
 	
 	
-	public LevelSelectView(ArrayList<LevelController> levelControllerArray) {
-		levelTilePaneController = new LevelTilePaneController(levelControllerArray);
+	public LevelSelectView(ArrayList<Level> levelArray) {
+		levelTilePaneController = new LevelTilePaneController(levelArray);
 		levelTilePane = levelTilePaneController.getRoot();
 		levelBox = new HBox(levelTilePane);
 		

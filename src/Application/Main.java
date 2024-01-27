@@ -50,24 +50,25 @@ public class Main extends Application {
 	private TheEnd theEnd;
 	private TheEndController theEndController;
 	
-	private ArrayList<LevelController> levelControllerArray;
+	private ArrayList<Level> levelArray;
 	private HashMap<KeyCode, Boolean> keybinds;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		keybinds = new HashMap<>();
 		player = new Player();
-		levelControllerArray = new ArrayList<>();
+		levelArray = new ArrayList<>();
 //		initBeat();
 
+		new LevelGenerator(20, 18);
 		initLevel();
 		
-		level = levelControllerArray.get(levelControllerArray.size() - 1).getRoot();
+		level = levelArray.get(levelArray.size() - 1);
 
 //		playerController = new PlayerController(level, audioPlayerSilent, beat);
 //		player = playerController.getPlayer();
 		
-		levelSelectViewController = new LevelSelectViewController(levelControllerArray);
+		levelSelectViewController = new LevelSelectViewController(levelArray, keybinds);
 		levelSelectView = levelSelectViewController.getRoot();
 		
 //		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
@@ -106,13 +107,12 @@ public class Main extends Application {
 	 * Sucht alle .lvl Dateien im Projekt und fügt sie einer HashMap hinzu
 	 */
 	public void initLevel() {
-		LevelController tempLevel;
+		Level tempLevel;
 		for (File levelFile : findFilesBySuffix(Config.LEVEL_SUFFIX, ".")) {
-			tempLevel = new LevelController(keybinds, player, levelFile);
+			tempLevel = new Level(levelFile);
 			System.out.println(levelFile.getName());
-			levelControllerArray.add(tempLevel);
+			levelArray.add(tempLevel);
 		}
-		levelControllerArray.add(new LevelController(keybinds, player, new LevelGenerator(20, 18).getLevelArray(), "Random Level"));
 	}
 
 	/**
@@ -221,6 +221,7 @@ public class Main extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				keybinds.put(event.getCode(), true);
+				
 				if(event.getCode() == KeyCode.ESCAPE) {
 					scene.setRoot(levelSelectView);
 				}

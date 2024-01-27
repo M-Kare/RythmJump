@@ -2,6 +2,7 @@ package presentation.LevelSelectView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import presentation.betterSelector.LevelTilePane;
 import presentation.betterSelector.LevelTilePaneController;
@@ -22,16 +24,19 @@ import presentation.betterSelector.TileNode;
 
 public class LevelSelectViewController {
 	private LevelSelectView root;
-	private ArrayList<LevelController> levelControllerArray;
+	private ArrayList<Level> levelArray;
 
 	private LevelTilePaneController levelTilePaneController;
 	private LevelTilePane levelTilePane;
 
+	private HashMap<KeyCode, Boolean> keybinds;
 	private Button selectButton;
 
-	public LevelSelectViewController(ArrayList<LevelController> levelControllerArray) {
-		root = new LevelSelectView(levelControllerArray);
-		this.levelControllerArray = levelControllerArray;
+	public LevelSelectViewController(ArrayList<Level> levelArray, HashMap<KeyCode, Boolean> keybinds) {
+		root = new LevelSelectView(levelArray);
+		this.levelArray = levelArray;
+		
+		this.keybinds = keybinds;
 
 		levelTilePaneController = root.levelTilePaneController;
 		levelTilePane = root.levelTilePane;
@@ -50,20 +55,11 @@ public class LevelSelectViewController {
 			if (levelTilePaneController.getSelected() == null)
 				return;
 
-			LevelController playLevelController = levelTilePaneController.getSelected().getLevelController();
-			Level newLevel = playLevelController.getRoot();
-//			newLevel.setLayoutY(
-//					-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-//			playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
-//			playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-//			playerController.setLevel(newLevel);
-
-//			if (newLevel.getChildren().contains(playerController.getPlayer()))
-//				newLevel.getChildren().remove(playerController.getPlayer());
-
-//			newLevel.getChildren().add(playerController.getPlayer());
-			playLevelController.resetPlayer();
-			root.getScene().setRoot(newLevel);
+			Level selectedLevel = levelTilePaneController.getSelected().getLevel();
+			LevelController selectedLevelController = new LevelController(keybinds, new Player(), selectedLevel.getFile());
+			
+			selectedLevelController.resetPlayer();
+			root.getScene().setRoot(selectedLevelController.getRoot());
 		});
 		
 		levelTilePane.setOnDragOver(new EventHandler<DragEvent>() {
@@ -100,7 +96,7 @@ public class LevelSelectViewController {
 
 				List<File> files = dragboard.getFiles();
 				for (File file : files) {
-					levelTilePaneController.addTileNode(new LevelController(null, new Player(), file));
+					levelTilePaneController.addTileNode(new Level(file));
 				}
 				event.setDropCompleted(true);
 

@@ -20,10 +20,10 @@ public class LevelController {
 
 	private Player player;
 
-	private HashMap<KeyCode, Boolean> keybinds;
+	private HashMap<KeyCode, Boolean> levelKeybinds;
 
 	public LevelController(HashMap<KeyCode, Boolean> keybinds, Player player, File level) {
-		this.keybinds = keybinds;
+		this.levelKeybinds = keybinds;
 
 		this.level = new Level(level);
 
@@ -37,7 +37,7 @@ public class LevelController {
 	}
 
 	public LevelController(HashMap<KeyCode, Boolean> keybinds, Player player, char[][] levelArray, String levelName) {
-		this.keybinds = keybinds;
+		this.levelKeybinds = keybinds;
 
 		this.level = new Level(levelArray, levelName);
 
@@ -51,6 +51,10 @@ public class LevelController {
 
 	public Level getRoot() {
 		return level;
+	}
+	
+	public HashMap<KeyCode, Boolean> getKeybinds(){
+		return levelKeybinds;
 	}
 
 	public Player getPlayer() {
@@ -121,14 +125,14 @@ public class LevelController {
 				/**
 				 * JUMPING
 				 */
-				if (keybinds.get(KeyCode.SPACE) || keybinds.get(KeyCode.W) || keybinds.get(KeyCode.UP)) {
+				if (levelKeybinds.get(KeyCode.SPACE) || levelKeybinds.get(KeyCode.W) || levelKeybinds.get(KeyCode.UP)) {
 					jump();
 				}
 
 				/**
 				 * RESPAWN
 				 */
-				if (keybinds.get(KeyCode.R)) {
+				if (levelKeybinds.get(KeyCode.R)) {
 					player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
 					player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
 					level.setLayoutX(-(level.getPlayerSpawn()[Dimensions.X.getIndex()] - (Config.BLOCK_SIZE * 2)));
@@ -139,7 +143,7 @@ public class LevelController {
 				/**
 				 * MOVING X Seitliches Bewegen
 				 */
-				if ((keybinds.get(KeyCode.RIGHT) || keybinds.get(KeyCode.D))
+				if ((levelKeybinds.get(KeyCode.RIGHT) || levelKeybinds.get(KeyCode.D))
 				/*
 				 * && player.getTranslateX() + Config.PLAYER_SIZE <= level.getLevelLength() - 5
 				 */) {
@@ -148,7 +152,7 @@ public class LevelController {
 					}
 					movePlayerX(Config.PLAYER_SPEED);
 				}
-				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
+				if ((levelKeybinds.get(KeyCode.LEFT) || levelKeybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
 					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
 						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getWidth());
 					}
@@ -171,84 +175,84 @@ public class LevelController {
 		timer.start();
 	}
 
-//	/**
-//	 * JUMP Springen Methode
-//	 */
-//	public void jump() {
-//		if (player.getJumpable() /* && onBeat */) {
-//			player.setVelocity(-Config.JUMP_HEIGHT);
+	/**
+	 * JUMP Springen Methode
+	 */
+	public void jump() {
+		if (player.getJumpable() /* && onBeat */) {
+			player.setVelocity(-Config.JUMP_HEIGHT);
+			player.setJumpable(false);
+		}
+//		} else if (player.getJumpable()) {
+//			player.setVelocity(-Config.JUMP_HEIGHT / 5);
 //			player.setJumpable(false);
 //		}
-////		} else if (player.getJumpable()) {
-////			player.setVelocity(-Config.JUMP_HEIGHT / 5);
-////			player.setJumpable(false);
-////		}
-//	}
-//
-//	/**
-//	 * MOVE_X Bewegen in X-Richtung. Wenn
-//	 * 
-//	 * @param value Wert um den bewegt werden soll
-//	 */
-//	public void movePlayerX(int value) {
-//		boolean movingRight = value > 0;
-//
-//		for (int i = 0; i < Math.abs(value); i++) {
-//			for (Node obstacle : obstacles) {
-//				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
-//					if (movingRight) {
-//						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
-//							player.setTranslateX(player.getTranslateX() - 1);
-//							return;
-//						}
-//
-//					} else {
-//						if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
-//							player.setTranslateX(player.getTranslateX() + 1);
-//							return;
-//						}
-//					}
-//				}
-//			}
-//			player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
-//		}
-//	}
-//
-//	/**
-//	 * MOVE_Y Bewegung in Y-Richtung
-//	 * 
-//	 * @param value Wert um den bewegt werden soll
-//	 */
-//	public void movePlayerY(int value) {
-//		boolean movingDown = value > 0;
-//		int counter = 0;
-//
-//		for (int i = 0; i < Math.abs(value); i++) {
-//			for (Node obstacle : obstacles) {
-//				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
-//				/*
-//				 * || player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5
-//				 */) {
-//					if (movingDown) {
-//						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
-//							player.setTranslateY(player.getTranslateY() - 1);
-//							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
-//							player.setJumpable(true);
-//							return;
-//						}
-//					} else {
-//						if (player.getTranslateY() == obstacle.getTranslateY() + Config.BLOCK_SIZE) {
-//							player.setTranslateY(player.getTranslateY() + 1);
-//							player.addVelocity(2);
-//							return;
-//						}
-//					}
-//				}
-//			}
-//			player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-//			if (counter >= Config.COYOTE_TIME)
-//				player.setJumpable(false);
-//			counter++;
-//		}
-//	}
+	}
+
+	/**
+	 * MOVE_X Bewegen in X-Richtung. Wenn
+	 * 
+	 * @param value Wert um den bewegt werden soll
+	 */
+	public void movePlayerX(int value) {
+		boolean movingRight = value > 0;
+
+		for (int i = 0; i < Math.abs(value); i++) {
+			for (Node obstacle : obstacles) {
+				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
+					if (movingRight) {
+						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
+							player.setTranslateX(player.getTranslateX() - 1);
+							return;
+						}
+
+					} else {
+						if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
+							player.setTranslateX(player.getTranslateX() + 1);
+							return;
+						}
+					}
+				}
+			}
+			player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
+		}
+	}
+
+	/**
+	 * MOVE_Y Bewegung in Y-Richtung
+	 * 
+	 * @param value Wert um den bewegt werden soll
+	 */
+	public void movePlayerY(int value) {
+		boolean movingDown = value > 0;
+		int counter = 0;
+
+		for (int i = 0; i < Math.abs(value); i++) {
+			for (Node obstacle : obstacles) {
+				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
+				/*
+				 * || player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5
+				 */) {
+					if (movingDown) {
+						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
+							player.setTranslateY(player.getTranslateY() - 1);
+							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
+							player.setJumpable(true);
+							return;
+						}
+					} else {
+						if (player.getTranslateY() == obstacle.getTranslateY() + Config.BLOCK_SIZE) {
+							player.setTranslateY(player.getTranslateY() + 1);
+							player.addVelocity(2);
+							return;
+						}
+					}
+				}
+			}
+			player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
+			if (counter >= Config.COYOTE_TIME)
+				player.setJumpable(false);
+			counter++;
+		}
+	}
 }

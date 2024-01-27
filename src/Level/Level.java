@@ -86,6 +86,10 @@ public class Level extends Pane {
 	public ArrayList<Node> getWinArea(){
 		return winArea;
 	}
+	
+	public File getFile() {
+		return levelFile;
+	}
 
 	public Image getThumbnail() {
 		return thumbnail;

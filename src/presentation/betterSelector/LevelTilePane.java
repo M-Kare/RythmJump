@@ -15,14 +15,14 @@ public class LevelTilePane extends ScrollPane {
 	
 	protected TilePane tilePane;
 
-	private ArrayList<LevelController> levelControllerArray;
+	private ArrayList<Level> levelArray;
 	protected ArrayList<TileNode> nodes;
 	SimpleObjectProperty<TileNode>[] no;
 	protected boolean oddTile = true;
 
-	public LevelTilePane(ArrayList<LevelController> levelControllerArray, int nodeWidth, int nodeHeight) {
+	public LevelTilePane(ArrayList<Level> levelArray, int nodeWidth, int nodeHeight) {
 		super();
-		this.levelControllerArray = levelControllerArray;
+		this.levelArray = levelArray;
 		nodes = new ArrayList<>();
 
 		tilePane = new TilePane();
@@ -35,25 +35,25 @@ public class LevelTilePane extends ScrollPane {
 		this.nodeHeight = nodeHeight;
 		this.nodeWidth = nodeWidth;
 
-		for (LevelController levelCon : this.levelControllerArray) {
-			addTileNode(levelCon);
+		for (Level level : this.levelArray) {
+			addTileNode(level);
 		}
 		
 		this.setContent(tilePane);
 	}
 
-	public LevelTilePane(ArrayList<LevelController> levelControllerArray) {
-		this(levelControllerArray, 200, 200);
+	public LevelTilePane(ArrayList<Level> levelArray) {
+		this(levelArray, 200, 200);
 	}
 
 	public ArrayList<TileNode> getTileNodes() {
 		return nodes;
 	}
 
-	public void addTileNode(LevelController levelController) {
+	public void addTileNode(Level level) {
 		oddTile = !oddTile;
 
-		TileNode tileNode = new TileNode(levelController, nodeWidth, nodeHeight);
+		TileNode tileNode = new TileNode(level, nodeWidth, nodeHeight);
 
 		if (oddTile) {
 			tileNode.getImagePane().getStyleClass().add("oddTile");

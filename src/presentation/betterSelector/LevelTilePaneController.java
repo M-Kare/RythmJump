@@ -2,11 +2,7 @@ package presentation.betterSelector;
 
 import java.util.ArrayList;
 
-import Application.Config;
-import Application.Dimensions;
 import Level.Level;
-import Level.LevelController;
-import Player.PlayerController;
 
 public class LevelTilePaneController {
 	private LevelTilePane root;
@@ -14,10 +10,8 @@ public class LevelTilePaneController {
 	private ArrayList<TileNode> tileNodes;
 	private TileNode selectedNode;
 
-//	private PlayerController playerController;
-
-	public LevelTilePaneController(ArrayList<LevelController> levelControllerArray) {
-		root = new LevelTilePane(levelControllerArray);
+	public LevelTilePaneController(ArrayList<Level> levelArray) {
+		root = new LevelTilePane(levelArray);
 		tileNodes = root.nodes;
 
 		selectedNode = tileNodes.get(0);
@@ -36,23 +30,21 @@ public class LevelTilePaneController {
 	public void init() {
 		for (TileNode node : tileNodes) {
 			node.setOnMouseClicked(e -> {
-//				tileNodes = root.nodes;
 				if (selectedNode == node) {
 					clearSelection();
 				} else {
 					clearSelection();
 					selectNode(node);
-//					loadLevel();
 				}
 			});
 		}
 
 	}
-	
-	public void addTileNode(LevelController levelController) {
+
+	public void addTileNode(Level level) {
 		root.oddTile = !root.oddTile;
 
-		TileNode tileNode = new TileNode(levelController, root.nodeWidth, root.nodeHeight);
+		TileNode tileNode = new TileNode(level, root.nodeWidth, root.nodeHeight);
 
 		if (root.oddTile) {
 			tileNode.getImagePane().getStyleClass().add("oddTile");
@@ -63,46 +55,25 @@ public class LevelTilePaneController {
 		tileNode.getStyleClass().add("tileNode");
 		tileNodes.add(tileNode);
 		root.tilePane.getChildren().add(tileNode);
-		
+
 		tileNode.setOnMouseClicked(e -> {
-//			tileNodes = root.nodes;
 			if (selectedNode == tileNode) {
 				clearSelection();
 			} else {
 				clearSelection();
 				selectNode(tileNode);
-//				loadLevel();
 			}
 		});
-	}
-
-	public void loadLevel() {
-		LevelController selectedLevelController = selectedNode.getLevelController();
-		Level newLevel = selectedLevelController.getRoot();
-
-//		newLevel.setLayoutY(-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-//		playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
-//		playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-//		playerController.setLevel(newLevel);
-//		
-//		if (newLevel.getChildren().contains(playerController.getPlayer()))
-//			newLevel.getChildren().removeAll(playerController.getPlayer());
-//		
-//		newLevel.getChildren().addAll(playerController.getPlayer());
-		selectedLevelController.resetPlayer();
-		root.getScene().setRoot(newLevel);
 	}
 
 	public void clearSelection() {
 		if (selectedNode == null)
 			return;
-//		selectedNode.getImagePane().getStyleClass().remove("selected");
 		selectedNode.getStyleClass().remove("selected");
 		selectedNode = null;
 	}
 
 	public void selectNode(TileNode node) {
-//		node.getImagePane().getStyleClass().add("selected");
 		node.getStyleClass().add("selected");
 		selectedNode = node;
 	}
