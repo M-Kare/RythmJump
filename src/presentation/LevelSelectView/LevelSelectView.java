@@ -3,6 +3,8 @@ package presentation.LevelSelectView;
 import java.util.ArrayList;
 
 import Level.Level;
+import Level.LevelController;
+import Player.Player;
 import Player.PlayerController;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -23,7 +25,6 @@ public class LevelSelectView extends BorderPane{
 	
 	private Label menuText;
 	protected Button selectButton;
-	private Node playerSkin;
 	
 	private VBox leftBox;
 	private VBox rightBox;
@@ -31,11 +32,10 @@ public class LevelSelectView extends BorderPane{
 	private HBox bottomBox;
 	
 	
-	public LevelSelectView(ArrayList<Level> levelArray , PlayerController playerController) {
-		levelTilePaneController = new LevelTilePaneController(levelArray, playerController);
+	public LevelSelectView(ArrayList<LevelController> levelControllerArray) {
+		levelTilePaneController = new LevelTilePaneController(levelControllerArray);
 		levelTilePane = levelTilePaneController.getRoot();
 		levelBox = new HBox(levelTilePane);
-		playerSkin =  clonePlayerSkin(playerController.getPlayer());
 		
 		menuText = new Label("Level Select");
 		menuText.getStyleClass().add("menuTitle");
@@ -44,7 +44,7 @@ public class LevelSelectView extends BorderPane{
 		selectButton.setId("levelSelectButton");
 		
 		rightBox = new VBox();
-		rightBox.getChildren().addAll(playerSkin, selectButton);
+		rightBox.getChildren().addAll(new Player(), selectButton);
 		rightBox.setAlignment(Pos.BOTTOM_LEFT);
 		rightBox.setSpacing(100);
 		rightBox.setPrefWidth(400);
@@ -69,10 +69,5 @@ public class LevelSelectView extends BorderPane{
 		this.setTop(topBox);
 		this.setBottom(bottomBox);
 		this.setCenter(levelBox);
-	}
-	
-	public Rectangle clonePlayerSkin(Rectangle playerSkin) {
-		Rectangle rect = new Rectangle(playerSkin.getWidth() * 5, playerSkin.getHeight() * 5, playerSkin.getFill());
-		return rect;
 	}
 }

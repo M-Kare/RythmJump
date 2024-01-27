@@ -14,6 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import presentation.LevelSelectView.LevelSelectView;
+import presentation.endview.TheEnd;
+import presentation.endview.TheEndController;
 
 public class PlayerController {
 
@@ -22,6 +25,7 @@ public class PlayerController {
 
 	private Level level;
 	private ArrayList<Node> obstacles;
+	private ArrayList<Node> winArea;
 
 	private BeatDetect beat;
 	private boolean onBeat;
@@ -40,6 +44,7 @@ public class PlayerController {
 
 		this.level = level;
 		this.obstacles = level.getObstacles();
+		this.winArea = level.getWinArea();
 		keybindsPlayer = new HashMap<>();
 
 		counter = 0;
@@ -147,6 +152,13 @@ public class PlayerController {
 //					counter = 0;
 //					System.out.println(onBeat);
 //				}
+				
+				for(Node win : winArea) {
+					if (player.getBoundsInParent().intersects(win.getBoundsInParent())) {
+						
+						player.getScene().setRoot(null);
+					}
+				}
 
 				/**
 				 * JUMPING

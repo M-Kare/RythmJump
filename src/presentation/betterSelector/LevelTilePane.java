@@ -3,6 +3,7 @@ package presentation.betterSelector;
 import java.util.ArrayList;
 
 import Level.Level;
+import Level.LevelController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -14,14 +15,14 @@ public class LevelTilePane extends ScrollPane {
 	
 	protected TilePane tilePane;
 
-	private ArrayList<Level> levelArray;
+	private ArrayList<LevelController> levelControllerArray;
 	protected ArrayList<TileNode> nodes;
 	SimpleObjectProperty<TileNode>[] no;
 	protected boolean oddTile = true;
 
-	public LevelTilePane(ArrayList<Level> levelArray, int nodeWidth, int nodeHeight) {
+	public LevelTilePane(ArrayList<LevelController> levelControllerArray, int nodeWidth, int nodeHeight) {
 		super();
-		this.levelArray = levelArray;
+		this.levelControllerArray = levelControllerArray;
 		nodes = new ArrayList<>();
 
 		tilePane = new TilePane();
@@ -34,25 +35,25 @@ public class LevelTilePane extends ScrollPane {
 		this.nodeHeight = nodeHeight;
 		this.nodeWidth = nodeWidth;
 
-		for (Level level : this.levelArray) {
-			addTileNode(level);
+		for (LevelController levelCon : this.levelControllerArray) {
+			addTileNode(levelCon);
 		}
 		
 		this.setContent(tilePane);
 	}
 
-	public LevelTilePane(ArrayList<Level> levelArray) {
-		this(levelArray, 200, 200);
+	public LevelTilePane(ArrayList<LevelController> levelControllerArray) {
+		this(levelControllerArray, 200, 200);
 	}
 
 	public ArrayList<TileNode> getTileNodes() {
 		return nodes;
 	}
 
-	public void addTileNode(Level level) {
+	public void addTileNode(LevelController levelController) {
 		oddTile = !oddTile;
 
-		TileNode tileNode = new TileNode(level, nodeWidth, nodeHeight);
+		TileNode tileNode = new TileNode(levelController, nodeWidth, nodeHeight);
 
 		if (oddTile) {
 			tileNode.getImagePane().getStyleClass().add("oddTile");

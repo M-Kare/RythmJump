@@ -32,16 +32,16 @@ public class Level extends Pane {
 	private int[] playerSpawn;
 	private String levelName;
 
-	private ImageView snapshotView;
-	private Image snapshot;
 	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
+	private ArrayList<Node> winArea;
 
 	public Level(File level) {
 		super();
 		this.levelFile = level;
 		this.obstacles = new ArrayList<>();
+		this.winArea = new ArrayList<>();
 		levelName = level.getName().split(".lvl")[0];
 
 		this.dimensions = getLevelDimensions(levelFile);
@@ -54,6 +54,7 @@ public class Level extends Pane {
 
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
+		this.getChildren().addAll(winArea);
 
 		takeThumbnail();
 	}
@@ -62,6 +63,7 @@ public class Level extends Pane {
 		super();
 		this.dimensions = new int[2];
 		this.obstacles = new ArrayList<>();
+		this.winArea = new ArrayList<>();
 		this.levelName = levelName;
 
 		this.dimensions[Dimensions.X.getIndex()] = levelArray[0].length;
@@ -74,12 +76,15 @@ public class Level extends Pane {
 
 		playerSpawn = new int[2];
 
-		this.setBackground(new Background(new BackgroundFill(Color.AQUA, new CornerRadii(0), new Insets(0))));
-
 		addChildren(this.levelArray);
 		this.getChildren().addAll(obstacles);
+		this.getChildren().addAll(winArea);
 
 		takeThumbnail();
+	}
+	
+	public ArrayList<Node> getWinArea(){
+		return winArea;
 	}
 
 	public Image getThumbnail() {
@@ -209,6 +214,12 @@ public class Level extends Pane {
 				case Config.PLAYER:
 					playerSpawn[Dimensions.X.getIndex()] = x * Config.BLOCK_SIZE;
 					playerSpawn[Dimensions.Y.getIndex()] = (y - 2) * Config.BLOCK_SIZE;
+					break;
+				case Config.WIN:
+					Node newWin = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.GOLD);
+					newWin.setTranslateX(x * Config.BLOCK_SIZE);
+					newWin.setTranslateY(y * Config.BLOCK_SIZE);
+					winArea.add(newWin);
 					break;
 				}
 			}

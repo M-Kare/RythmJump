@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Application.Config;
 import Application.Dimensions;
 import Level.Level;
+import Level.LevelController;
 import Player.PlayerController;
 
 public class LevelTilePaneController {
@@ -13,15 +14,13 @@ public class LevelTilePaneController {
 	private ArrayList<TileNode> tileNodes;
 	private TileNode selectedNode;
 
-	private PlayerController playerController;
+//	private PlayerController playerController;
 
-	public LevelTilePaneController(ArrayList<Level> levelArray, PlayerController playerController) {
-		root = new LevelTilePane(levelArray);
+	public LevelTilePaneController(ArrayList<LevelController> levelControllerArray) {
+		root = new LevelTilePane(levelControllerArray);
 		tileNodes = root.nodes;
 
 		selectedNode = tileNodes.get(0);
-
-		this.playerController = playerController;
 
 		init();
 	}
@@ -50,10 +49,10 @@ public class LevelTilePaneController {
 
 	}
 	
-	public void addTileNode(Level level) {
+	public void addTileNode(LevelController levelController) {
 		root.oddTile = !root.oddTile;
 
-		TileNode tileNode = new TileNode(level, root.nodeWidth, root.nodeHeight);
+		TileNode tileNode = new TileNode(levelController, root.nodeWidth, root.nodeHeight);
 
 		if (root.oddTile) {
 			tileNode.getImagePane().getStyleClass().add("oddTile");
@@ -78,17 +77,19 @@ public class LevelTilePaneController {
 	}
 
 	public void loadLevel() {
-		Level newLevel = selectedNode.getLevel();
+		LevelController selectedLevelController = selectedNode.getLevelController();
+		Level newLevel = selectedLevelController.getRoot();
 
-		newLevel.setLayoutY(-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-		playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
-		playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-		playerController.setLevel(newLevel);
-		
-		if (newLevel.getChildren().contains(playerController.getPlayer()))
-			newLevel.getChildren().removeAll(playerController.getPlayer());
-		
-		newLevel.getChildren().addAll(playerController.getPlayer());
+//		newLevel.setLayoutY(-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
+//		playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
+//		playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
+//		playerController.setLevel(newLevel);
+//		
+//		if (newLevel.getChildren().contains(playerController.getPlayer()))
+//			newLevel.getChildren().removeAll(playerController.getPlayer());
+//		
+//		newLevel.getChildren().addAll(playerController.getPlayer());
+		selectedLevelController.resetPlayer();
 		root.getScene().setRoot(newLevel);
 	}
 

@@ -8,6 +8,8 @@ import java.util.Set;
 import Application.Config;
 import Application.Dimensions;
 import Level.Level;
+import Level.LevelController;
+import Player.Player;
 import Player.PlayerController;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -20,18 +22,16 @@ import presentation.betterSelector.TileNode;
 
 public class LevelSelectViewController {
 	private LevelSelectView root;
-	private PlayerController playerController;
-	private ArrayList<Level> levelArray;
+	private ArrayList<LevelController> levelControllerArray;
 
 	private LevelTilePaneController levelTilePaneController;
 	private LevelTilePane levelTilePane;
 
 	private Button selectButton;
 
-	public LevelSelectViewController(ArrayList<Level> levelArray, PlayerController playerController) {
-		root = new LevelSelectView(levelArray, playerController);
-		this.playerController = playerController;
-		this.levelArray = levelArray;
+	public LevelSelectViewController(ArrayList<LevelController> levelControllerArray) {
+		root = new LevelSelectView(levelControllerArray);
+		this.levelControllerArray = levelControllerArray;
 
 		levelTilePaneController = root.levelTilePaneController;
 		levelTilePane = root.levelTilePane;
@@ -50,19 +50,19 @@ public class LevelSelectViewController {
 			if (levelTilePaneController.getSelected() == null)
 				return;
 
-			Level newLevel = levelTilePaneController.getSelected().getLevel();
+			LevelController playLevelController = levelTilePaneController.getSelected().getLevelController();
+			Level newLevel = playLevelController.getRoot();
+//			newLevel.setLayoutY(
+//					-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
+//			playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
+//			playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
+//			playerController.setLevel(newLevel);
 
-			newLevel.setLayoutY(
-					-(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-			playerController.getPlayer().setTranslateX(newLevel.getPlayerSpawn()[Dimensions.X.getIndex()]);
-			playerController.getPlayer().setTranslateY(newLevel.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-			playerController.setLevel(newLevel);
+//			if (newLevel.getChildren().contains(playerController.getPlayer()))
+//				newLevel.getChildren().remove(playerController.getPlayer());
 
-			if (newLevel.getChildren().contains(playerController.getPlayer()))
-				newLevel.getChildren().remove(playerController.getPlayer());
-
-			newLevel.getChildren().add(playerController.getPlayer());
-
+//			newLevel.getChildren().add(playerController.getPlayer());
+			playLevelController.resetPlayer();
 			root.getScene().setRoot(newLevel);
 		});
 		
@@ -100,7 +100,7 @@ public class LevelSelectViewController {
 
 				List<File> files = dragboard.getFiles();
 				for (File file : files) {
-					levelTilePaneController.addTileNode(new Level(file));
+					levelTilePaneController.addTileNode(new LevelController(null, new Player(), file));
 				}
 				event.setDropCompleted(true);
 

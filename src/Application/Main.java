@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Level.Level;
+import Level.LevelController;
 import Level.LevelGenerator;
 import Player.Player;
 import Player.PlayerController;
@@ -32,9 +33,10 @@ public class Main extends Application {
 
 	private Scene scene;
 
-	private PlayerController playerController;
-//	private Player player;
+//	private PlayerController playerController;
+	private Player player;
 
+	private LevelController levelController;
 	private Level level;
 
 	private SimpleMinim minim;
@@ -48,25 +50,24 @@ public class Main extends Application {
 	private TheEnd theEnd;
 	private TheEndController theEndController;
 	
-//	private LevelTilePaneController levelTilePaneController;
-//	private LevelTilePane levelTilePane;
-//	private HBox levelSelectBox;
-	
-	private ArrayList<Level> levelArray;
+	private ArrayList<LevelController> levelControllerArray;
+	private HashMap<KeyCode, Boolean> keybinds;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		levelArray = new ArrayList<>();
+		keybinds = new HashMap<>();
+		player = new Player();
+		levelControllerArray = new ArrayList<>();
 //		initBeat();
 
 		initLevel();
 		
-		level = levelArray.get(levelArray.size() - 1);
+		level = levelControllerArray.get(levelControllerArray.size() - 1).getRoot();
 
-		playerController = new PlayerController(level, audioPlayerSilent, beat);
+//		playerController = new PlayerController(level, audioPlayerSilent, beat);
 //		player = playerController.getPlayer();
 		
-		levelSelectViewController = new LevelSelectViewController(levelArray, playerController);
+		levelSelectViewController = new LevelSelectViewController(levelControllerArray);
 		levelSelectView = levelSelectViewController.getRoot();
 		
 //		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
@@ -105,13 +106,13 @@ public class Main extends Application {
 	 * Sucht alle .lvl Dateien im Projekt und fügt sie einer HashMap hinzu
 	 */
 	public void initLevel() {
-		Level tempLevel;
+		LevelController tempLevel;
 		for (File levelFile : findFilesBySuffix(Config.LEVEL_SUFFIX, ".")) {
-			tempLevel = new Level(levelFile);
+			tempLevel = new LevelController(keybinds, player, levelFile);
 			System.out.println(levelFile.getName());
-			levelArray.add(tempLevel);
+			levelControllerArray.add(tempLevel);
 		}
-		levelArray.add(new Level(new LevelGenerator(800, 18).getLevelArray(), "Random Level"));
+		levelControllerArray.add(new LevelController(keybinds, player, new LevelGenerator(20, 18).getLevelArray(), "Random Level"));
 	}
 
 	/**
@@ -200,12 +201,26 @@ public class Main extends Application {
 
 	public void init(Scene scene) {
 		/**
+		 * KEYBINDS Verwendete Knöpfe
+		 */
+		keybinds.put(KeyCode.UP, false);
+		keybinds.put(KeyCode.W, false);
+		keybinds.put(KeyCode.DOWN, false);
+		keybinds.put(KeyCode.S, false);
+		keybinds.put(KeyCode.RIGHT, false);
+		keybinds.put(KeyCode.D, false);
+		keybinds.put(KeyCode.LEFT, false);
+		keybinds.put(KeyCode.A, false);
+		keybinds.put(KeyCode.SPACE, false);
+		keybinds.put(KeyCode.R, false);
+		
+		/**
 		 * PRESSED aktualisiert, dass der Knopf gedrückt wird
 		 */
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				playerController.getKeybinds().put(event.getCode(), true);
+				keybinds.put(event.getCode(), true);
 				if(event.getCode() == KeyCode.ESCAPE) {
 					scene.setRoot(levelSelectView);
 				}
@@ -218,7 +233,7 @@ public class Main extends Application {
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				playerController.getKeybinds().put(event.getCode(), false);
+				keybinds.put(event.getCode(), false);
 			}
 		});
 	}
