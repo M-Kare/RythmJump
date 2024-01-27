@@ -6,87 +6,52 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Level.Level;
-import Level.LevelController;
 import Level.LevelGenerator;
-import Player.Player;
-import Player.PlayerController;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
-import presentation.LevelSelect_depricated.LevelListView;
-import presentation.LevelSelect_depricated.LevelListViewController;
-import presentation.betterSelector.LevelTilePane;
-import presentation.betterSelector.LevelTilePaneController;
-import presentation.endview.TheEnd;
-import presentation.endview.TheEndController;
 
 public class Main extends Application {
 
 	private Scene scene;
 
-//	private PlayerController playerController;
-	private Player player;
-
-	private LevelController levelController;
-	private Level level;
-
 	private SimpleMinim minim;
 	private AudioPlayer audioPlayer;
 	private AudioPlayer audioPlayerSilent;
 	private BeatDetect beat;
-	
+
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
-	
-	private TheEnd theEnd;
-	private TheEndController theEndController;
-	
+
 	private ArrayList<Level> levelArray;
-	private HashMap<KeyCode, Boolean> keybinds;
+	
+	private HashMap<KeyCode, SimpleBooleanProperty> keybinds;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		keybinds = new HashMap<>();
-		player = new Player();
 		levelArray = new ArrayList<>();
 //		initBeat();
 
 		new LevelGenerator(20, 18);
 		initLevel();
-		
-		level = levelArray.get(levelArray.size() - 1);
 
-//		playerController = new PlayerController(level, audioPlayerSilent, beat);
-//		player = playerController.getPlayer();
-		
-		levelSelectViewController = new LevelSelectViewController(levelArray, keybinds);
+		levelSelectViewController = new LevelSelectViewController(levelArray);
 		levelSelectView = levelSelectViewController.getRoot();
-		
-//		levelTilePaneController = new LevelTilePaneController(new ArrayList<Level>(levelMap.values()), playerController);
-//		levelTilePane = levelTilePaneController.getRoot();
-//		levelSelectBox = new HBox(levelTilePane);
-		
-		theEndController = new TheEndController(levelSelectView);
-		theEnd = theEndController.getRoot();
-		
+
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
 		scene = new Scene(levelSelectView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+		levelSelectView.requestFocus();
 		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-//		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-//		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
-//		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-//		level.getChildren().add(player);
 
 		/**
 		 * STAGE Stage wird gesetzt
@@ -95,8 +60,6 @@ public class Main extends Application {
 		primaryStage.setTitle("RythmJump");
 //		primaryStage.setResizable(false);
 		primaryStage.show();
-
-		init(scene);
 	}
 
 	public static void main(String[] args) {
@@ -197,45 +160,5 @@ public class Main extends Application {
 			}
 		}
 		return foundFiles;
-	}
-
-	public void init(Scene scene) {
-		/**
-		 * KEYBINDS Verwendete Knöpfe
-		 */
-		keybinds.put(KeyCode.UP, false);
-		keybinds.put(KeyCode.W, false);
-		keybinds.put(KeyCode.DOWN, false);
-		keybinds.put(KeyCode.S, false);
-		keybinds.put(KeyCode.RIGHT, false);
-		keybinds.put(KeyCode.D, false);
-		keybinds.put(KeyCode.LEFT, false);
-		keybinds.put(KeyCode.A, false);
-		keybinds.put(KeyCode.SPACE, false);
-		keybinds.put(KeyCode.R, false);
-		
-		/**
-		 * PRESSED aktualisiert, dass der Knopf gedrückt wird
-		 */
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				keybinds.put(event.getCode(), true);
-				
-				if(event.getCode() == KeyCode.ESCAPE) {
-					scene.setRoot(levelSelectView);
-				}
-			}
-		});
-
-		/**
-		 * UNPRESSED aktualisiert, dass der Knopf nicht mehr gedrückt wird
-		 */
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				keybinds.put(event.getCode(), false);
-			}
-		});
 	}
 }

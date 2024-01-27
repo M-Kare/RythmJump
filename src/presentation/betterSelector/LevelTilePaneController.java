@@ -14,7 +14,7 @@ public class LevelTilePaneController {
 		root = new LevelTilePane(levelArray);
 		tileNodes = root.nodes;
 
-		selectedNode = tileNodes.get(0);
+		selectedNode = null;
 
 		init();
 	}
@@ -39,6 +39,34 @@ public class LevelTilePaneController {
 			});
 		}
 
+	}
+
+	public TileNode nextSelected() {
+		int index;
+		if (selectedNode == null) {
+			index = 0;
+		} else {
+			index = tileNodes.indexOf(selectedNode) + 1;
+			if (index >= tileNodes.size()) {
+				index = 0;
+			}
+		}
+		clearSelection();
+		return selectNode(tileNodes.get(index));
+	}
+
+	public TileNode prevSelected() {
+		int index;
+		if (selectedNode == null) {
+			index = 0;
+		} else {
+			index = tileNodes.indexOf(selectedNode) - 1;
+			if (index < 0) {
+				index = tileNodes.size() - 1;
+			}
+		}
+		clearSelection();
+		return selectNode(tileNodes.get(index));
 	}
 
 	public void addTileNode(Level level) {
@@ -73,8 +101,9 @@ public class LevelTilePaneController {
 		selectedNode = null;
 	}
 
-	public void selectNode(TileNode node) {
+	public TileNode selectNode(TileNode node) {
 		node.getStyleClass().add("selected");
 		selectedNode = node;
+		return selectedNode;
 	}
 }

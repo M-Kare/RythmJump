@@ -13,6 +13,7 @@ import Level.LevelController;
 import Player.Player;
 import Player.PlayerController;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -24,19 +25,14 @@ import presentation.betterSelector.TileNode;
 
 public class LevelSelectViewController {
 	private LevelSelectView root;
-	private ArrayList<Level> levelArray;
 
 	private LevelTilePaneController levelTilePaneController;
 	private LevelTilePane levelTilePane;
 
-	private HashMap<KeyCode, Boolean> keybinds;
 	private Button selectButton;
 
-	public LevelSelectViewController(ArrayList<Level> levelArray, HashMap<KeyCode, Boolean> keybinds) {
+	public LevelSelectViewController(ArrayList<Level> levelArray) {
 		root = new LevelSelectView(levelArray);
-		this.levelArray = levelArray;
-		
-		this.keybinds = keybinds;
 
 		levelTilePaneController = root.levelTilePaneController;
 		levelTilePane = root.levelTilePane;
@@ -51,17 +47,68 @@ public class LevelSelectViewController {
 	}
 
 	public void init() {
+		root.setOnKeyPressed(e -> {
+			Level selectedLevel;
+			LevelController selectedLevelController;
+
+			switch (e.getCode()) {
+			case LEFT:
+				levelTilePaneController.prevSelected();
+				break;
+			case A:
+				levelTilePaneController.prevSelected();
+				break;
+			case UP:
+				levelTilePaneController.prevSelected();
+				break;
+			case W:
+				levelTilePaneController.prevSelected();					
+				break;
+			case RIGHT:
+				levelTilePaneController.nextSelected();
+				break;
+			case D:
+				levelTilePaneController.nextSelected();
+				break;
+			case DOWN:
+				levelTilePaneController.nextSelected();
+				break;
+			case S:
+				levelTilePaneController.nextSelected();
+				break;
+			case ENTER:
+				selectedLevel = levelTilePaneController.getSelected().getLevel();
+				selectedLevelController = new LevelController(selectedLevel.getFile(), root);
+
+				selectedLevelController.resetPlayer();
+				root.getScene().setRoot(selectedLevelController.getRoot());
+				selectedLevelController.getRoot().requestFocus();
+				break;
+			case SPACE:
+				selectedLevel = levelTilePaneController.getSelected().getLevel();
+				selectedLevelController = new LevelController(selectedLevel.getFile(), root);
+
+				selectedLevelController.resetPlayer();
+				root.getScene().setRoot(selectedLevelController.getRoot());
+				selectedLevelController.getRoot().requestFocus();
+				break;
+			case ESCAPE:
+//				root.getScene().setRoot();	Home
+			}
+		});
+
 		selectButton.setOnMouseClicked(e -> {
 			if (levelTilePaneController.getSelected() == null)
 				return;
 
 			Level selectedLevel = levelTilePaneController.getSelected().getLevel();
-			LevelController selectedLevelController = new LevelController(keybinds, new Player(), selectedLevel.getFile());
-			
+			LevelController selectedLevelController = new LevelController(selectedLevel.getFile(), root);
+
 			selectedLevelController.resetPlayer();
 			root.getScene().setRoot(selectedLevelController.getRoot());
+			selectedLevelController.getRoot().requestFocus();
 		});
-		
+
 		levelTilePane.setOnDragOver(new EventHandler<DragEvent>() {
 			public void handle(DragEvent event) {
 				boolean dropSupported = true;
@@ -77,12 +124,12 @@ public class LevelSelectViewController {
 				for (TransferMode mode : modes) {
 					copySupported = copySupported || TransferMode.COPY == mode;
 				}
-				
+
 				for (File file : dragboard.getFiles()) {
 					if (!file.getName().contains(".lvl"))
 						dropSupported = false;
 				}
-				
+
 				if (copySupported && dropSupported)
 					event.acceptTransferModes(TransferMode.COPY);
 				event.consume();

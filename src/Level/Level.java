@@ -22,6 +22,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
+import presentation.endview.TheEnd;
+import presentation.endview.TheEndController;
 
 public class Level extends Pane {
 	private int[] dimensions;
@@ -32,6 +34,9 @@ public class Level extends Pane {
 	private int[] playerSpawn;
 	private String levelName;
 
+	private int jumpCount;
+	private int deathCount;
+
 	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
@@ -39,10 +44,14 @@ public class Level extends Pane {
 
 	public Level(File level) {
 		super();
+		this.setFocusTraversable(true);;
 		this.levelFile = level;
 		this.obstacles = new ArrayList<>();
 		this.winArea = new ArrayList<>();
 		levelName = level.getName().split(".lvl")[0];
+
+		jumpCount = 0;
+		deathCount = 0;
 
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
@@ -59,36 +68,36 @@ public class Level extends Pane {
 		takeThumbnail();
 	}
 
-	public Level(char[][] levelArray, String levelName) {
-		super();
-		this.dimensions = new int[2];
-		this.obstacles = new ArrayList<>();
-		this.winArea = new ArrayList<>();
-		this.levelName = levelName;
-
-		this.dimensions[Dimensions.X.getIndex()] = levelArray[0].length;
-		this.dimensions[Dimensions.Y.getIndex()] = levelArray.length;
-
-		this.levelArray = levelArray;
-
-		levelLength = dimensions[Dimensions.X.getIndex()] * Config.BLOCK_SIZE;
-		levelHeight = dimensions[Dimensions.Y.getIndex()] * Config.BLOCK_SIZE;
-
-		playerSpawn = new int[2];
-
-		addChildren(this.levelArray);
-		this.getChildren().addAll(obstacles);
-		this.getChildren().addAll(winArea);
-
-		takeThumbnail();
-	}
-	
-	public ArrayList<Node> getWinArea(){
+	public ArrayList<Node> getWinArea() {
 		return winArea;
 	}
-	
+
 	public File getFile() {
 		return levelFile;
+	}
+
+	public int getJumpCount() {
+		return jumpCount;
+	}
+
+	public int getDeathCount() {
+		return deathCount;
+	}
+
+	public void setDeathCount(int count) {
+		deathCount = count;
+	}
+
+	public void addDeathCount(int value) {
+		deathCount += value;
+	}
+
+	public void setJumpCount(int count) {
+		jumpCount = count;
+	}
+
+	public void addJumpCount(int value) {
+		jumpCount += value;
 	}
 
 	public Image getThumbnail() {

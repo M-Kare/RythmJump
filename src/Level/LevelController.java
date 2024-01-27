@@ -8,53 +8,63 @@ import Application.Config;
 import Application.Dimensions;
 import Player.Player;
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import presentation.LevelSelectView.LevelSelectView;
+import presentation.endview.TheEnd;
+import presentation.endview.TheEndController;
 
 public class LevelController {
-
 	private Level level;
+	private LevelSelectView levelSelectView;
 
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> obstacles;
 
 	private Player player;
 
-	private HashMap<KeyCode, Boolean> levelKeybinds;
+	private HashMap<KeyCode, Boolean> keybinds;
 
-	public LevelController(HashMap<KeyCode, Boolean> keybinds, Player player, File level) {
-		this.levelKeybinds = keybinds;
+	private TheEndController theEndController;
+	private TheEnd theEndScreen;
+
+	private SimpleBooleanProperty won;
+
+	public LevelController(File level, LevelSelectView levelSelectView) {
+		this.levelSelectView = levelSelectView;
+		this.keybinds = new HashMap<>();
 
 		this.level = new Level(level);
 
 		winArea = new ArrayList<>(this.level.getWinArea());
 		obstacles = new ArrayList<>(this.level.getObstacles());
 
-		this.player = player;
+		this.player = new Player();
 //		this.level.getChildren().add(player);
+
+		theEndController = new TheEndController(levelSelectView, this.level);
+		theEndScreen = theEndController.getRoot();
+
+		won = new SimpleBooleanProperty(false);
 
 		init();
 	}
 
-	public LevelController(HashMap<KeyCode, Boolean> keybinds, Player player, char[][] levelArray, String levelName) {
-		this.levelKeybinds = keybinds;
-
-		this.level = new Level(levelArray, levelName);
-
-		winArea = new ArrayList<>(this.level.getWinArea());
-		obstacles = new ArrayList<>(this.level.getObstacles());
-
-		this.player = player;
-
-		init();
+	public LevelController(Level level, LevelSelectView levelSelectView) {
+		this(level.getFile(), levelSelectView);
 	}
 
 	public Level getRoot() {
 		return level;
 	}
-	
-	public HashMap<KeyCode, Boolean> getKeybinds(){
-		return levelKeybinds;
+
+	public HashMap<KeyCode, Boolean> getKeybinds() {
+		return keybinds;
 	}
 
 	public Player getPlayer() {
@@ -66,7 +76,7 @@ public class LevelController {
 	}
 
 	public void resetPlayer() {
-		if(!level.getChildren().contains(player))
+		if (!level.getChildren().contains(player))
 			level.getChildren().add(player);
 //		level.getChildren().add(player);
 		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
@@ -76,19 +86,70 @@ public class LevelController {
 
 	public void init() {
 		/**
+		 * KEYBINDS Verwendete Knöpfe
+		 */
+		keybinds.put(KeyCode.UP, false);
+		keybinds.put(KeyCode.W, false);
+		keybinds.put(KeyCode.DOWN, false);
+		keybinds.put(KeyCode.S, false);
+		keybinds.put(KeyCode.RIGHT, false);
+		keybinds.put(KeyCode.D, false);
+		keybinds.put(KeyCode.LEFT, false);
+		keybinds.put(KeyCode.A, false);
+		keybinds.put(KeyCode.SPACE, false);
+		keybinds.put(KeyCode.R, false);
+
+		/**
+		 * PRESSED aktualisiert, dass der Knopf gedrückt wird
+		 */
+		level.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				keybinds.put(event.getCode(), true);
+
+				if (event.getCode() == KeyCode.ESCAPE) {
+					level.getScene().setRoot(levelSelectView);
+					levelSelectView.requestFocus();
+				}
+			}
+		});
+
+		/**
+		 * UNPRESSED aktualisiert, dass der Knopf nicht mehr gedrückt wird
+		 */
+		level.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				keybinds.put(event.getCode(), false);
+			}
+		});
+
+		/**
 		 * SET_LAYOUT Damit die "Kamera" dem Spieler folgt
 		 */
 		player.translateXProperty().addListener((obs, oldValue, newValue) -> {
-			int playerPosX = newValue.intValue();
-			if (playerPosX > Config.WINDOW_WIDTH / 3
-					&& playerPosX < level.getLevelLength() - Config.WINDOW_WIDTH / 100 * 66) {
-				level.setLayoutX(-(playerPosX - Config.WINDOW_WIDTH / 3));
+			if (!won.get()) {
+				int playerPosX = newValue.intValue();
+				if (playerPosX > Config.WINDOW_WIDTH / 3
+						&& playerPosX < level.getLevelLength() - Config.WINDOW_WIDTH / 100 * 66) {
+					level.setLayoutX(-(playerPosX - Config.WINDOW_WIDTH / 3));
+				}
 			}
 		});
 		player.translateYProperty().addListener((obs, oldValue, newValue) -> {
-			int playerPosY = newValue.intValue();
-			if (playerPosY > 0 && playerPosY < level.getLevelHeight() - (Config.WINDOW_HEIGHT / 100 * 55)) {
-				level.setLayoutY(-(playerPosY - (Config.WINDOW_HEIGHT / 2)));
+			if (!won.get()) {
+				int playerPosY = newValue.intValue();
+				if (playerPosY > 0 && playerPosY < level.getLevelHeight() - (Config.WINDOW_HEIGHT / 100 * 55)) {
+					level.setLayoutY(-(playerPosY - (Config.WINDOW_HEIGHT / 2)));
+				}
+			}
+		});
+
+		won.addListener(e -> {
+			if (won.get()) {
+				theEndScreen.setJumps(level.getJumpCount());
+				level.getScene().setRoot(theEndScreen);
+				theEndScreen.requestFocus();
 			}
 		});
 
@@ -117,22 +178,21 @@ public class LevelController {
 
 				for (Node win : winArea) {
 					if (player.getBoundsInParent().intersects(win.getBoundsInParent())) {
-						System.out.println(level.getLevelName());
-//						level.getScene().setRoot(null);
+						won.set(true);
 					}
 				}
 
 				/**
 				 * JUMPING
 				 */
-				if (levelKeybinds.get(KeyCode.SPACE) || levelKeybinds.get(KeyCode.W) || levelKeybinds.get(KeyCode.UP)) {
+				if (keybinds.get(KeyCode.SPACE) || keybinds.get(KeyCode.W) || keybinds.get(KeyCode.UP)) {
 					jump();
 				}
 
 				/**
 				 * RESPAWN
 				 */
-				if (levelKeybinds.get(KeyCode.R)) {
+				if (keybinds.get(KeyCode.R)) {
 					player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
 					player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
 					level.setLayoutX(-(level.getPlayerSpawn()[Dimensions.X.getIndex()] - (Config.BLOCK_SIZE * 2)));
@@ -143,7 +203,7 @@ public class LevelController {
 				/**
 				 * MOVING X Seitliches Bewegen
 				 */
-				if ((levelKeybinds.get(KeyCode.RIGHT) || levelKeybinds.get(KeyCode.D))
+				if ((keybinds.get(KeyCode.RIGHT) || keybinds.get(KeyCode.D))
 				/*
 				 * && player.getTranslateX() + Config.PLAYER_SIZE <= level.getLevelLength() - 5
 				 */) {
@@ -152,7 +212,7 @@ public class LevelController {
 					}
 					movePlayerX(Config.PLAYER_SPEED);
 				}
-				if ((levelKeybinds.get(KeyCode.LEFT) || levelKeybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
+				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
 					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
 						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getWidth());
 					}
@@ -167,9 +227,7 @@ public class LevelController {
 				} else if (player.getVelocity() < Config.MAX_GRAVITY) {
 					player.addVelocity(1);
 				}
-				if (player.getTranslateY() + (Config.PLAYER_SIZE * 2) <= level.getLevelHeight() - 5) {
-					movePlayerY((int) player.getVelocity());
-				}
+				movePlayerY((int) player.getVelocity());
 			}
 		};
 		timer.start();
@@ -182,6 +240,7 @@ public class LevelController {
 		if (player.getJumpable() /* && onBeat */) {
 			player.setVelocity(-Config.JUMP_HEIGHT);
 			player.setJumpable(false);
+			level.addJumpCount(1);
 		}
 //		} else if (player.getJumpable()) {
 //			player.setVelocity(-Config.JUMP_HEIGHT / 5);
@@ -201,16 +260,11 @@ public class LevelController {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
 					if (movingRight) {
-						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
-							player.setTranslateX(player.getTranslateX() - 1);
-							return;
-						}
-
+						player.setTranslateX(player.getTranslateX() - 1);
+						return;
 					} else {
-						if (player.getTranslateX() == obstacle.getTranslateX() + Config.BLOCK_SIZE) {
-							player.setTranslateX(player.getTranslateX() + 1);
-							return;
-						}
+						player.setTranslateX(player.getTranslateX() + 1);
+						return;
 					}
 				}
 			}
@@ -230,22 +284,16 @@ public class LevelController {
 		for (int i = 0; i < Math.abs(value); i++) {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
-				/*
-				 * || player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5
-				 */) {
+						|| player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5) {
 					if (movingDown) {
-						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
-							player.setTranslateY(player.getTranslateY() - 1);
-							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
-							player.setJumpable(true);
-							return;
-						}
+						player.setTranslateY(player.getTranslateY() - 1);
+						player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
+						player.setJumpable(true);
+						return;
 					} else {
-						if (player.getTranslateY() == obstacle.getTranslateY() + Config.BLOCK_SIZE) {
-							player.setTranslateY(player.getTranslateY() + 1);
-							player.addVelocity(2);
-							return;
-						}
+						player.setTranslateY(player.getTranslateY() + 1);
+						player.addVelocity(2);
+						return;
 					}
 				}
 			}

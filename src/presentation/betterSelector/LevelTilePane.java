@@ -38,7 +38,6 @@ public class LevelTilePane extends ScrollPane {
 		for (Level level : this.levelArray) {
 			addTileNode(level);
 		}
-		
 		this.setContent(tilePane);
 	}
 

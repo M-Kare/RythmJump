@@ -3,48 +3,81 @@ package presentation.endview;
 import Application.Config;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class TheEnd extends StackPane {
-	
-	protected Label label;
+public class TheEnd extends AnchorPane {
+	protected Label title;
+
 	protected VBox middle;
-	protected VBox stats;
 	protected HBox navigation;
 	protected Button home, levelSelect, repeat;
-	
+
+	protected HBox stats;
+	protected VBox leftBox;
+	protected Label jumpText;
+	protected Label jumps;
+	protected VBox rightBox;
+	protected Label deathText;
+	protected Label deaths;
+
 	public TheEnd() {
-		label = new Label("Level Clear");
-		label.setId("clearText");
-		
-		middle = new VBox();
-		stats = new VBox();
-		navigation = new HBox();
-		
+		// stats
+		jumpText = new Label("Jumps:");
+		deathText = new Label("Deaths:");
+		leftBox = new VBox(jumpText, deathText);
+
+		jumps = new Label("0");
+		deaths = new Label("0");
+		rightBox = new VBox(jumps, deaths);
+
+		stats = new HBox(leftBox, rightBox);
+		stats.setSpacing(5);
+
+		this.getChildren().add(stats);
+		this.setTopAnchor(stats, 20.00);
+		this.setRightAnchor(stats, 20.00);
+
+		// Middle-Box
+		title = new Label("Level Clear");
+		title.setId("clearText");
+
 		home = new Button("Home");
 		home.setId("homeButton");
 		levelSelect = new Button("Level Select");
 		levelSelect.setId("levelSelectButton");
 		repeat = new Button("Repeat");
 		repeat.setId("repeatLevelButton");
-		
-		navigation.getChildren().addAll(home, levelSelect, repeat);
-		middle.getChildren().addAll(label, navigation);
-		this.getChildren().addAll(middle);
-		
+
+		navigation = new HBox(home, levelSelect, repeat);
 		navigation.setAlignment(Pos.CENTER);
+
+		middle = new VBox(title, navigation);
 		middle.setAlignment(Pos.CENTER);
 		middle.setSpacing(200);
+
+		this.getChildren().addAll(middle);
+		this.setBottomAnchor(middle, 10.00);
+		this.setTopAnchor(middle, 10.00);
+		this.setRightAnchor(middle, 10.00);
+		this.setLeftAnchor(middle, 10.00);
+
 		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("theEndView");
-	} 
+	}
+	
+	public void setJumps(int value) {
+		jumps.setText(Integer.toString(value));
+	}
+	
+	public void setDeaths(int value) {
+		deaths.setText(Integer.toString(value));
+	}
 
 }
