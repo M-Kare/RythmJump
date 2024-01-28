@@ -17,12 +17,15 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
 
-public class Level extends Pane {
+public class Level extends StackPane {
+	private Pane levelRoot;
 	private int[] dimensions;
 	private char[][] levelArray;
 	private File levelFile;
@@ -42,8 +45,11 @@ public class Level extends Pane {
 
 	private String songPath;
 
+	protected HBox beatBorder;
+
 	public Level(File level, String songPath) {
 		super();
+		levelRoot = new Pane();
 		this.levelFile = level;
 		levelName = level.getName().split(".lvl")[0];
 
@@ -65,16 +71,23 @@ public class Level extends Pane {
 		playerSpawn = new int[2];
 
 		addChildren(levelArray);
-		this.getChildren().addAll(obstacles);
-		this.getChildren().addAll(winArea);
-		this.getChildren().addAll(deathArea);
+		levelRoot.getChildren().addAll(obstacles);
+		levelRoot.getChildren().addAll(winArea);
+		levelRoot.getChildren().addAll(deathArea);
 
 		takeThumbnail();
-		this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+		beatBorder = new HBox();
+		beatBorder.setMinSize(Config.WINDOW_WIDTH - 10, Config.WINDOW_HEIGHT - 10);
+		this.getChildren().addAll(levelRoot, beatBorder);
+		this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 
 	public Level(File level) {
 		this(level, Config.STD_SONG);
+	}
+
+	public Pane getLevelRoot() {
+		return levelRoot;
 	}
 
 	public String getSong() {
@@ -156,7 +169,7 @@ public class Level extends Pane {
 			vpWidth = levelLength * 0.31;
 
 		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
-		thumbnail = this.snapshot(sp, null);
+		thumbnail = levelRoot.snapshot(sp, null);
 	}
 
 	private char[][] readLevelFromFile(File level) {
