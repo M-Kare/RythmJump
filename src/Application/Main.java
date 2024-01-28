@@ -3,16 +3,22 @@ package Application;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import Level.Level;
+import Level.LevelController;
 import Level.LevelGenerator;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
@@ -30,11 +36,17 @@ public class Main extends Application {
 	private LevelSelectView levelSelectView;
 
 	private ArrayList<Level> levelArray;
+	private ArrayList<String> songs;
+
+	boolean onBeat = false;
+	int counter = 0;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		levelArray = new ArrayList<>();
-//		initBeat();
+		songs = new ArrayList<>();
+
+		initSongs();
 
 		new LevelGenerator(500, 18);
 		initLevel();
@@ -45,6 +57,7 @@ public class Main extends Application {
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
+
 		scene = new Scene(levelSelectView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		levelSelectView.requestFocus();
 		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
@@ -56,6 +69,7 @@ public class Main extends Application {
 		primaryStage.setTitle("RythmJump");
 //		primaryStage.setResizable(false);
 		primaryStage.show();
+
 	}
 
 	public static void main(String[] args) {
@@ -67,32 +81,13 @@ public class Main extends Application {
 	 */
 	public void initLevel() {
 		Level tempLevel;
+		int randomSongIndex;
 		for (File levelFile : findFilesBySuffix(Config.LEVEL_SUFFIX, ".")) {
-			tempLevel = new Level(levelFile);
+			randomSongIndex = getRandomNumber(0, songs.size() - 1);
+			tempLevel = new Level(levelFile, songs.get(randomSongIndex));
 			System.out.println(levelFile.getName());
 			levelArray.add(tempLevel);
 		}
-	}
-
-	/**
-	 * Testweise Methode für die Musik und Beat-Erkennung Spielt die Musik und eine
-	 * lautlose Version ab, die versetzt ist, damit der Beat frühzeitig erkannt
-	 * werden kann.
-	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public void initBeat() throws IOException, InterruptedException {
-		minim = new SimpleMinim(true);
-		audioPlayerSilent = minim.loadFile(findFile("60bpm.mp3", ".").getCanonicalPath());
-		audioPlayerSilent.mute();
-		audioPlayer = minim.loadFile(findFile("60bpm.mp3", ".").getCanonicalPath());
-		audioPlayer.setGain(-20);
-		audioPlayerSilent.play(1000 / 10);
-		audioPlayer.play();
-		beat = new BeatDetect();
-		beat.setSensitivity(50);
-		beat.detect(audioPlayerSilent.mix);
 	}
 
 	/**
@@ -127,6 +122,14 @@ public class Main extends Application {
 		return null;
 	}
 
+	public void initSongs() throws IOException {
+		ArrayList<File> songFiles = findFilesBySuffix(".mp3", ".");
+
+		for (File song : songFiles) {
+			songs.add(song.getCanonicalPath());
+		}
+	}
+
 	/**
 	 * Sucht alle Dateien im angegebenen Pfad, die mit dem suffix übereinstimmen und
 	 * packt sie in eine ArrayList
@@ -157,4 +160,9 @@ public class Main extends Application {
 		}
 		return foundFiles;
 	}
+
+	public static int getRandomNumber(int min, int max) {
+		return (int) ((Math.random() * (max - min + 1)) + min);
+	}
+
 }

@@ -1,12 +1,16 @@
 package Level;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import Application.Config;
 import Application.Dimensions;
 import Player.Player;
+import ddf.minim.AudioPlayer;
+import ddf.minim.analysis.BeatDetect;
+import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
@@ -14,7 +18,11 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
@@ -37,12 +45,20 @@ public class LevelController {
 
 	private SimpleBooleanProperty won;
 	private SimpleBooleanProperty dieded;
+	
+	private SimpleMinim minim;
+	private AudioPlayer audioPlayer;
+	private BeatDetect beat;
+	private int frameCounter;
+	
+	private boolean onBeat;
+	
 
-	public LevelController(File level, LevelSelectView levelSelectView) {
+	public LevelController(File level, String songPath, LevelSelectView levelSelectView) {
 		this.levelSelectView = levelSelectView;
 		this.keybinds = new HashMap<>();
 
-		this.level = new Level(level);
+		this.level = new Level(level, songPath);
 
 		winArea = new ArrayList<>(this.level.getWinArea());
 		obstacles = new ArrayList<>(this.level.getObstacles());
@@ -51,17 +67,27 @@ public class LevelController {
 		this.player = new Player();
 //		this.level.getChildren().add(player);
 
-		theEndController = new TheEndController(levelSelectView, this.level);
+		theEndController = new TheEndController(levelSelectView, this);
 		theEndScreen = theEndController.getRoot();
 
 		won = new SimpleBooleanProperty(false);
 		dieded = new SimpleBooleanProperty(false);
+		
+		onBeat = false;
+		
+		minim = new SimpleMinim();
+		audioPlayer = minim.loadFile(songPath);
+		audioPlayer.setGain(-20);
+		beat = new BeatDetect();
+		beat.setSensitivity(300);
+		
+		frameCounter = 0;
 
 		init();
 	}
 
 	public LevelController(Level level, LevelSelectView levelSelectView) {
-		this(level.getFile(), levelSelectView);
+		this(level.getFile(), level.getSong(), levelSelectView);
 	}
 
 	public Level getRoot() {
@@ -74,6 +100,10 @@ public class LevelController {
 	
 	public SimpleBooleanProperty getDieded() {
 		return dieded;
+	}
+	
+	public AudioPlayer getAudioPlayer() {
+		return audioPlayer;
 	}
 
 	public Player getPlayer() {
@@ -89,10 +119,31 @@ public class LevelController {
 			level.getChildren().add(player);
 //		level.getChildren().add(player);
 		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-		level.setLayoutX(0);
+		
+		if(level.getPlayerSpawn()[Dimensions.X.getIndex()] > Config.WINDOW_WIDTH / 3) {
+			level.setLayoutX(-(level.getPlayerSpawn()[Dimensions.X.getIndex()] - (Config.WINDOW_WIDTH / 100 * 13)));
+		} else {
+			level.setLayoutX(0);
+		}
 		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
 		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
 		dieded.set(false);
+	}
+	
+	public void stopMusic() {
+		if(audioPlayer == null)
+			return;
+		audioPlayer.pause();
+		
+		if(minim == null)
+			return;
+		minim.stop();
+	}
+	
+	public void playMusic() {
+		if(audioPlayer == null)
+			return;
+		audioPlayer.play();
 	}
 
 	public void init() {
@@ -121,6 +172,7 @@ public class LevelController {
 				if (event.getCode() == KeyCode.ESCAPE) {
 					level.getScene().setRoot(levelSelectView);
 					levelSelectView.requestFocus();
+					stopMusic();
 				}
 			}
 		});
@@ -169,7 +221,7 @@ public class LevelController {
 		});
 		
 		dieded.addListener(e -> {
-			if(dieded.get()) {
+			if(dieded.get() && !won.get()) {
 				DeathViewController deathViewController = new DeathViewController(this, levelSelectView);
 				level.getScene().setRoot(deathViewController.getRoot());
 				deathViewController.getRoot().requestFocus();
@@ -183,22 +235,20 @@ public class LevelController {
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-//				beat.detect(audioPlayer.mix);
-//				if (beat.isOnset()) {
-//					player.setFill(Color.GREEN);
-//					onBeat = true;
-////					System.out.println(onBeat);
-////					jump();
-//				}
-//				if (onBeat) {
-//					counter++;
-//				}
-//				if (counter > 12) {
-//					player.setFill(Color.RED);
-//					onBeat = false;
-//					counter = 0;
-//					System.out.println(onBeat);
-//				}
+				beat.detect(audioPlayer.mix);
+				if (beat.isOnset()) {
+					level.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, null, BorderStroke.THICK)));
+					onBeat = true;
+//					jump();
+				}
+				if (onBeat) {
+					frameCounter++;
+				}
+				if (frameCounter > 12) {
+					level.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, null, BorderStroke.THICK)));
+					onBeat = false;
+					frameCounter = 0;
+				}
 				
 				for (Node death : deathArea) {
 					if(player.getBoundsInParent().intersects(death.getBoundsInParent())) {
@@ -341,4 +391,5 @@ public class LevelController {
 			counter++;
 		}
 	}
+
 }

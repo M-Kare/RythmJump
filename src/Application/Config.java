@@ -20,5 +20,6 @@ public class Config {
 	public static final int WINDOW_HEIGHT = 800;
 
 	public static final String LEVEL_SUFFIX = ".lvl";
+	public static final String STD_SONG = "./assets/mp3/tombtorial.mp3";
 
 }

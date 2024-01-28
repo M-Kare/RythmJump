@@ -1,6 +1,5 @@
 package presentation.endview;
 
-import Level.Level;
 import Level.LevelController;
 import javafx.scene.control.Button;
 import presentation.LevelSelectView.LevelSelectView;
@@ -13,16 +12,16 @@ public class TheEndController {
 	private Button repeat;
 	private LevelSelectView levelSelectView;
 
-	private Level currentLevel;
+	private LevelController currentLevelController;
 
-	public TheEndController(LevelSelectView levelSelectView, Level currentLevel) {
+	public TheEndController(LevelSelectView levelSelectView, LevelController currentLevelController) {
 		root = new TheEnd();
 		home = root.home;
 		levelSelect = root.levelSelect;
 		repeat = root.repeat;
 		this.levelSelectView = levelSelectView;
 
-		this.currentLevel = currentLevel;
+		this.currentLevelController = currentLevelController;
 
 		init();
 	}
@@ -30,17 +29,21 @@ public class TheEndController {
 	public void init() {
 		home.setOnMouseClicked(e -> {
 			// Ayoub
+			
 		});
 		levelSelect.setOnMouseClicked(e -> {
+			currentLevelController.stopMusic();
 			root.getScene().setRoot(levelSelectView);
 			levelSelectView.requestFocus();
 		});
 
 		repeat.setOnMouseClicked(e -> {
-			LevelController repeatLevelController = new LevelController(currentLevel, levelSelectView);
+			currentLevelController.stopMusic();
+			LevelController repeatLevelController = new LevelController(currentLevelController.getRoot(), levelSelectView);
 			repeatLevelController.resetPlayer();
 			root.getScene().setRoot(repeatLevelController.getRoot());
 			repeatLevelController.getRoot().requestFocus();
+			repeatLevelController.playMusic();
 		});
 	}
 

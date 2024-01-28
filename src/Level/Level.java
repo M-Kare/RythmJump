@@ -14,7 +14,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -22,8 +21,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
-import presentation.endview.TheEnd;
-import presentation.endview.TheEndController;
 
 public class Level extends Pane {
 	private int[] dimensions;
@@ -43,10 +40,14 @@ public class Level extends Pane {
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> deathArea;
 
-	public Level(File level) {
+	private String songPath;
+
+	public Level(File level, String songPath) {
 		super();
 		this.levelFile = level;
 		levelName = level.getName().split(".lvl")[0];
+
+		this.songPath = songPath;
 
 		this.obstacles = new ArrayList<>();
 		this.winArea = new ArrayList<>();
@@ -69,13 +70,22 @@ public class Level extends Pane {
 		this.getChildren().addAll(deathArea);
 
 		takeThumbnail();
+		this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+	}
+
+	public Level(File level) {
+		this(level, Config.STD_SONG);
+	}
+
+	public String getSong() {
+		return songPath;
 	}
 
 	public ArrayList<Node> getWinArea() {
 		return winArea;
 	}
-	
-	public ArrayList<Node> getDeathArea(){
+
+	public ArrayList<Node> getDeathArea() {
 		return deathArea;
 	}
 
@@ -250,10 +260,6 @@ public class Level extends Pane {
 				}
 			}
 		}
-	}
-
-	private void removeChildren() {
-		this.getChildren().clear();
 	}
 
 	public int determineBlockSize(char[][] levelArray, int currentLine, int currentChar, char symbol) {

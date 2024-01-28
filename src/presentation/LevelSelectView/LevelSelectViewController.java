@@ -19,6 +19,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.StackPane;
 import presentation.betterSelector.LevelTilePane;
 import presentation.betterSelector.LevelTilePaneController;
 import presentation.betterSelector.TileNode;
@@ -46,11 +47,19 @@ public class LevelSelectViewController {
 		return root;
 	}
 
+	public void loadLevel() {
+		Level selectedLevel = levelTilePaneController.getSelected().getLevel();
+		LevelController selectedLevelController = new LevelController(selectedLevel, root);
+
+		selectedLevelController.resetPlayer();
+		root.getScene().setRoot(selectedLevelController.getRoot());
+		selectedLevelController.getRoot().requestFocus();
+		
+		selectedLevelController.playMusic();
+	}
+
 	public void init() {
 		root.setOnKeyPressed(e -> {
-			Level selectedLevel;
-			LevelController selectedLevelController;
-
 			switch (e.getCode()) {
 			case LEFT:
 				levelTilePaneController.prevSelected();
@@ -62,7 +71,7 @@ public class LevelSelectViewController {
 				levelTilePaneController.prevSelected();
 				break;
 			case W:
-				levelTilePaneController.prevSelected();					
+				levelTilePaneController.prevSelected();
 				break;
 			case RIGHT:
 				levelTilePaneController.nextSelected();
@@ -77,20 +86,10 @@ public class LevelSelectViewController {
 				levelTilePaneController.nextSelected();
 				break;
 			case ENTER:
-				selectedLevel = levelTilePaneController.getSelected().getLevel();
-				selectedLevelController = new LevelController(selectedLevel.getFile(), root);
-
-				selectedLevelController.resetPlayer();
-				root.getScene().setRoot(selectedLevelController.getRoot());
-				selectedLevelController.getRoot().requestFocus();
+				loadLevel();
 				break;
 			case SPACE:
-				selectedLevel = levelTilePaneController.getSelected().getLevel();
-				selectedLevelController = new LevelController(selectedLevel.getFile(), root);
-
-				selectedLevelController.resetPlayer();
-				root.getScene().setRoot(selectedLevelController.getRoot());
-				selectedLevelController.getRoot().requestFocus();
+				loadLevel();
 				break;
 			case ESCAPE:
 //				root.getScene().setRoot();	Home
@@ -101,12 +100,7 @@ public class LevelSelectViewController {
 			if (levelTilePaneController.getSelected() == null)
 				return;
 
-			Level selectedLevel = levelTilePaneController.getSelected().getLevel();
-			LevelController selectedLevelController = new LevelController(selectedLevel.getFile(), root);
-
-			selectedLevelController.resetPlayer();
-			root.getScene().setRoot(selectedLevelController.getRoot());
-			selectedLevelController.getRoot().requestFocus();
+			loadLevel();
 		});
 
 		levelTilePane.setOnDragOver(new EventHandler<DragEvent>() {
