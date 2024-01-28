@@ -3,6 +3,7 @@ package presentation.betterSelector;
 import java.util.ArrayList;
 
 import Level.Level;
+import javafx.scene.input.MouseEvent;
 
 public class LevelTilePaneController {
 	private LevelTilePane root;
