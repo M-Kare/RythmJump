@@ -63,7 +63,7 @@ public class Main extends Application {
 		 */
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("RythmJump");
-//		primaryStage.setResizable(false);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 
 	}

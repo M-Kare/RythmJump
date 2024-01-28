@@ -89,10 +89,8 @@ public class LevelController {
 		minim = new SimpleMinim(false);
 		silentAudioPlayer = minim.loadFile(Config.STD_SONG);
 		silentAudioPlayer.mute();
-		silentAudioPlayer.loop();
 		audioPlayer = minim.loadFile(songPath);
 		audioPlayer.setGain(-20);
-		audioPlayer.loop();
 		beat = new BeatDetect();
 		beat.setSensitivity(100);
 
@@ -178,7 +176,9 @@ public class LevelController {
 //		musicThread.start();
 //		beatThread.start();	
 		silentAudioPlayer.play(125);
+		silentAudioPlayer.loop();
 		audioPlayer.play();
+		audioPlayer.loop();
 	}
 
 	public void init() {
