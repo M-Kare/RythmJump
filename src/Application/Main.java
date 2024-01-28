@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import Level.Level;
 import Level.LevelController;
 import Level.LevelGenerator;
+import Player.Player;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
@@ -26,11 +27,6 @@ import presentation.LevelSelectView.LevelSelectViewController;
 public class Main extends Application {
 
 	private Scene scene;
-
-	private SimpleMinim minim;
-	private AudioPlayer audioPlayer;
-	private AudioPlayer audioPlayerSilent;
-	private BeatDetect beat;
 
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
@@ -123,8 +119,8 @@ public class Main extends Application {
 	}
 
 	public void initSongs() throws IOException {
-		ArrayList<File> songFiles = findFilesBySuffix(".mp3", ".");
-
+		ArrayList<File> songFiles = new ArrayList<>();//findFilesBySuffix(".mp3", ".");
+		songFiles.add(findFile("tombtorial.mp3", "."));
 		for (File song : songFiles) {
 			songs.add(song.getCanonicalPath());
 		}
