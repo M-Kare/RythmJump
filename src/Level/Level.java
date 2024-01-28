@@ -35,6 +35,8 @@ public class Level extends StackPane {
 	private String levelName;
 
 	private int jumpCount;
+	private int missedJumpCount;
+	private int beatCount;
 	private int deathCount;
 
 	private Image thumbnail;
@@ -104,6 +106,30 @@ public class Level extends StackPane {
 
 	public File getFile() {
 		return levelFile;
+	}
+	
+	public int getMissedJumpCount() {
+		return missedJumpCount;
+	}
+	
+	public void setMissedJumpCount(int count) {
+		missedJumpCount = count;
+	}
+	
+	public void addMissedJumpCount(int value) {
+		missedJumpCount += value;
+	}
+	
+	public int getBeatCount() {
+		return beatCount;
+	}
+	
+	public void setBeatCount(int count) {
+		beatCount = count;
+	}
+	
+	public void addBeatCount(int value) {
+		beatCount += value;
 	}
 
 	public int getJumpCount() {

@@ -22,20 +22,28 @@ public class TheEnd extends AnchorPane {
 	protected HBox stats;
 	protected VBox leftBox;
 	protected Label jumpText;
-	protected Label jumps;
-	protected VBox rightBox;
 	protected Label deathText;
+	protected Label missedText;
+	protected Label beatsText;
+	protected VBox rightBox;
+	protected Label jumps;
+	protected Label missedJumps;
+	protected Label beats;
 	protected Label deaths;
 
 	public TheEnd() {
 		// stats
 		jumpText = new Label("Jumps:");
+		missedText = new Label("Off-Beat Jumps:");
+		beatsText = new Label("Beats:");
 		deathText = new Label("Deaths:");
-		leftBox = new VBox(jumpText, deathText);
+		leftBox = new VBox(jumpText, missedText, beatsText, deathText);
 
 		jumps = new Label("0");
+		missedJumps = new Label("0");
+		beats = new Label("0");
 		deaths = new Label("0");
-		rightBox = new VBox(jumps, deaths);
+		rightBox = new VBox(jumps, missedJumps, beats, deaths);
 
 		stats = new HBox(leftBox, rightBox);
 		stats.setSpacing(5);
@@ -78,6 +86,14 @@ public class TheEnd extends AnchorPane {
 	
 	public void setDeaths(int value) {
 		deaths.setText(Integer.toString(value));
+	}
+	
+	public void setBeats(int value) {
+		beats.setText(Integer.toString(value));
+	}
+	
+	public void setMissedJumps(int value) {
+		missedJumps.setText(Integer.toString(value));
 	}
 
 }

@@ -59,9 +59,9 @@ public class LevelController {
 	
 	private HBox beatBorder;
 	private final Border ON_BEAT_BORDER = new Border(
-			new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(40)));
+			new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(25)));
 	private final Border OFF_BEAT_BORDER = new Border(
-			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(30)));
+			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20)));
 
 	public LevelController(File level, String songPath, LevelSelectView levelSelectView) {
 		this.levelSelectView = levelSelectView;
@@ -74,6 +74,7 @@ public class LevelController {
 		deathArea = new ArrayList<>(this.level.getDeathArea());
 
 		beatBorder = this.level.beatBorder;
+		beatBorder.setBorder(OFF_BEAT_BORDER);
 
 		this.player = new Player();
 //		this.level.getChildren().add(player);
@@ -262,6 +263,8 @@ public class LevelController {
 				Scene scene = level.getScene();
 				theEndScreen.setJumps(level.getJumpCount());
 				theEndScreen.setDeaths(level.getDeathCount());
+				theEndScreen.setMissedJumps(level.getMissedJumpCount());
+				theEndScreen.setBeats(level.getBeatCount());
 
 				StackPane stack = new StackPane(level, theEndScreen);
 				scene.setRoot(stack);
@@ -288,6 +291,7 @@ public class LevelController {
 				if (beat.isOnset()) {
 					beatBorder.setBorder(ON_BEAT_BORDER);
 					onBeat = true;
+					level.addBeatCount(1);
 //					jump();
 				}
 				if (onBeat) {
@@ -373,6 +377,7 @@ public class LevelController {
 		} else if (player.getJumpable()) {
 			player.setVelocity(-Config.JUMP_HEIGHT / 5);
 			player.setJumpable(false);
+			level.addMissedJumpCount(1);
 		}
 	}
 
