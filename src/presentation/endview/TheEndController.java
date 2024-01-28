@@ -33,6 +33,7 @@ public class TheEndController {
 		});
 		levelSelect.setOnMouseClicked(e -> {
 			root.getScene().setRoot(levelSelectView);
+			levelSelectView.requestFocus();
 		});
 
 		repeat.setOnMouseClicked(e -> {

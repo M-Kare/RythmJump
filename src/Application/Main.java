@@ -36,7 +36,7 @@ public class Main extends Application {
 		levelArray = new ArrayList<>();
 //		initBeat();
 
-		new LevelGenerator(20, 18);
+		new LevelGenerator(500, 18);
 		initLevel();
 
 		levelSelectViewController = new LevelSelectViewController(levelArray);

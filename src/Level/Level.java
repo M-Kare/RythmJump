@@ -41,13 +41,16 @@ public class Level extends Pane {
 
 	private ArrayList<Node> obstacles;
 	private ArrayList<Node> winArea;
+	private ArrayList<Node> deathArea;
 
 	public Level(File level) {
 		super();
 		this.levelFile = level;
+		levelName = level.getName().split(".lvl")[0];
+
 		this.obstacles = new ArrayList<>();
 		this.winArea = new ArrayList<>();
-		levelName = level.getName().split(".lvl")[0];
+		this.deathArea = new ArrayList<>();
 
 		jumpCount = 0;
 		deathCount = 0;
@@ -63,12 +66,17 @@ public class Level extends Pane {
 		addChildren(levelArray);
 		this.getChildren().addAll(obstacles);
 		this.getChildren().addAll(winArea);
+		this.getChildren().addAll(deathArea);
 
 		takeThumbnail();
 	}
 
 	public ArrayList<Node> getWinArea() {
 		return winArea;
+	}
+	
+	public ArrayList<Node> getDeathArea(){
+		return deathArea;
 	}
 
 	public File getFile() {
@@ -232,6 +240,12 @@ public class Level extends Pane {
 					newWin.setTranslateX(x * Config.BLOCK_SIZE);
 					newWin.setTranslateY(y * Config.BLOCK_SIZE);
 					winArea.add(newWin);
+					break;
+				case Config.DEATH:
+					Node newDeath = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.GRAY);
+					newDeath.setTranslateX(x * Config.BLOCK_SIZE);
+					newDeath.setTranslateY(y * Config.BLOCK_SIZE);
+					deathArea.add(newDeath);
 					break;
 				}
 			}

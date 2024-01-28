@@ -11,9 +11,12 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import presentation.LevelSelectView.LevelSelectView;
+import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
 
@@ -23,6 +26,7 @@ public class LevelController {
 
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> obstacles;
+	private ArrayList<Node> deathArea;
 
 	private Player player;
 
@@ -32,6 +36,7 @@ public class LevelController {
 	private TheEnd theEndScreen;
 
 	private SimpleBooleanProperty won;
+	private SimpleBooleanProperty dieded;
 
 	public LevelController(File level, LevelSelectView levelSelectView) {
 		this.levelSelectView = levelSelectView;
@@ -41,6 +46,7 @@ public class LevelController {
 
 		winArea = new ArrayList<>(this.level.getWinArea());
 		obstacles = new ArrayList<>(this.level.getObstacles());
+		deathArea = new ArrayList<>(this.level.getDeathArea());
 
 		this.player = new Player();
 //		this.level.getChildren().add(player);
@@ -49,6 +55,7 @@ public class LevelController {
 		theEndScreen = theEndController.getRoot();
 
 		won = new SimpleBooleanProperty(false);
+		dieded = new SimpleBooleanProperty(false);
 
 		init();
 	}
@@ -64,6 +71,10 @@ public class LevelController {
 	public HashMap<KeyCode, Boolean> getKeybinds() {
 		return keybinds;
 	}
+	
+	public SimpleBooleanProperty getDieded() {
+		return dieded;
+	}
 
 	public Player getPlayer() {
 		return player;
@@ -78,8 +89,10 @@ public class LevelController {
 			level.getChildren().add(player);
 //		level.getChildren().add(player);
 		level.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
+		level.setLayoutX(0);
 		player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
 		player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
+		dieded.set(false);
 	}
 
 	public void init() {
@@ -145,9 +158,22 @@ public class LevelController {
 
 		won.addListener(e -> {
 			if (won.get()) {
+				Scene scene = level.getScene();
 				theEndScreen.setJumps(level.getJumpCount());
-				level.getScene().setRoot(theEndScreen);
+				theEndScreen.setDeaths(level.getDeathCount());
+				
+				StackPane stack = new StackPane(level, theEndScreen);
+				scene.setRoot(stack);
 				theEndScreen.requestFocus();
+			}
+		});
+		
+		dieded.addListener(e -> {
+			if(dieded.get()) {
+				DeathViewController deathViewController = new DeathViewController(this, levelSelectView);
+				level.getScene().setRoot(deathViewController.getRoot());
+				deathViewController.getRoot().requestFocus();
+				level.addDeathCount(1);
 			}
 		});
 
@@ -173,6 +199,12 @@ public class LevelController {
 //					counter = 0;
 //					System.out.println(onBeat);
 //				}
+				
+				for (Node death : deathArea) {
+					if(player.getBoundsInParent().intersects(death.getBoundsInParent())) {
+						dieded.set(true);
+					}
+				}
 
 				for (Node win : winArea) {
 					if (player.getBoundsInParent().intersects(win.getBoundsInParent())) {

@@ -25,3 +25,7 @@
 #levelSelectButton {
 
 }
+
+#theEndView {
+    -fx-background-color: rgba(10,10,10,0.7);
+}

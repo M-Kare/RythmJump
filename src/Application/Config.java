@@ -6,6 +6,7 @@ public class Config {
 	public static final char WALL = '*';
 	public static final char PLAYER = 'P';
 	public static final char WIN = 'W';
+	public static final char DEATH = 'D';
 
 	public static final int BLOCK_SIZE = 40;
 
