@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import presentation.homeView.*;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
 
@@ -30,6 +31,8 @@ public class Main extends Application {
 
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
+	private HomeScreen homeScreen;
+	private HomeScreenController homeScreenController;
 
 	private ArrayList<Level> levelArray;
 	private ArrayList<String> songs;
@@ -49,12 +52,15 @@ public class Main extends Application {
 
 		levelSelectViewController = new LevelSelectViewController(levelArray);
 		levelSelectView = levelSelectViewController.getRoot();
+		homeScreenController = new HomeScreenController(levelSelectView);
+		homeScreen = homeScreenController.getRoot();
+		
 
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
 
-		scene = new Scene(levelSelectView, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+		scene = new Scene(homeScreen, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		levelSelectView.requestFocus();
 		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
