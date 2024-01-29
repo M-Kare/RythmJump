@@ -29,7 +29,6 @@ public class LevelSelectView extends BorderPane {
 	private Label menuText;
 	private Label designElement_circle;
 	protected Button selectButton;
-	protected Button test;
 
 	private VBox leftBox;
 	private VBox rightBox;
