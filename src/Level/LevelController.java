@@ -59,9 +59,9 @@ public class LevelController {
 	
 	private HBox beatBorder;
 	private final Border ON_BEAT_BORDER = new Border(
-			new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(25)));
+			new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(25, 0, 0, 0)));
 	private final Border OFF_BEAT_BORDER = new Border(
-			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20)));
+			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20, 0, 0, 0)));
 
 	public LevelController(File level, String songPath, LevelSelectView levelSelectView) {
 		this.levelSelectView = levelSelectView;
@@ -93,7 +93,7 @@ public class LevelController {
 		audioPlayer = minim.loadFile(songPath);
 		audioPlayer.setGain(-20);
 		beat = new BeatDetect();
-		beat.setSensitivity(100);
+		beat.setSensitivity(50);
 
 //		musicThread = new Thread() {
 //			public void run() {
@@ -175,11 +175,32 @@ public class LevelController {
 		if (silentAudioPlayer == null || audioPlayer == null)
 			return;
 //		musicThread.start();
-//		beatThread.start();	
+//		beatThread.start();
 		silentAudioPlayer.play(125);
 		silentAudioPlayer.loop();
 		audioPlayer.play();
 		audioPlayer.loop();
+		AnimationTimer detect = new AnimationTimer() {
+			@Override
+			public void handle(long arg0) {
+				// TODO Auto-generated method stub
+				beat.detect(silentAudioPlayer.mix);
+				if (beat.isOnset()) {
+					beatBorder.setBorder(ON_BEAT_BORDER);
+					onBeat = true;
+					level.addBeatCount(1);
+//					jump();
+				}
+				if (onBeat) {
+					frameCounter++;
+				}
+				if (frameCounter > 15) {
+					beatBorder.setBorder(OFF_BEAT_BORDER);
+					onBeat = false;
+					frameCounter = 0;
+				}
+			}
+		}; detect.start();
 	}
 
 	public void init() {
@@ -287,21 +308,21 @@ public class LevelController {
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				beat.detect(silentAudioPlayer.mix);
-				if (beat.isOnset()) {
-					beatBorder.setBorder(ON_BEAT_BORDER);
-					onBeat = true;
-					level.addBeatCount(1);
-//					jump();
-				}
-				if (onBeat) {
-					frameCounter++;
-				}
-				if (frameCounter > 15) {
-					beatBorder.setBorder(OFF_BEAT_BORDER);
-					onBeat = false;
-					frameCounter = 0;
-				}
+//				beat.detect(silentAudioPlayer.mix);
+//				if (beat.isOnset()) {
+//					beatBorder.setBorder(ON_BEAT_BORDER);
+//					onBeat = true;
+//					level.addBeatCount(1);
+////					jump();
+//				}
+//				if (onBeat) {
+//					frameCounter++;
+//				}
+//				if (frameCounter > 15) {
+//					beatBorder.setBorder(OFF_BEAT_BORDER);
+//					onBeat = false;
+//					frameCounter = 0;
+//				}
 
 				for (Node death : deathArea) {
 					if (player.getBoundsInParent().intersects(death.getBoundsInParent())) {
