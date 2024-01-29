@@ -38,6 +38,7 @@ public class DeathViewController {
 		});
 		
 		levelSelectButton.setOnMouseClicked(e -> {
+			currentLevelController.stopMusic();
 			root.getScene().setRoot(levelSelectView);
 			levelSelectView.requestFocus();
 		});

@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 public class HomeScreen extends VBox{
 	
 	protected Label header;
-	protected HBox buttons;
+	protected VBox buttons;
 	protected HBox playerPreview;
 	protected Button play;
 	protected Button levelSelect;
@@ -24,6 +24,7 @@ public class HomeScreen extends VBox{
 		
 		play = new Button("New Game");
 		play.setId("playButton");
+		
 		levelSelect = new Button("Select Level");
 		levelSelect.setId("levelSelectButton");
 		tutorial = new Button("Tutorial");
@@ -33,7 +34,7 @@ public class HomeScreen extends VBox{
 		player.setHeight(player.getHeight()*5);
 		player.setWidth(player.getWidth()*5);
 		
-		buttons = new HBox(play, levelSelect, tutorial);
+		buttons = new VBox(play, levelSelect, tutorial);
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 		playerPreview = new HBox(player);
 		playerPreview.setAlignment(Pos.CENTER_LEFT);

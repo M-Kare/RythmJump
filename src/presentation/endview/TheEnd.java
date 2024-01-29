@@ -5,12 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class TheEnd extends AnchorPane {
 	protected Label title;
@@ -79,19 +75,19 @@ public class TheEnd extends AnchorPane {
 		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("theEndView");
 	}
-	
+
 	public void setJumps(int value) {
 		jumps.setText(Integer.toString(value));
 	}
-	
+
 	public void setDeaths(int value) {
 		deaths.setText(Integer.toString(value));
 	}
-	
+
 	public void setBeats(int value) {
 		beats.setText(Integer.toString(value));
 	}
-	
+
 	public void setMissedJumps(int value) {
 		missedJumps.setText(Integer.toString(value));
 	}

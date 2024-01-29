@@ -4,20 +4,15 @@ import java.util.ArrayList;
 
 import Level.Level;
 import Player.Player;
-import Player.PlayerController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 import presentation.betterSelector.LevelTilePane;
 import presentation.betterSelector.LevelTilePaneController;
 
@@ -27,7 +22,7 @@ public class LevelSelectView extends BorderPane {
 	private HBox levelBox;
 
 	private Label menuText;
-	private Label designElement_circle;
+	protected Button designElement_circle;
 	protected Button selectButton;
 
 	private VBox leftBox;
@@ -40,7 +35,7 @@ public class LevelSelectView extends BorderPane {
 		levelTilePane = levelTilePaneController.getRoot();
 		levelBox = new HBox(levelTilePane);
 
-		Image menuTextImg = new Image("menu_title_alt@0.75x.png"); // menu title as png file instead of plain text
+		Image menuTextImg = new Image("/pics/menu_title_alt@0.75x.png"); // menu title as png file instead of plain text
 		ImageView menuTextView = new ImageView(menuTextImg);
 		menuTextView.setPreserveRatio(true);
 		menuText = new Label();
@@ -48,11 +43,12 @@ public class LevelSelectView extends BorderPane {
 
 		menuText.setId("menuTitle");
 
-		Image circle = new Image("circle@0.75x.png"); // added circular design element in front of menu title
-		ImageView circleView = new ImageView(circle);
-		circleView.setPreserveRatio(true);
-		designElement_circle = new Label();
-		designElement_circle.setGraphic(circleView);
+//		Image circle = new Image("/pics/circle@0.75x.png"); // added circular design element in front of menu title
+//		ImageView circleView = new ImageView(circle);
+//		circleView.setPreserveRatio(true);
+		designElement_circle = new Button("←");
+		designElement_circle.getStyleClass().add("button");
+//		designElement_circle.setGraphic(circleView);
 		// designElement_circle.setPadding(new Insets(10, 0, 0, 0)); //padding circle
 
 		designElement_circle.setId("circle");
@@ -68,8 +64,8 @@ public class LevelSelectView extends BorderPane {
 		selectButton.setId("levelSelectButton"); // button specific styling
 
 		Player player = new Player();
-		player.setHeight(player.getHeight()*5);
-		player.setWidth(player.getWidth()*5);
+		player.setHeight(player.getHeight() * 5);
+		player.setWidth(player.getWidth() * 5);
 		rightBox = new VBox(player, selectButton);
 		rightBox.setAlignment(Pos.BOTTOM_CENTER);
 		rightBox.setSpacing(100);

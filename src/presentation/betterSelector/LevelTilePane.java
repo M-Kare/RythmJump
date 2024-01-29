@@ -3,7 +3,6 @@ package presentation.betterSelector;
 import java.util.ArrayList;
 
 import Level.Level;
-import Level.LevelController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -12,7 +11,7 @@ import javafx.scene.layout.TilePane;
 public class LevelTilePane extends ScrollPane {
 	protected int nodeWidth;
 	protected int nodeHeight;
-	
+
 	protected TilePane tilePane;
 
 	private ArrayList<Level> levelArray;
@@ -26,7 +25,7 @@ public class LevelTilePane extends ScrollPane {
 		nodes = new ArrayList<>();
 
 		tilePane = new TilePane();
-		
+
 		tilePane.setVgap(100);
 		tilePane.setHgap(100);
 		tilePane.setPrefColumns(3);
@@ -59,7 +58,7 @@ public class LevelTilePane extends ScrollPane {
 		} else {
 			tileNode.getImagePane().getStyleClass().add("evenTile");
 		}
-		
+
 		tileNode.getStyleClass().add("tileNode");
 		nodes.add(tileNode);
 		tilePane.getChildren().add(tileNode);

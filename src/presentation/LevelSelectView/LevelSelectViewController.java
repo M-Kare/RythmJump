@@ -2,43 +2,39 @@ package presentation.LevelSelectView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import Application.Config;
-import Application.Dimensions;
 import Level.Level;
 import Level.LevelController;
-import Player.Player;
-import Player.PlayerController;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.StackPane;
 import presentation.betterSelector.LevelTilePane;
 import presentation.betterSelector.LevelTilePaneController;
-import presentation.betterSelector.TileNode;
+import presentation.homeView.HomeScreen;
 
 public class LevelSelectViewController {
 	private LevelSelectView root;
+	private HomeScreen homeScreen;
 
 	private LevelTilePaneController levelTilePaneController;
 	private LevelTilePane levelTilePane;
 
 	private Button selectButton;
+	private Button circle;
 
-	public LevelSelectViewController(ArrayList<Level> levelArray) {
+	public LevelSelectViewController(ArrayList<Level> levelArray, HomeScreen homeScreen) {
 		root = new LevelSelectView(levelArray);
+		this.homeScreen = homeScreen;
 
 		levelTilePaneController = root.levelTilePaneController;
 		levelTilePane = root.levelTilePane;
 
 		selectButton = root.selectButton;
+		circle = root.designElement_circle;
 
 		init();
 	}
@@ -49,12 +45,12 @@ public class LevelSelectViewController {
 
 	public void loadLevel() {
 		Level selectedLevel = levelTilePaneController.getSelected().getLevel();
-		LevelController selectedLevelController = new LevelController(selectedLevel, root);
+		LevelController selectedLevelController = new LevelController(selectedLevel, root, homeScreen);
 
 		selectedLevelController.resetPlayer();
 		root.getScene().setRoot(selectedLevelController.getRoot());
 		selectedLevelController.getRoot().requestFocus();
-		
+
 		selectedLevelController.playMusic();
 	}
 
@@ -101,6 +97,11 @@ public class LevelSelectViewController {
 				return;
 
 			loadLevel();
+		});
+
+		circle.setOnMouseClicked(e -> {
+			root.getScene().setRoot(homeScreen);
+			homeScreen.requestFocus();
 		});
 
 		levelTilePane.setOnDragOver(new EventHandler<DragEvent>() {

@@ -3,34 +3,19 @@ package Application;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import Level.Level;
-import Level.LevelController;
 import Level.LevelGenerator;
-import Player.Player;
-import ddf.minim.AudioPlayer;
-import ddf.minim.analysis.BeatDetect;
-import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import presentation.homeView.*;
-import presentation.LevelSelectView.LevelSelectView;
-import presentation.LevelSelectView.LevelSelectViewController;
+import presentation.homeView.HomeScreen;
+import presentation.homeView.HomeScreenController;
 
 public class Main extends Application {
 
 	private Scene scene;
 
-	private LevelSelectViewController levelSelectViewController;
-	private LevelSelectView levelSelectView;
 	private HomeScreen homeScreen;
 	private HomeScreenController homeScreenController;
 
@@ -50,18 +35,17 @@ public class Main extends Application {
 		new LevelGenerator(500, 18);
 		initLevel();
 
-		levelSelectViewController = new LevelSelectViewController(levelArray);
-		levelSelectView = levelSelectViewController.getRoot();
-		homeScreenController = new HomeScreenController(levelSelectView);
+//		levelSelectViewController = new LevelSelectViewController(levelArray);
+//		levelSelectView = levelSelectViewController.getRoot();
+		homeScreenController = new HomeScreenController(levelArray);
 		homeScreen = homeScreenController.getRoot();
-		
 
 		/**
 		 * SCENE + LEVEL Spieler im Level setzten
 		 */
 
 		scene = new Scene(homeScreen, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-		levelSelectView.requestFocus();
+		homeScreen.requestFocus();
 		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
 		/**
@@ -72,6 +56,9 @@ public class Main extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 
+		primaryStage.setOnCloseRequest(e -> {
+			System.exit(0);
+		});
 	}
 
 	public static void main(String[] args) {
@@ -125,7 +112,7 @@ public class Main extends Application {
 	}
 
 	public void initSongs() throws IOException {
-		ArrayList<File> songFiles = new ArrayList<>();//findFilesBySuffix(".mp3", ".");
+		ArrayList<File> songFiles = new ArrayList<>();// findFilesBySuffix(".mp3", ".");
 		songFiles.add(findFile("tombtorial.mp3", "."));
 		for (File song : songFiles) {
 			songs.add(song.getCanonicalPath());

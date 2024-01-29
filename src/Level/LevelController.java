@@ -29,10 +29,12 @@ import presentation.LevelSelectView.LevelSelectView;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
+import presentation.homeView.HomeScreen;
 
 public class LevelController {
 	private Level level;
 	private LevelSelectView levelSelectView;
+	private HomeScreen homeScreen;
 
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> obstacles;
@@ -54,17 +56,21 @@ public class LevelController {
 	private BeatDetect beat;
 	private int frameCounter;
 	private boolean onBeat;
-//	private Thread beatThread;
+//	AnimationTimer detect;
+	private Thread beatThread;
 //	private Thread musicThread;
-	
+
+	AnimationTimer timer;
+
 	private HBox beatBorder;
-	private final Border ON_BEAT_BORDER = new Border(
-			new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(25, 0, 0, 0)));
+	private final Border ON_BEAT_BORDER = new Border(new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID,
+			CornerRadii.EMPTY, new BorderWidths(25, 0, 0, 0)));
 	private final Border OFF_BEAT_BORDER = new Border(
 			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20, 0, 0, 0)));
 
-	public LevelController(File level, String songPath, LevelSelectView levelSelectView) {
+	public LevelController(File level, String songPath, LevelSelectView levelSelectView, HomeScreen homeScreen) {
 		this.levelSelectView = levelSelectView;
+		this.homeScreen = homeScreen;
 		this.keybinds = new HashMap<>();
 
 		this.level = new Level(level, songPath);
@@ -79,7 +85,7 @@ public class LevelController {
 		this.player = new Player();
 //		this.level.getChildren().add(player);
 
-		theEndController = new TheEndController(levelSelectView, this);
+		theEndController = new TheEndController(levelSelectView, this, this.homeScreen);
 		theEndScreen = theEndController.getRoot();
 
 		won = new SimpleBooleanProperty(false);
@@ -109,14 +115,14 @@ public class LevelController {
 //				}
 //			}
 //		};
-		
+
 		frameCounter = 0;
-		
+
 		init();
 	}
 
-	public LevelController(Level level, LevelSelectView levelSelectView) {
-		this(level.getFile(), level.getSong(), levelSelectView);
+	public LevelController(Level level, LevelSelectView levelSelectView, HomeScreen homeScreen) {
+		this(level.getFile(), level.getSong(), levelSelectView, homeScreen);
 	}
 
 	public Level getRoot() {
@@ -164,8 +170,10 @@ public class LevelController {
 			return;
 //		musicThread.interrupt();
 		audioPlayer.pause();
-//		beatThread.interrupt();
-		silentAudioPlayer.pause();
+		beatThread.interrupt();
+//		silentAudioPlayer.pause();
+//		detect.stop();
+		timer.stop();
 		if (minim == null)
 			return;
 		minim.stop();
@@ -176,31 +184,46 @@ public class LevelController {
 			return;
 //		musicThread.start();
 //		beatThread.start();
-		silentAudioPlayer.play(125);
-		silentAudioPlayer.loop();
+//		silentAudioPlayer.play(125);
+//		silentAudioPlayer.loop();
 		audioPlayer.play();
 		audioPlayer.loop();
-		AnimationTimer detect = new AnimationTimer() {
-			@Override
-			public void handle(long arg0) {
-				// TODO Auto-generated method stub
-				beat.detect(silentAudioPlayer.mix);
-				if (beat.isOnset()) {
-					beatBorder.setBorder(ON_BEAT_BORDER);
+		beatThread = new Thread() {
+			public void run() {
+				while(!isInterrupted()) {
 					onBeat = true;
-					level.addBeatCount(1);
-//					jump();
-				}
-				if (onBeat) {
-					frameCounter++;
-				}
-				if (frameCounter > 15) {
-					beatBorder.setBorder(OFF_BEAT_BORDER);
-					onBeat = false;
-					frameCounter = 0;
+					beatBorder.setBorder(ON_BEAT_BORDER);
+					try {
+						sleep(600);							
+					} catch (InterruptedException e) {
+						return;
+					}
+					
 				}
 			}
-		}; detect.start();
+		}; beatThread.start();
+//		detect = new AnimationTimer() {
+//			@Override
+//			public void handle(long arg0) {
+//				// TODO Auto-generated method stub
+//				beat.detect(silentAudioPlayer.mix);
+//				if (beat.isOnset()) {
+//					beatBorder.setBorder(ON_BEAT_BORDER);
+//					onBeat = true;
+//					level.addBeatCount(1);
+////					jump();						
+//				}
+//				if (onBeat) {
+//					frameCounter++;
+//				}
+//				if (frameCounter > 15) {
+//					beatBorder.setBorder(OFF_BEAT_BORDER);
+//					onBeat = false;
+//					frameCounter = 0;
+//				}
+//			}
+//		};
+//		detect.start();
 	}
 
 	public void init() {
@@ -226,7 +249,7 @@ public class LevelController {
 			public void handle(KeyEvent event) {
 				keybinds.put(event.getCode(), true);
 
-				switch(event.getCode()) {
+				switch (event.getCode()) {
 				case ESCAPE:
 					level.getScene().setRoot(levelSelectView);
 					levelSelectView.requestFocus();
@@ -254,7 +277,7 @@ public class LevelController {
 				keybinds.put(event.getCode(), false);
 			}
 		});
-		
+
 		beatBorder.translateXProperty().bind(level.layoutXProperty().multiply(-1));
 		beatBorder.translateYProperty().bind(level.layoutYProperty().multiply(-1));
 
@@ -305,7 +328,7 @@ public class LevelController {
 		/**
 		 * ANIMATION_TIMER Animation-Timer für flüssige Bewegung
 		 */
-		AnimationTimer timer = new AnimationTimer() {
+		timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 //				beat.detect(silentAudioPlayer.mix);
@@ -315,14 +338,14 @@ public class LevelController {
 //					level.addBeatCount(1);
 ////					jump();
 //				}
-//				if (onBeat) {
-//					frameCounter++;
-//				}
-//				if (frameCounter > 15) {
-//					beatBorder.setBorder(OFF_BEAT_BORDER);
-//					onBeat = false;
-//					frameCounter = 0;
-//				}
+				if (onBeat) {
+					frameCounter++;
+				}
+				if (frameCounter > 12) {
+					beatBorder.setBorder(OFF_BEAT_BORDER);
+					onBeat = false;
+					frameCounter = 0;
+				}
 
 				for (Node death : deathArea) {
 					if (player.getBoundsInParent().intersects(death.getBoundsInParent())) {
@@ -447,7 +470,7 @@ public class LevelController {
 						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
 							player.setTranslateY(player.getTranslateY() - 1);
 							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
-							if(!keybinds.get(KeyCode.SPACE) && !keybinds.get(KeyCode.W) && !keybinds.get(KeyCode.UP))
+							if (!keybinds.get(KeyCode.SPACE) && !keybinds.get(KeyCode.W) && !keybinds.get(KeyCode.UP))
 								player.setJumpable(true);
 							return;
 						}

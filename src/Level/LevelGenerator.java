@@ -20,7 +20,7 @@ public class LevelGenerator {
 
 		levelFile = writeFile(levelArray);
 	}
-	
+
 	public File getLevelFile() {
 		return levelFile;
 	}
@@ -41,10 +41,10 @@ public class LevelGenerator {
 		File levelFile = new File("./assets/level/randomLevel.lvl");
 		try {
 			writer = new FileWriter(levelFile);
-			for(int y = 0; y < levelArray.length; y++) {
+			for (int y = 0; y < levelArray.length; y++) {
 //				for (int x = 0; x < levelArray[0].length; x++) {
-					writer.write(levelArray[y]);
-					writer.write("\n");
+				writer.write(levelArray[y]);
+				writer.write("\n");
 //				}
 			}
 		} catch (IOException e) {
@@ -60,7 +60,7 @@ public class LevelGenerator {
 	}
 
 	public void createRandomPlatforms() {
-		int areaSize, sektor, oldPos;
+		int areaSize, sektor;
 		int platformLength = 0;
 		int max, min;
 		int position = levelArray[0].length / 2;
