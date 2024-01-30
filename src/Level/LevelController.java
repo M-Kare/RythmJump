@@ -238,7 +238,6 @@ public class LevelController {
 					beatBorder.setBorder(OFF_BEAT_BORDER);
 					onBeat = false;
 				}
-				System.out.println(audioPlayer.isPlaying());
 				if(!audioPlayer.isPlaying()) {
 					beatThread.interrupt();
 					audioPlayer.play(0);
