@@ -8,8 +8,8 @@ import presentation.settingsView.SettingsViewController;
 import java.util.ArrayList;
 
 import Level.Level;
+import Level.LevelController;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 
 public class HomeScreenController {
 
@@ -23,6 +23,7 @@ public class HomeScreenController {
 	private Button settingsButton;
 	private SettingsViewController settingsController;
 	private SettingsView settingsView;
+	private ArrayList<Level> levelArray;
 
 	public HomeScreenController(ArrayList<Level> levelArray) {
 		root = new HomeScreen();
@@ -30,6 +31,8 @@ public class HomeScreenController {
 		levelSelect = root.levelSelect;
 		tutorial = root.tutorial;
 		settingsButton = root.settingButton;
+		
+		this.levelArray = levelArray;
 
 		levelSelectViewController = new LevelSelectViewController(levelArray, root);
 		levelSelectView = levelSelectViewController.getRoot();
@@ -51,7 +54,20 @@ public class HomeScreenController {
 		});
 
 		tutorial.setOnMouseClicked(e -> {
-			// TODO show popup with game explanation and control explanation
+				Level selectedLevel = null;
+				for (Level level : this.levelArray) {
+					if (level.getLevelName().contains("tutorial")) {
+						selectedLevel = level;
+						break;
+					}
+				}
+				LevelController selectedLevelController = new LevelController(selectedLevel, levelSelectView, root);
+
+				selectedLevelController.resetPlayer();
+				root.getScene().setRoot(selectedLevelController.getRoot());
+				selectedLevelController.getRoot().requestFocus();
+
+				selectedLevelController.playMusic();
 		});
 		
 		settingsButton.setOnMouseClicked(e-> {
