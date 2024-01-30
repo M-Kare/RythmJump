@@ -1,0 +1,7 @@
+music + beat detection in its own thread?
+win and death detection in its own thread?
+
+
+tempo detection instead of beat detection
+
+preprocessing of music -> maps

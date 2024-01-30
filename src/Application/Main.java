@@ -112,8 +112,8 @@ public class Main extends Application {
 	}
 
 	public void initSongs() throws IOException {
-		ArrayList<File> songFiles = new ArrayList<>();// findFilesBySuffix(".mp3", ".");
-		songFiles.add(findFile("tombtorial.mp3", "."));
+		ArrayList<File> songFiles = findFilesBySuffix(".mp3", "./assets/mp3");
+//		songFiles.add(findFile("loop.wav", "."));
 		for (File song : songFiles) {
 			songs.add(song.getCanonicalPath());
 		}
