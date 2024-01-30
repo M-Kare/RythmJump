@@ -3,7 +3,6 @@ package presentation.homeView;
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
 import presentation.settingsView.SettingsView;
-import presentation.settingsView.SettingsViewController;
 
 import java.util.ArrayList;
 
@@ -19,9 +18,8 @@ public class HomeScreenController {
 	private Button tutorial;
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
-	
+
 	private Button settingsButton;
-	private SettingsViewController settingsController;
 	private SettingsView settingsView;
 	private ArrayList<Level> levelArray;
 
@@ -31,14 +29,14 @@ public class HomeScreenController {
 		levelSelect = root.levelSelect;
 		tutorial = root.tutorial;
 		settingsButton = root.settingButton;
-		
+
 		this.levelArray = levelArray;
 
 		levelSelectViewController = new LevelSelectViewController(levelArray, root);
 		levelSelectView = levelSelectViewController.getRoot();
-		
+
 		settingsView = root.settingsView;
-		
+
 		init();
 	}
 
@@ -54,23 +52,23 @@ public class HomeScreenController {
 		});
 
 		tutorial.setOnMouseClicked(e -> {
-				Level selectedLevel = null;
-				for (Level level : this.levelArray) {
-					if (level.getLevelName().contains("tutorial")) {
-						selectedLevel = level;
-						break;
-					}
+			Level selectedLevel = null;
+			for (Level level : this.levelArray) {
+				if (level.getLevelName().contains("tutorial")) {
+					selectedLevel = level;
+					break;
 				}
-				LevelController selectedLevelController = new LevelController(selectedLevel, levelSelectView, root);
+			}
+			LevelController selectedLevelController = new LevelController(selectedLevel, levelSelectView, root);
 
-				selectedLevelController.resetPlayer();
-				root.getScene().setRoot(selectedLevelController.getRoot());
-				selectedLevelController.getRoot().requestFocus();
+			selectedLevelController.resetPlayer();
+			root.getScene().setRoot(selectedLevelController.getRoot());
+			selectedLevelController.getRoot().requestFocus();
 
-				selectedLevelController.playMusic();
+			selectedLevelController.playMusic();
 		});
-		
-		settingsButton.setOnMouseClicked(e-> {
+
+		settingsButton.setOnMouseClicked(e -> {
 			root.getChildren().add(settingsView);
 		});
 

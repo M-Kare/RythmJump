@@ -61,19 +61,19 @@ public class LevelController {
 
 	private SimpleMinim minim;
 	private AudioPlayer audioPlayer;
-	private AudioPlayer silentAudioPlayer;
 	private BeatDetect beat;
 	private int frameCounter;
 	private boolean onBeat;
-//	AnimationTimer detect;
+	AnimationTimer detect;
 	private Thread beatThread;
-//	private Thread musicThread;
 
 	private AnimationTimer timer;
+	private long time;
+	private boolean firstBeat;
 
 	private HBox beatBorder;
 	private final Border ON_BEAT_BORDER = new Border(new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID,
-			CornerRadii.EMPTY, new BorderWidths(25, 0, 0, 0)));
+			CornerRadii.EMPTY, new BorderWidths(23, 0, 0, 0)));
 	private final Border OFF_BEAT_BORDER = new Border(
 			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20, 0, 0, 0)));
 
@@ -109,32 +109,17 @@ public class LevelController {
 		dieded = new SimpleBooleanProperty(false);
 
 		onBeat = false;
+		firstBeat = true;
 
 		minim = new SimpleMinim(false);
-		silentAudioPlayer = minim.loadFile(Config.STD_SONG);
-		silentAudioPlayer.mute();
 		audioPlayer = minim.loadFile(songPath);
 		audioPlayer.setGain(-20);
 		beat = new BeatDetect();
-		beat.setSensitivity(50);
-
-//		musicThread = new Thread() {
-//			public void run() {
-//				while(!isInterrupted()) {
-//					audioPlayer.play();									
-//				}
-//			}
-//		};
-//		beatThread = new Thread() {
-//			public void run() {
-//				while(!isInterrupted()) {
-//					silentAudioPlayer.play(150);							
-//				}
-//			}
-//		};
+		beat.setSensitivity(500);
 
 		frameCounter = 0;
 
+		initMusic();
 		init();
 	}
 
@@ -183,10 +168,11 @@ public class LevelController {
 	}
 
 	public void stopMusic() {
-		if (audioPlayer == null || silentAudioPlayer == null)
+		if (audioPlayer == null)
 			return;
 		if (rhythmEnabled) {
 			beatThread.interrupt();
+			detect.stop();
 		}
 		audioPlayer.pause();
 		timer.stop();
@@ -198,32 +184,69 @@ public class LevelController {
 	}
 
 	public void playMusic() {
-		if (silentAudioPlayer == null || audioPlayer == null)
+		if (audioPlayer == null)
 			return;
-
 		audioPlayer.play();
-		audioPlayer.loop();
-		beatThread = new Thread() {
-			public void run() {
-				while (!isInterrupted()) {
-					onBeat = true;
-					frameCounter = 0;
-					beatBorder.setBorder(ON_BEAT_BORDER);
-					if(autoJumpEnabled) {
-						jump();
-					}
-					try {
-						sleep(600);
-					} catch (InterruptedException e) {
-						return;
-					}
+		if (rhythmEnabled) {
+			detect.start();
+		}
+	}
 
+	public void initMusic() {
+		
+
+		detect = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				time = now;
+				
+				beat.detect(audioPlayer.mix);
+				if (beat.isOnset()) {
+					System.out.println(now + " - Beat");
+					if (firstBeat) {
+						beatThread = new Thread() {
+							public void run() {
+								try {
+									sleep(499);  //499 for 100bpm
+								} catch (InterruptedException e) {
+									this.interrupt();
+								}
+								while (!isInterrupted()) {
+									System.out.println(time + " - Thread");
+									onBeat = true;
+									frameCounter = 0;
+									beatBorder.setBorder(ON_BEAT_BORDER);
+									if (autoJumpEnabled) {
+										jump();
+									}
+									try {
+										sleep(599); //599 for 100bpm
+									} catch (InterruptedException e) {
+										this.interrupt();
+									}
+
+								}
+							}
+						};
+						beatThread.start();
+						firstBeat = false;
+					}
+				}
+				frameCounter++;
+
+				if (frameCounter > 12) {
+					beatBorder.setBorder(OFF_BEAT_BORDER);
+					onBeat = false;
+				}
+				System.out.println(audioPlayer.isPlaying());
+				if(!audioPlayer.isPlaying()) {
+					beatThread.interrupt();
+					audioPlayer.play(0);
+					firstBeat = true;
+					
 				}
 			}
 		};
-		if (rhythmEnabled) {
-			beatThread.start();
-		}
 	}
 
 	public void init() {
@@ -331,18 +354,8 @@ public class LevelController {
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-
-				if (rhythmEnabled) {
-					frameCounter++;
-					
-					if (frameCounter > 12) {
-						beatBorder.setBorder(OFF_BEAT_BORDER);
-						onBeat = false;
-					}
-				} else {
-					if(autoJumpEnabled) {
-						jump();
-					}
+				if (!rhythmEnabled && autoJumpEnabled) {
+					jump();
 				}
 
 				for (Node death : deathArea) {
@@ -355,7 +368,7 @@ public class LevelController {
 					if (player.getBoundsInParent().intersects(win.getBoundsInParent())) {
 						won.set(true);
 					}
-				} 
+				}
 
 //				/**
 //				 * JUMPING
