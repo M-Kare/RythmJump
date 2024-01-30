@@ -30,15 +30,24 @@ import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
 import presentation.homeView.HomeScreen;
+import presentation.settingsView.SettingsViewController;
 
 public class LevelController {
 	private Level level;
 	private LevelSelectView levelSelectView;
 	private HomeScreen homeScreen;
+	private SettingsViewController settingsController;
 
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> obstacles;
 	private ArrayList<Node> deathArea;
+
+	private int jumpHeight;
+	private int coyote;
+	private int speed;
+
+	private boolean autoJumpEnabled;
+	private boolean rhythmEnabled;
 
 	private Player player;
 
@@ -60,7 +69,7 @@ public class LevelController {
 	private Thread beatThread;
 //	private Thread musicThread;
 
-	AnimationTimer timer;
+	private AnimationTimer timer;
 
 	private HBox beatBorder;
 	private final Border ON_BEAT_BORDER = new Border(new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID,
@@ -71,19 +80,27 @@ public class LevelController {
 	public LevelController(File level, String songPath, LevelSelectView levelSelectView, HomeScreen homeScreen) {
 		this.levelSelectView = levelSelectView;
 		this.homeScreen = homeScreen;
-		this.keybinds = new HashMap<>();
+		settingsController = homeScreen.getSettingsController();
 
+		this.keybinds = new HashMap<>();
 		this.level = new Level(level, songPath);
 
 		winArea = new ArrayList<>(this.level.getWinArea());
 		obstacles = new ArrayList<>(this.level.getObstacles());
 		deathArea = new ArrayList<>(this.level.getDeathArea());
 
+		speed = settingsController.getSpeedValue();
+		coyote = settingsController.getCoyoteValue();
+		jumpHeight = settingsController.getJumpHeightValue();
+		autoJumpEnabled = settingsController.getAutoJump();
+		rhythmEnabled = settingsController.getRhythmEnabled();
+
 		beatBorder = this.level.beatBorder;
-		beatBorder.setBorder(OFF_BEAT_BORDER);
+		if (rhythmEnabled) {
+			beatBorder.setBorder(OFF_BEAT_BORDER);
+		}
 
 		this.player = new Player();
-//		this.level.getChildren().add(player);
 
 		theEndController = new TheEndController(levelSelectView, this, this.homeScreen);
 		theEndScreen = theEndController.getRoot();
@@ -168,62 +185,45 @@ public class LevelController {
 	public void stopMusic() {
 		if (audioPlayer == null || silentAudioPlayer == null)
 			return;
-//		musicThread.interrupt();
+		if (rhythmEnabled) {
+			beatThread.interrupt();
+		}
 		audioPlayer.pause();
-		beatThread.interrupt();
-//		silentAudioPlayer.pause();
-//		detect.stop();
 		timer.stop();
+
 		if (minim == null)
 			return;
+
 		minim.stop();
 	}
 
 	public void playMusic() {
 		if (silentAudioPlayer == null || audioPlayer == null)
 			return;
-//		musicThread.start();
-//		beatThread.start();
-//		silentAudioPlayer.play(125);
-//		silentAudioPlayer.loop();
+
 		audioPlayer.play();
 		audioPlayer.loop();
 		beatThread = new Thread() {
 			public void run() {
-				while(!isInterrupted()) {
+				while (!isInterrupted()) {
 					onBeat = true;
+					frameCounter = 0;
 					beatBorder.setBorder(ON_BEAT_BORDER);
+					if(autoJumpEnabled) {
+						jump();
+					}
 					try {
-						sleep(600);							
+						sleep(600);
 					} catch (InterruptedException e) {
 						return;
 					}
-					
+
 				}
 			}
-		}; beatThread.start();
-//		detect = new AnimationTimer() {
-//			@Override
-//			public void handle(long arg0) {
-//				// TODO Auto-generated method stub
-//				beat.detect(silentAudioPlayer.mix);
-//				if (beat.isOnset()) {
-//					beatBorder.setBorder(ON_BEAT_BORDER);
-//					onBeat = true;
-//					level.addBeatCount(1);
-////					jump();						
-//				}
-//				if (onBeat) {
-//					frameCounter++;
-//				}
-//				if (frameCounter > 15) {
-//					beatBorder.setBorder(OFF_BEAT_BORDER);
-//					onBeat = false;
-//					frameCounter = 0;
-//				}
-//			}
-//		};
-//		detect.start();
+		};
+		if (rhythmEnabled) {
+			beatThread.start();
+		}
 	}
 
 	public void init() {
@@ -331,20 +331,18 @@ public class LevelController {
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-//				beat.detect(silentAudioPlayer.mix);
-//				if (beat.isOnset()) {
-//					beatBorder.setBorder(ON_BEAT_BORDER);
-//					onBeat = true;
-//					level.addBeatCount(1);
-////					jump();
-//				}
-				if (onBeat) {
+
+				if (rhythmEnabled) {
 					frameCounter++;
-				}
-				if (frameCounter > 12) {
-					beatBorder.setBorder(OFF_BEAT_BORDER);
-					onBeat = false;
-					frameCounter = 0;
+					
+					if (frameCounter > 12) {
+						beatBorder.setBorder(OFF_BEAT_BORDER);
+						onBeat = false;
+					}
+				} else {
+					if(autoJumpEnabled) {
+						jump();
+					}
 				}
 
 				for (Node death : deathArea) {
@@ -357,7 +355,7 @@ public class LevelController {
 					if (player.getBoundsInParent().intersects(win.getBoundsInParent())) {
 						won.set(true);
 					}
-				}
+				} 
 
 //				/**
 //				 * JUMPING
@@ -387,13 +385,13 @@ public class LevelController {
 					if (player.getTranslateX() + player.getWidth() >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
 						player.setTranslateX(Config.BLOCK_SIZE + 2);
 					}
-					movePlayerX(Config.PLAYER_SPEED);
+					movePlayerX(speed);
 				}
 				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
 					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
 						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getWidth());
 					}
-					movePlayerX(-(Config.PLAYER_SPEED));
+					movePlayerX(-(speed));
 				}
 
 				/**
@@ -414,14 +412,22 @@ public class LevelController {
 	 * JUMP Springen Methode
 	 */
 	public void jump() {
-		if (player.getJumpable() && onBeat) {
-			player.setVelocity(-Config.JUMP_HEIGHT);
-			player.setJumpable(false);
-			level.addJumpCount(1);
-		} else if (player.getJumpable()) {
-			player.setVelocity(-Config.JUMP_HEIGHT / 5);
-			player.setJumpable(false);
-			level.addMissedJumpCount(1);
+		if (rhythmEnabled) {
+			if (player.getJumpable() && onBeat) {
+				player.setVelocity(-jumpHeight);
+				player.setJumpable(false);
+				level.addJumpCount(1);
+			} else if (player.getJumpable()) {
+				player.setVelocity(-jumpHeight / 5);
+				player.setJumpable(false);
+				level.addMissedJumpCount(1);
+			}
+		} else {
+			if (player.getJumpable()) {
+				player.setVelocity(-jumpHeight);
+				player.setJumpable(false);
+				level.addJumpCount(1);
+			}
 		}
 	}
 
@@ -484,7 +490,7 @@ public class LevelController {
 				}
 			}
 			player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-			if (counter >= Config.COYOTE_TIME)
+			if (counter >= coyote)
 				player.setJumpable(false);
 			counter++;
 		}

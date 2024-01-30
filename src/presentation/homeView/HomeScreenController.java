@@ -2,6 +2,8 @@ package presentation.homeView;
 
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
+import presentation.settingsView.SettingsView;
+import presentation.settingsView.SettingsViewController;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,10 @@ public class HomeScreenController {
 	private Button tutorial;
 	private LevelSelectViewController levelSelectViewController;
 	private LevelSelectView levelSelectView;
+	
+	private Button settingsButton;
+	private SettingsViewController settingsController;
+	private SettingsView settingsView;
 	private ArrayList<Level> levelArray;
 
 	public HomeScreenController(ArrayList<Level> levelArray) {
@@ -24,11 +30,15 @@ public class HomeScreenController {
 		play = root.play;
 		levelSelect = root.levelSelect;
 		tutorial = root.tutorial;
+		settingsButton = root.settingButton;
+		
 		this.levelArray = levelArray;
 
 		levelSelectViewController = new LevelSelectViewController(levelArray, root);
 		levelSelectView = levelSelectViewController.getRoot();
-
+		
+		settingsView = root.settingsView;
+		
 		init();
 	}
 
@@ -58,6 +68,10 @@ public class HomeScreenController {
 				selectedLevelController.getRoot().requestFocus();
 
 				selectedLevelController.playMusic();
+		});
+		
+		settingsButton.setOnMouseClicked(e-> {
+			root.getChildren().add(settingsView);
 		});
 
 	}
