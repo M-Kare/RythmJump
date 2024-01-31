@@ -5,7 +5,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class DeathView extends AnchorPane {
 	private VBox middle;
@@ -36,6 +39,7 @@ public class DeathView extends AnchorPane {
 		
 		
 		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+		this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		this.setId("DeathView");
 	}
 }

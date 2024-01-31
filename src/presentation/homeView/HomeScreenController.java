@@ -2,6 +2,7 @@ package presentation.homeView;
 
 import presentation.LevelSelectView.LevelSelectView;
 import presentation.LevelSelectView.LevelSelectViewController;
+import presentation.PlayView.PlayViewController;
 import presentation.settingsView.SettingsView;
 
 import java.util.ArrayList;
@@ -59,13 +60,11 @@ public class HomeScreenController {
 					break;
 				}
 			}
-			LevelController selectedLevelController = new LevelController(selectedLevel, levelSelectView, root);
+			PlayViewController playViewController = new PlayViewController(levelSelectView, root, selectedLevel);
 
-			selectedLevelController.resetPlayer();
-			root.getScene().setRoot(selectedLevelController.getRoot());
-			selectedLevelController.getRoot().requestFocus();
-
-			selectedLevelController.playMusic();
+			playViewController.getLevelController().resetPlayer();
+			root.getScene().setRoot(playViewController.getRoot());
+			playViewController.getLevelController().getRoot().requestFocus();
 		});
 
 		settingsButton.setOnMouseClicked(e -> {

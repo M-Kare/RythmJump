@@ -3,21 +3,22 @@ package presentation.deathView;
 import Level.LevelController;
 import javafx.scene.control.Button;
 import presentation.LevelSelectView.LevelSelectView;
+import presentation.PlayView.PlayViewController;
 
 public class DeathViewController {
 	private Button repeat;
 	private Button levelSelectButton;
 	
 	private LevelSelectView levelSelectView;
-	private LevelController currentLevelController;
+	private PlayViewController currentPlayViewController;
 	
 	private DeathView root;
 	
-	public DeathViewController(LevelController levelController, LevelSelectView levelSelectView) {
+	public DeathViewController(PlayViewController playViewController, LevelSelectView levelSelectView) {
 		root = new DeathView();
 		
 		this.levelSelectView = levelSelectView;
-		currentLevelController = levelController;
+		currentPlayViewController = playViewController;
 		
 		repeat = root.repeat;
 		levelSelectButton = root.levelSelectButton;
@@ -32,21 +33,23 @@ public class DeathViewController {
 	
 	public void init() {
 		repeat.setOnMouseClicked(e -> {
-			currentLevelController.resetPlayer();
-			root.getScene().setRoot(currentLevelController.getRoot());
-			currentLevelController.getRoot().requestFocus();
+			currentPlayViewController.getLevelController().resetPlayer();
+			currentPlayViewController.getLevelController().resetKeys();
+			currentPlayViewController.getRoot().getChildren().remove(root);
+			currentPlayViewController.getLevelController().getRoot().requestFocus();
 		});
 		
 		levelSelectButton.setOnMouseClicked(e -> {
-			currentLevelController.stopMusic();
-			root.getScene().setRoot(levelSelectView);
+			currentPlayViewController.getLevelController().stopMusic();
+			currentPlayViewController.getRoot().getScene().setRoot(levelSelectView);
 			levelSelectView.requestFocus();
 		});
 		
 		root.setOnKeyPressed(e -> {
-			currentLevelController.resetPlayer();
-			root.getScene().setRoot(currentLevelController.getRoot());
-			currentLevelController.getRoot().requestFocus();
+			currentPlayViewController.getLevelController().resetPlayer();
+			currentPlayViewController.getLevelController().resetKeys();
+			currentPlayViewController.getRoot().getChildren().remove(root);
+			currentPlayViewController.getLevelController().getRoot().requestFocus();
 		});
 	}
 	
