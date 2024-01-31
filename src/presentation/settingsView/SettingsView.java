@@ -60,14 +60,13 @@ public class SettingsView extends GridPane {
 		cancelButton = new Button("Cancel");
 		resetButton = new Button("Default");
 		saveButton.setMinWidth(60);
-		buttonsBox = new HBox(saveButton, cancelButton, resetButton);
+		buttonsBox = new HBox(saveButton, resetButton, cancelButton);
 		this.add(buttonsBox, 1, 8);
 
 		this.setVgap(5);
 		this.setHgap(5);
 		this.setAlignment(Pos.CENTER);
-		this.setBackground(new Background(new BackgroundFill(Color.BEIGE, null, null)));
-		this.setMaxSize(300, 200);
+		this.setBackground(new Background(new BackgroundFill(new Color(0.1, 0.1, 0.1, 0.8), null, null)));
 	}
 
 }
