@@ -64,8 +64,8 @@ public class LevelSelectView extends BorderPane {
 		selectButton.setId("levelSelectButton"); // button specific styling
 
 		Player player = new Player();
-		player.setHeight(player.getHeight() * 5);
-		player.setWidth(player.getWidth() * 5);
+		//player.setHeight(player.getHeight() * 5);
+		//player.setWidth(player.getWidth() * 5);
 		rightBox = new VBox(player, selectButton);
 		rightBox.setAlignment(Pos.BOTTOM_CENTER);
 		rightBox.setSpacing(100);

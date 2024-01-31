@@ -55,8 +55,8 @@ public class HomeScreen extends StackPane{
 		root.setRightAnchor(buttons, 50.00);
 		
 		player = new Player();
-		player.setHeight(player.getHeight()*5);
-		player.setWidth(player.getWidth()*5);
+		//player.setHeight(player.getHeight()*5);
+		//player.setWidth(player.getWidth()*5);
 		playerPreview = new HBox(player);
 		playerPreview.setAlignment(Pos.BOTTOM_CENTER);
 		root.setLeftAnchor(playerPreview, 300.00);

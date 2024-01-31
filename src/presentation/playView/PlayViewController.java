@@ -4,6 +4,7 @@ import business.Config;
 import business.level.Level;
 import business.level.LevelController;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
@@ -22,6 +23,8 @@ public class PlayViewController {
 	private LevelController levelController;
 
 	private Button backButton;
+	
+	private ImageView bgFrame;
 
 	public PlayViewController(LevelSelectView levelSelect, HomeScreen homeScreen, Level level) {
 		super();
@@ -34,7 +37,9 @@ public class PlayViewController {
 		levelController.playMusic();
 
 		backButton = root.backButton;
-
+		
+		bgFrame = root.bgFrame;
+		
 		init();
 	}
 
@@ -51,7 +56,7 @@ public class PlayViewController {
 		theEndScreen = theEndController.getRoot();
 
 		theEndScreen.setBeats(levelController.getBeatCount());
-		theEndScreen.setDeaths(levelController.getDeathCount());
+		theEndScreen.setJumps(levelController.getJumpCount());
 		theEndScreen.setMissedJumps(levelController.getMissedJumpCount());
 		theEndScreen.setDeaths(levelController.getDeathCount());
 
@@ -70,6 +75,8 @@ public class PlayViewController {
 
 	public void init() {
 		
+		bgFrame.translateXProperty().bind(root.layoutXProperty().multiply(-1));
+		bgFrame.translateYProperty().bind(root.layoutYProperty().multiply(-1));
 		backButton.translateXProperty().bind(root.layoutXProperty().multiply(-1));
 		backButton.translateYProperty().bind(root.layoutYProperty().multiply(-1));
 		

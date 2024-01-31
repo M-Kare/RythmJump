@@ -26,6 +26,8 @@ public class BeatControlls extends HBox {
 
 	private Thread beatThread;
 	private boolean onBeat;
+	
+	private int beatCount;
 
 	private HBox beatBorder;
 	private final Border ON_BEAT_BORDER = new Border(new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID,
@@ -37,6 +39,8 @@ public class BeatControlls extends HBox {
 		super();
 		beatBorder = this;
 		this.levelController = levelController;
+		
+		beatCount = 0;
 
 		minim = new SimpleMinim(false);
 		audioPlayer = minim.loadFile(songPath);
@@ -54,6 +58,10 @@ public class BeatControlls extends HBox {
 			initMusic();
 		}
 	}
+	
+	public int getBeatCount() {
+		return beatCount;
+	}
 
 	public void initMusic() {
 		detect = new AnimationTimer() {
@@ -70,6 +78,7 @@ public class BeatControlls extends HBox {
 									this.interrupt();
 								}
 								while (!isInterrupted()) {
+									beatCount++;
 									onBeat = true;
 									frameCounter = 0;
 									beatBorder.setBorder(ON_BEAT_BORDER);

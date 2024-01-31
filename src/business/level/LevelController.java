@@ -45,7 +45,6 @@ public class LevelController {
 
 	private int jumpCount = 0;
 	private int missedJumpCount = 0;
-	private int beatCount = 0;
 	private int deathCount = 0;
 
 	private Player player;
@@ -99,7 +98,7 @@ public class LevelController {
 	}
 
 	public int getBeatCount() {
-		return beatCount;
+		return music.getBeatCount();
 	}
 
 	public int getMissedJumpCount() {
@@ -289,14 +288,14 @@ public class LevelController {
 				/*
 				 * && player.getTranslateX() + Config.PLAYER_SIZE <= level.getLevelLength() - 5
 				 */) {
-					if (player.getTranslateX() + player.getWidth() >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
+					if (player.getTranslateX() + player.getLayoutBounds().getWidth() >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
 						player.setTranslateX(Config.BLOCK_SIZE + 2);
 					}
 					movePlayerX(Config.getPlayerSpeed());
 				}
 				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
 					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
-						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getWidth());
+						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getLayoutBounds().getWidth());
 					}
 					movePlayerX(-(Config.getPlayerSpeed()));
 				}
@@ -350,7 +349,7 @@ public class LevelController {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
 					if (movingRight) {
-						if (player.getTranslateX() + player.getWidth() == obstacle.getTranslateX()) {
+						if (player.getTranslateX() + player.getLayoutBounds().getWidth() == obstacle.getTranslateX()) {
 							player.setTranslateX(player.getTranslateX() - 1);
 							return;
 						}
@@ -378,9 +377,9 @@ public class LevelController {
 		for (int i = 0; i < Math.abs(value); i++) {
 			for (Node obstacle : obstacles) {
 				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
-						|| player.getTranslateY() + player.getHeight() >= level.getLevelHeight() - 5) {
+						|| player.getTranslateY() + player.getLayoutBounds().getHeight() >= level.getLevelHeight() - 5) {
 					if (movingDown) {
-						if (player.getTranslateY() + (player.getHeight()) == obstacle.getTranslateY()) {
+						if (player.getTranslateY() + (player.getLayoutBounds().getHeight()) == obstacle.getTranslateY()) {
 							player.setTranslateY(player.getTranslateY() - 1);
 							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
 							if (!keybinds.get(KeyCode.SPACE) && !keybinds.get(KeyCode.W) && !keybinds.get(KeyCode.UP))

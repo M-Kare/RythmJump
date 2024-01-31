@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import business.Config;
@@ -14,6 +15,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -43,7 +45,6 @@ public class Level extends Pane {
 
 	public Level(File level, String songPath) {
 		super();
-//		levelRoot = new Pane();
 		this.levelFile = level;
 		levelName = level.getName().split(".lvl")[0];
 
@@ -53,9 +54,6 @@ public class Level extends Pane {
 		this.winArea = new ArrayList<>();
 		this.deathArea = new ArrayList<>();
 
-//		jumpCount = 0;
-//		deathCount = 0;
-
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
 
@@ -64,10 +62,12 @@ public class Level extends Pane {
 
 		playerSpawn = new int[2];
 
-		addChildren(levelArray);
-//		levelRoot.getChildren().addAll(obstacles);
-//		levelRoot.getChildren().addAll(winArea);
-//		levelRoot.getChildren().addAll(deathArea);
+		try {
+			addChildren(levelArray);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		this.getChildren().addAll(obstacles);
 		this.getChildren().addAll(winArea);
@@ -80,10 +80,6 @@ public class Level extends Pane {
 	public Level(File level) {
 		this(level, Config.STD_SONG);
 	}
-
-//	public Pane getLevelRoot() {
-//		return levelRoot;
-//	}
 
 	public String getSong() {
 		return songPath;
@@ -100,54 +96,6 @@ public class Level extends Pane {
 	public File getFile() {
 		return levelFile;
 	}
-
-//	public int getMissedJumpCount() {
-//		return missedJumpCount;
-//	}
-//	
-//	public void setMissedJumpCount(int count) {
-//		missedJumpCount = count;
-//	}
-//	
-//	public void addMissedJumpCount(int value) {
-//		missedJumpCount += value;
-//	}
-//	
-//	public int getBeatCount() {
-//		return beatCount;
-//	}
-//	
-//	public void setBeatCount(int count) {
-//		beatCount = count;
-//	}
-//	
-//	public void addBeatCount(int value) {
-//		beatCount += value;
-//	}
-//
-//	public int getJumpCount() {
-//		return jumpCount;
-//	}
-//
-//	public int getDeathCount() {
-//		return deathCount;
-//	}
-//
-//	public void setDeathCount(int count) {
-//		deathCount = count;
-//	}
-//
-//	public void addDeathCount(int value) {
-//		deathCount += value;
-//	}
-//
-//	public void setJumpCount(int count) {
-//		jumpCount = count;
-//	}
-//
-//	public void addJumpCount(int value) {
-//		jumpCount += value;
-//	}
 
 	public Image getThumbnail() {
 		return thumbnail;
@@ -188,7 +136,6 @@ public class Level extends Pane {
 			vpWidth = levelLength * 0.31;
 
 		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
-//		thumbnail = levelRoot.snapshot(sp, null);
 		thumbnail = snapshot(sp, null);
 	}
 
@@ -264,12 +211,12 @@ public class Level extends Pane {
 		return output;
 	}
 
-	private void addChildren(char[][] levelArray) {
+	private void addChildren(char[][] levelArray) throws MalformedURLException {
 		for (int y = 0; y < levelArray.length; y++) {
 			for (int x = 0; x < levelArray[y].length; x++) {
 				switch (levelArray[y][x]) {
 				case Config.WALL:
-					Node newWall = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.BLACK);
+					Node newWall = new ImageView(new Image(Config.findFile("block-blackgold.png", "./assets/textures/blocks").toURI().toURL().toExternalForm()));
 					newWall.setTranslateX(x * Config.BLOCK_SIZE);
 					newWall.setTranslateY(y * Config.BLOCK_SIZE);
 					obstacles.add(newWall);
@@ -279,13 +226,13 @@ public class Level extends Pane {
 					playerSpawn[Dimensions.Y.getIndex()] = (y - 2) * Config.BLOCK_SIZE;
 					break;
 				case Config.WIN:
-					Node newWin = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.GOLD);
+					Node newWin = new ImageView(new Image(Config.findFile("block-win.png", "./assets/textures/blocks").toURI().toURL().toExternalForm()));
 					newWin.setTranslateX(x * Config.BLOCK_SIZE);
 					newWin.setTranslateY(y * Config.BLOCK_SIZE);
 					winArea.add(newWin);
 					break;
 				case Config.DEATH:
-					Node newDeath = new Rectangle(Config.BLOCK_SIZE, Config.BLOCK_SIZE, Color.GRAY);
+					Node newDeath = new ImageView(new Image(Config.findFile("hazard-spike.png", "./assets/textures/blocks").toURI().toURL().toExternalForm()));
 					newDeath.setTranslateX(x * Config.BLOCK_SIZE);
 					newDeath.setTranslateY(y * Config.BLOCK_SIZE);
 					deathArea.add(newDeath);
