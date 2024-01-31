@@ -1,12 +1,12 @@
-package presentation.PlayView;
+package presentation.playView;
 
-import Level.Level;
-import Level.LevelController;
+import business.level.Level;
+import business.level.LevelController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import presentation.LevelSelectView.LevelSelectView;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.LevelSelectView;
 
 public class PlayView extends StackPane {
 	protected LevelController levelController;

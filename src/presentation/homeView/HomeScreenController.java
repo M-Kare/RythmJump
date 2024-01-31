@@ -1,14 +1,14 @@
 package presentation.homeView;
 
-import presentation.LevelSelectView.LevelSelectView;
-import presentation.LevelSelectView.LevelSelectViewController;
-import presentation.PlayView.PlayViewController;
+import presentation.levelSelectView.LevelSelectView;
+import presentation.levelSelectView.LevelSelectViewController;
+import presentation.playView.PlayViewController;
 import presentation.settingsView.SettingsView;
 
 import java.util.ArrayList;
 
-import Level.Level;
-import Level.LevelController;
+import business.level.Level;
+import business.level.LevelController;
 import javafx.scene.control.Button;
 
 public class HomeScreenController {

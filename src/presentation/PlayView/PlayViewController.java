@@ -1,14 +1,14 @@
-package presentation.PlayView;
+package presentation.playView;
 
-import Application.Config;
-import Level.Level;
-import Level.LevelController;
+import business.Config;
+import business.level.Level;
+import business.level.LevelController;
 import javafx.scene.control.Button;
-import presentation.LevelSelectView.LevelSelectView;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.LevelSelectView;
 
 public class PlayViewController {
 	private PlayView root;

@@ -1,22 +1,22 @@
-package presentation.LevelSelectView;
+package presentation.levelSelectView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import Level.Level;
-import Level.LevelController;
+import business.level.Level;
+import business.level.LevelController;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import presentation.PlayView.PlayView;
-import presentation.PlayView.PlayViewController;
-import presentation.betterSelector.LevelTilePane;
-import presentation.betterSelector.LevelTilePaneController;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.levelTilePane.LevelTilePane;
+import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
+import presentation.playView.PlayView;
+import presentation.playView.PlayViewController;
 
 public class LevelSelectViewController {
 	private LevelSelectView root;

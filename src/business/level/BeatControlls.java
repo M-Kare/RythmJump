@@ -1,6 +1,6 @@
-package Level;
+package business.level;
 
-import Application.Config;
+import business.Config;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
@@ -14,14 +14,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 public class BeatControlls extends HBox {
+	LevelController levelController;
+	
 	private SimpleMinim minim;
 	private AudioPlayer audioPlayer;
 	private BeatDetect beat;
-	private int frameCounter;
-	private boolean onBeat;
+
 	AnimationTimer detect;
-	private Thread beatThread;
+	private int frameCounter;
 	private boolean firstBeat;
+
+	private Thread beatThread;
+	private boolean onBeat;
 
 	private HBox beatBorder;
 	private final Border ON_BEAT_BORDER = new Border(new BorderStroke(Color.LIGHTGREEN, BorderStrokeStyle.SOLID,
@@ -29,24 +33,26 @@ public class BeatControlls extends HBox {
 	private final Border OFF_BEAT_BORDER = new Border(
 			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20, 0, 0, 0)));
 
-	public BeatControlls(String songPath) {
+	public BeatControlls(String songPath, LevelController levelController) {
 		super();
 		beatBorder = this;
+		this.levelController = levelController;
 
 		minim = new SimpleMinim(false);
 		audioPlayer = minim.loadFile(songPath);
 		audioPlayer.setGain(-20);
-		beat = new BeatDetect();
-		beat.setSensitivity(500);
 
-		onBeat = false;
-		firstBeat = true;
-		frameCounter = 0;
-
-		beatBorder.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-		beatBorder.setBorder(OFF_BEAT_BORDER);
-
-		initMusic();
+		if (Config.getRhythmEnabled()) {
+			beat = new BeatDetect();
+			beat.setSensitivity(500);
+			onBeat = false;
+			firstBeat = true;
+			frameCounter = 0;
+			beatBorder.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+			beatBorder.setBorder(OFF_BEAT_BORDER);
+			
+			initMusic();
+		}
 	}
 
 	public void initMusic() {
@@ -67,9 +73,9 @@ public class BeatControlls extends HBox {
 									onBeat = true;
 									frameCounter = 0;
 									beatBorder.setBorder(ON_BEAT_BORDER);
-//									if (autoJumpEnabled) {
-//										jump();
-//									}
+									if (Config.getAutoJump()) {
+										levelController.jump();
+									}
 									try {
 										sleep(599); // 599 for 100bpm
 									} catch (InterruptedException e) {
@@ -99,18 +105,20 @@ public class BeatControlls extends HBox {
 		};
 	}
 
+	public boolean getOnBeat() {
+		return onBeat;
+	}
+
 	public void stopMusic() {
 		if (audioPlayer == null)
 			return;
-//		if (rhythmEnabled) {
-		beatThread.interrupt();
-		detect.stop();
-//		}
+		if (Config.getRhythmEnabled()) {
+			beatThread.interrupt();
+			detect.stop();
+		}
 		audioPlayer.pause();
-
 		if (minim == null)
 			return;
-
 		minim.stop();
 	}
 
@@ -118,8 +126,10 @@ public class BeatControlls extends HBox {
 		if (audioPlayer == null)
 			return;
 		audioPlayer.play();
-//		if (rhythmEnabled) {
-		detect.start();
-//		}
+		if (!Config.getRhythmEnabled()) {
+			audioPlayer.loop();
+		} else {
+			detect.start();
+		}
 	}
 }

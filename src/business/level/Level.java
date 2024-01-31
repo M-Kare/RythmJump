@@ -1,4 +1,4 @@
-package Level;
+package business.level;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Application.Config;
-import Application.Dimensions;
+import business.Config;
+import business.Dimensions;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -33,11 +33,6 @@ public class Level extends Pane {
 	private int[] playerSpawn;
 	private String levelName;
 
-//	private int jumpCount;
-//	private int missedJumpCount;
-//	private int beatCount;
-//	private int deathCount;
-
 	private Image thumbnail;
 
 	private ArrayList<Node> obstacles;
@@ -45,8 +40,6 @@ public class Level extends Pane {
 	private ArrayList<Node> deathArea;
 
 	private String songPath;
-
-	protected HBox beatBorder;
 
 	public Level(File level, String songPath) {
 		super();
@@ -76,13 +69,9 @@ public class Level extends Pane {
 //		levelRoot.getChildren().addAll(winArea);
 //		levelRoot.getChildren().addAll(deathArea);
 
-		beatBorder = new HBox();
-		beatBorder.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-
 		this.getChildren().addAll(obstacles);
 		this.getChildren().addAll(winArea);
 		this.getChildren().addAll(deathArea);
-		this.getChildren().add(beatBorder);
 		this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
 		takeThumbnail();

@@ -1,9 +1,9 @@
 package presentation.deathView;
 
-import Level.LevelController;
+import business.level.LevelController;
 import javafx.scene.control.Button;
-import presentation.LevelSelectView.LevelSelectView;
-import presentation.PlayView.PlayViewController;
+import presentation.levelSelectView.LevelSelectView;
+import presentation.playView.PlayViewController;
 
 public class DeathViewController {
 	private Button repeat;

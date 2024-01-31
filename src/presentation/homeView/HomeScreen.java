@@ -1,7 +1,7 @@
 package presentation.homeView;
 
-import Application.Config;
-import Player.Player;
+import business.Config;
+import business.player.Player;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

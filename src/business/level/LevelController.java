@@ -1,12 +1,12 @@
-package Level;
+package business.level;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Application.Config;
-import Application.Dimensions;
-import Player.Player;
+import business.Config;
+import business.Dimensions;
+import business.player.Player;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
@@ -25,17 +25,16 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import presentation.LevelSelectView.LevelSelectView;
-import presentation.PlayView.PlayView;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.LevelSelectView;
+import presentation.playView.PlayView;
 import presentation.settingsView.SettingsViewController;
 
 public class LevelController {
 	private Level level;
-	private SettingsViewController settingsController;
 	private PlayView playView;
 
 	private ArrayList<Node> winArea;
@@ -43,13 +42,6 @@ public class LevelController {
 	private ArrayList<Node> deathArea;
 
 	private BeatControlls music;
-
-//	private int jumpHeight;
-//	private int coyote;
-//	private int speed;
-
-//	private boolean autoJumpEnabled;
-//	private boolean rhythmEnabled;
 
 	private int jumpCount = 0;
 	private int missedJumpCount = 0;
@@ -66,7 +58,6 @@ public class LevelController {
 	private HashMap<KeyCode, Boolean> keybinds;
 
 	public LevelController(File level, String songPath, PlayView playView) {
-//		settingsController = homeScreen.getSettingsController();
 		this.playView = playView;
 
 		this.keybinds = new HashMap<>();
@@ -82,8 +73,10 @@ public class LevelController {
 //		autoJumpEnabled = settingsController.getAutoJump();
 //		rhythmEnabled = settingsController.getRhythmEnabled();
 
-		music = new BeatControlls(songPath);
-		this.level.getChildren().add(music);
+		music = new BeatControlls(songPath, this);
+		if(Config.getRhythmEnabled()) {
+			this.level.getChildren().add(music);			
+		}
 
 		this.player = new Player();
 
@@ -243,25 +236,8 @@ public class LevelController {
 		music.translateXProperty().bind(playView.layoutXProperty().multiply(-1));
 		music.translateYProperty().bind(playView.layoutYProperty().multiply(-1));
 
-//		won.addListener(e -> {
-//			if (won.get()) {
-////				Scene scene = level.getScene();
-////				theEndScreen.setJumps(level.getJumpCount());
-////				theEndScreen.setDeaths(level.getDeathCount());
-////				theEndScreen.setMissedJumps(level.getMissedJumpCount());
-////				theEndScreen.setBeats(level.getBeatCount());
-//
-//				StackPane stack = new StackPane(level, theEndScreen);
-//				scene.setRoot(stack);
-//				theEndScreen.requestFocus();
-//			}
-//		});
-
 		dieded.addListener(e -> {
 			if (dieded.get() && !won.get()) {
-//				DeathViewController deathViewController = new DeathViewController(this, levelSelectView);
-//				level.getScene().setRoot(deathViewController.getRoot());
-//				deathViewController.getRoot().requestFocus();
 				deathCount++;
 			}
 		});
@@ -272,9 +248,9 @@ public class LevelController {
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-//				if (!rhythmEnabled && autoJumpEnabled) {
-//					jump();
-//				}
+				if (!Config.getRhythmEnabled() && Config.getAutoJump()) {
+					jump();
+				}
 
 				for (Node death : deathArea) {
 					if (player.getBoundsInParent().intersects(death.getBoundsInParent())) {
@@ -316,13 +292,13 @@ public class LevelController {
 					if (player.getTranslateX() + player.getWidth() >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
 						player.setTranslateX(Config.BLOCK_SIZE + 2);
 					}
-					movePlayerX(Config.PLAYER_SPEED);
+					movePlayerX(Config.getPlayerSpeed());
 				}
 				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
 					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
 						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getWidth());
 					}
-					movePlayerX(-(Config.PLAYER_SPEED));
+					movePlayerX(-(Config.getPlayerSpeed()));
 				}
 
 				/**
@@ -343,23 +319,23 @@ public class LevelController {
 	 * JUMP Springen Methode
 	 */
 	public void jump() {
-//		if (rhythmEnabled) {
-//			if (player.getJumpable() && onBeat) {
-//				player.setVelocity(-jumpHeight);
-//				player.setJumpable(false);
-//				jumpCount++;
-//			} else if (player.getJumpable()) {
-//				player.setVelocity(-jumpHeight / 5);
-//				player.setJumpable(false);
-//				missedJumpCount++;
-//			}
-//		} else {
-		if (player.getJumpable()) {
-			player.setVelocity(-Config.JUMP_HEIGHT);
-			player.setJumpable(false);
-			jumpCount++;
+		if (Config.getRhythmEnabled()) {
+			if (player.getJumpable() && music.getOnBeat()) {
+				player.setVelocity(-Config.getJumpHeight());
+				player.setJumpable(false);
+				jumpCount++;
+			} else if (player.getJumpable()) {
+				player.setVelocity(-Config.getJumpHeight() / 5);
+				player.setJumpable(false);
+				missedJumpCount++;
+			}
+		} else {
+			if (player.getJumpable()) {
+				player.setVelocity(-Config.getJumpHeight());
+				player.setJumpable(false);
+				jumpCount++;
+			}
 		}
-//		}
 	}
 
 	/**
@@ -421,7 +397,7 @@ public class LevelController {
 				}
 			}
 			player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-			if (counter >= Config.COYOTE_TIME)
+			if (counter >= Config.getCoyote())
 				player.setJumpable(false);
 			counter++;
 		}

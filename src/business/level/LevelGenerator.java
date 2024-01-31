@@ -1,10 +1,10 @@
-package Level;
+package business.level;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Application.Config;
+import business.Config;
 
 public class LevelGenerator {
 	private final int MAX_IN_ROW = 4;

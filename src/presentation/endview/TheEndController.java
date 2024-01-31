@@ -1,10 +1,10 @@
 package presentation.endview;
 
-import Level.LevelController;
+import business.level.LevelController;
 import javafx.scene.control.Button;
-import presentation.LevelSelectView.LevelSelectView;
-import presentation.PlayView.PlayViewController;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.LevelSelectView;
+import presentation.playView.PlayViewController;
 
 public class TheEndController {
 

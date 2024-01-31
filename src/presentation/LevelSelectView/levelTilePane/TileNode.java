@@ -1,6 +1,6 @@
-package presentation.betterSelector;
+package presentation.levelSelectView.levelTilePane;
 
-import Level.Level;
+import business.level.Level;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
