@@ -1,6 +1,7 @@
 package presentation.levelSelectView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import business.level.Level;
 import business.player.Player;
@@ -30,7 +31,7 @@ public class LevelSelectView extends BorderPane {
 	private HBox topBox;
 	private HBox bottomBox;
 
-	public LevelSelectView(ArrayList<Level> levelArray) {
+	public LevelSelectView(HashMap<String, Level> levelArray) {
 		levelTilePaneController = new LevelTilePaneController(levelArray);
 		levelTilePane = levelTilePaneController.getRoot();
 		levelBox = new HBox(levelTilePane);

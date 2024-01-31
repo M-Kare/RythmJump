@@ -8,6 +8,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * View, wenn man ein Level gewinnt
+ */
 public class TheEnd extends AnchorPane {
 	protected Label title;
 
@@ -27,6 +30,9 @@ public class TheEnd extends AnchorPane {
 	protected Label beats;
 	protected Label deaths;
 
+	/**
+	 * Enthält Stats- und Navigationselemente
+	 */
 	public TheEnd() {
 		// stats
 		jumpText = new Label("Jumps:");
@@ -76,18 +82,38 @@ public class TheEnd extends AnchorPane {
 		this.setId("theEndView");
 	}
 
+	/**
+	 * Setter für den Jump-Stat
+	 * 
+	 * @param value JumpCount
+	 */
 	public void setJumps(int value) {
 		jumps.setText(Integer.toString(value));
 	}
 
+	/**
+	 * Setter für den Tode-Stat
+	 * 
+	 * @param value DeathCount
+	 */
 	public void setDeaths(int value) {
 		deaths.setText(Integer.toString(value));
 	}
 
+	/**
+	 * Setter für den Beats-Stat
+	 * 
+	 * @param value BeatsCount
+	 */
 	public void setBeats(int value) {
 		beats.setText(Integer.toString(value));
 	}
 
+	/**
+	 * Setter für den verfehlte Sprünge-Stat
+	 * 
+	 * @param value missedJumpCount
+	 */
 	public void setMissedJumps(int value) {
 		missedJumps.setText(Integer.toString(value));
 	}

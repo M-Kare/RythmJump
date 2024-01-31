@@ -6,12 +6,22 @@ import java.io.IOException;
 
 import business.Config;
 
+/**
+ * Generiert ein zufälliges Level mit den beim Erzeugen angegebenen Maßen
+ * (Designt für vertikale Level mit teleport) und speicher es als .lvl-Datei
+ */
 public class LevelGenerator {
 	private final int MAX_IN_ROW = 4;
 
 	private char[][] levelArray;
 	private File levelFile;
 
+	/**
+	 * Generiert das Level und schreibt es in die "randomLevel.lvl"-Datei
+	 * 
+	 * @param height Höhe des Levels
+	 * @param width  Breite des Levels
+	 */
 	public LevelGenerator(int height, int width) {
 		levelArray = new char[height][width];
 
@@ -21,14 +31,27 @@ public class LevelGenerator {
 		levelFile = writeFile(levelArray);
 	}
 
+	/**
+	 * Getter für die Level-Datei
+	 * 
+	 * @return Level-Datei
+	 */
 	public File getLevelFile() {
 		return levelFile;
 	}
 
+	/**
+	 * Getter für das Level Char-Array
+	 * 
+	 * @return levelArray
+	 */
 	public char[][] getLevelArray() {
 		return levelArray;
 	}
 
+	/**
+	 * Fügt Wände an den Rand des Levels hinzu
+	 */
 	public void addSideWalls() {
 		for (int i = 0; i < levelArray.length; i++) {
 			levelArray[i][0] = Config.WALL;
@@ -36,11 +59,19 @@ public class LevelGenerator {
 		}
 	}
 
+	/**
+	 * Schreibt das Level-Array sowie den Teleport-Flag in die Datei:
+	 * randomLevel.lvl
+	 * 
+	 * @param levelArray
+	 * @return Level-Datei
+	 */
 	public File writeFile(char[][] levelArray) {
 		FileWriter writer = null;
 		File levelFile = new File("./assets/level/randomLevel.lvl");
 		try {
 			writer = new FileWriter(levelFile);
+			writer.write("#" + Config.LEVEL_TELEPORT + "\n");
 			for (int y = 0; y < levelArray.length; y++) {
 //				for (int x = 0; x < levelArray[0].length; x++) {
 				writer.write(levelArray[y]);
@@ -59,6 +90,9 @@ public class LevelGenerator {
 		return levelFile;
 	}
 
+	/**
+	 * Erzeugt Platformen zufälliger länge an einigermaßen zufälligen Positionen
+	 */
 	public void createRandomPlatforms() {
 		int areaSize, sektor;
 		int platformLength = 0;
@@ -74,15 +108,11 @@ public class LevelGenerator {
 		levelArray[levelArray.length - 4][2] = Config.PLAYER;
 		areaSize = (levelArray[0].length) / MAX_IN_ROW;
 
-		for (int y = getRandomNumber(levelArray.length - 6, levelArray.length - 5); y >= 0; y -= getRandomNumber(3,
-				4)) {
-			// get platform number in row
-//			wallsInLine = getRandomNumber(1, MAX_IN_ROW);
-
-//			for(int p = 1; p <= wallsInLine; p++) {
+		for (int y = Config.getRandomNumber(levelArray.length - 6, levelArray.length - 5); y >= 0; y -= Config
+				.getRandomNumber(3, 4)) {
 			// get platform length
 			if (platformLength <= 0) {
-				platformLength = getRandomNumber(1, areaSize - 1); // (int)(((levelArray[y].length-1-4) / wallsInLine))
+				platformLength = Config.getRandomNumber(1, areaSize - 1);
 			} else {
 				if (platformLength == areaSize) {
 					max = platformLength;
@@ -94,22 +124,16 @@ public class LevelGenerator {
 				} else {
 					min = platformLength - 1;
 				}
-				platformLength = getRandomNumber(min, max);
+				platformLength = Config.getRandomNumber(min, max);
 			}
 
 			// get platform position
-			sektor = getRandomNumber(1, MAX_IN_ROW);
-			position = getRandomNumber(1, areaSize - platformLength);
+			sektor = Config.getRandomNumber(1, MAX_IN_ROW);
+			position = Config.getRandomNumber(1, areaSize - platformLength);
 
 			for (int i = 0; i < platformLength; i++) {
 				levelArray[y][(areaSize * (sektor - 1)) + position + i] = Config.WALL;
 			}
-//			}
 		}
 	}
-
-	public static int getRandomNumber(int min, int max) {
-		return (int) ((Math.random() * (max - min + 1)) + min);
-	}
-
 }

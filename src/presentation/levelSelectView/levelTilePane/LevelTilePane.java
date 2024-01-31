@@ -1,6 +1,7 @@
 package presentation.levelSelectView.levelTilePane;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import business.level.Level;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,12 +15,12 @@ public class LevelTilePane extends ScrollPane {
 
 	protected TilePane tilePane;
 
-	private ArrayList<Level> levelArray;
+	private HashMap<String, Level> levelArray;
 	protected ArrayList<TileNode> nodes;
 	SimpleObjectProperty<TileNode>[] no;
 	protected boolean oddTile = true;
 
-	public LevelTilePane(ArrayList<Level> levelArray, int nodeWidth, int nodeHeight) {
+	public LevelTilePane(HashMap<String, Level> levelArray, int nodeWidth, int nodeHeight) {
 		super();
 		this.levelArray = levelArray;
 		nodes = new ArrayList<>();
@@ -34,13 +35,13 @@ public class LevelTilePane extends ScrollPane {
 		this.nodeHeight = nodeHeight;
 		this.nodeWidth = nodeWidth;
 
-		for (Level level : this.levelArray) {
+		this.levelArray.forEach((name, level) -> {
 			addTileNode(level);
-		}
+		});
 		this.setContent(tilePane);
 	}
 
-	public LevelTilePane(ArrayList<Level> levelArray) {
+	public LevelTilePane(HashMap<String, Level> levelArray) {
 		this(levelArray, 200, 200);
 	}
 

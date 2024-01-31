@@ -3,6 +3,7 @@ package presentation.playView;
 import business.Config;
 import business.level.Level;
 import business.level.LevelController;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import presentation.deathView.DeathViewController;
@@ -21,9 +22,10 @@ public class PlayViewController {
 	private TheEnd theEndScreen;
 
 	private LevelController levelController;
+	private SimpleBooleanProperty paused;
 
 	private Button backButton;
-	
+
 	private ImageView bgFrame;
 
 	public PlayViewController(LevelSelectView levelSelect, HomeScreen homeScreen, Level level) {
@@ -36,17 +38,19 @@ public class PlayViewController {
 		levelController.resetPlayer();
 		levelController.playMusic();
 
+		paused = levelController.getPaused();
+
 		backButton = root.backButton;
-		
+
 		bgFrame = root.bgFrame;
-		
+
 		init();
 	}
 
 	public PlayView getRoot() {
 		return root;
 	}
-	
+
 	public LevelController getLevelController() {
 		return levelController;
 	}
@@ -74,12 +78,20 @@ public class PlayViewController {
 	}
 
 	public void init() {
-		
+
 		bgFrame.translateXProperty().bind(root.layoutXProperty().multiply(-1));
 		bgFrame.translateYProperty().bind(root.layoutYProperty().multiply(-1));
 		backButton.translateXProperty().bind(root.layoutXProperty().multiply(-1));
 		backButton.translateYProperty().bind(root.layoutYProperty().multiply(-1));
-		
+
+		paused.addListener(e -> {
+			if (paused.get()) {
+				levelController.stopMusic();
+				root.getScene().setRoot(levelSelectView);
+				levelSelectView.requestFocus();
+			}
+		});
+
 		levelController.getDieded().addListener(e -> {
 			if (levelController.getDieded().get() && !levelController.getWon().get()) {
 				showDeathView();

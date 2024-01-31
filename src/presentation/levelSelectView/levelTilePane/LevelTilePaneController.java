@@ -1,6 +1,7 @@
 package presentation.levelSelectView.levelTilePane;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import business.level.Level;
 
@@ -10,7 +11,7 @@ public class LevelTilePaneController {
 	private ArrayList<TileNode> tileNodes;
 	private TileNode selectedNode;
 
-	public LevelTilePaneController(ArrayList<Level> levelArray) {
+	public LevelTilePaneController(HashMap<String, Level> levelArray) {
 		root = new LevelTilePane(levelArray);
 		tileNodes = root.nodes;
 

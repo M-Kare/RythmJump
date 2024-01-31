@@ -33,6 +33,9 @@ import presentation.levelSelectView.LevelSelectView;
 import presentation.playView.PlayView;
 import presentation.settingsView.SettingsViewController;
 
+/**
+ * Controller für die Level - Setzt die Logik für die Bewegung des Spielers um
+ */
 public class LevelController {
 	private Level level;
 	private PlayView playView;
@@ -53,28 +56,31 @@ public class LevelController {
 	private SimpleBooleanProperty dieded;
 
 	private AnimationTimer timer;
-
 	private HashMap<KeyCode, Boolean> keybinds;
+	private SimpleBooleanProperty paused;
 
+	/**
+	 * Erzeugt Level basierend auf der Level-Datei und dem SongPath. PlayView wird
+	 * benötigt, damit die "Kamera" sich mit bewegen kann
+	 * 
+	 * @param level    Level-Datei
+	 * @param songPath Song-Pfad
+	 * @param playView Root des Level
+	 */
 	public LevelController(File level, String songPath, PlayView playView) {
 		this.playView = playView;
 
 		this.keybinds = new HashMap<>();
+		paused = new SimpleBooleanProperty(false);
 		this.level = new Level(level, songPath);
 
 		winArea = new ArrayList<>(this.level.getWinArea());
 		obstacles = new ArrayList<>(this.level.getObstacles());
 		deathArea = new ArrayList<>(this.level.getDeathArea());
 
-//		speed = settingsController.getSpeedValue();
-//		coyote = settingsController.getCoyoteValue();
-//		jumpHeight = settingsController.getJumpHeightValue();
-//		autoJumpEnabled = settingsController.getAutoJump();
-//		rhythmEnabled = settingsController.getRhythmEnabled();
-
 		music = new BeatControlls(songPath, this);
-		if(Config.getRhythmEnabled()) {
-			this.level.getChildren().add(music);			
+		if (Config.getRhythmEnabled()) {
+			this.level.getChildren().add(music);
 		}
 
 		this.player = new Player();
@@ -85,50 +91,129 @@ public class LevelController {
 		init();
 	}
 
+	/**
+	 * Alternativer Konstruktor, bei dem ein fertiges Level mitgegeben wird. Es wird
+	 * ein neues Level basierend auf der Datei und des hinterlegten Songs des Levels
+	 * erzeugt
+	 * 
+	 * @param level    Fertiges Level
+	 * @param playView Root des Levels
+	 */
 	public LevelController(Level level, PlayView playView) {
 		this(level.getFile(), level.getSong(), playView);
 	}
 
+	/**
+	 * Getter für Level
+	 * 
+	 * @return Level
+	 */
 	public Level getRoot() {
 		return level;
 	}
 
+	/**
+	 * Getter für die Anzahl der gemachten Sprünge
+	 * 
+	 * @return Sprung-Anzahl
+	 */
 	public int getJumpCount() {
 		return jumpCount;
 	}
 
+	/**
+	 * Getter für die vergangenen Beats
+	 * 
+	 * @return Beat-Anzahl
+	 */
 	public int getBeatCount() {
 		return music.getBeatCount();
 	}
 
+	/**
+	 * Getter für die getätigten off-beat Sprünge
+	 * 
+	 * @return verfehlt Sprünge-Anzahl
+	 */
 	public int getMissedJumpCount() {
 		return missedJumpCount;
 	}
 
+	/**
+	 * Getter für die Anzahl der Tode im Level-Durchlauf
+	 * 
+	 * @return Tode-Anzahl
+	 */
 	public int getDeathCount() {
 		return deathCount;
 	}
 
+	/**
+	 * Getter für die HashMap mit den Zuständen der gedrückten Knöpfe
+	 * 
+	 * @return Tastatur-Inputs
+	 */
 	public HashMap<KeyCode, Boolean> getKeybinds() {
 		return keybinds;
 	}
 
+	/**
+	 * Getter für den Paused-Property
+	 * 
+	 * @return Paused-Property
+	 */
+	public SimpleBooleanProperty getPaused() {
+		return paused;
+	}
+
+	/**
+	 * Setter für den Paused-Property
+	 * 
+	 * @param value neuer Zustand
+	 */
+	public void setPaused(boolean value) {
+		paused.set(value);
+	}
+
+	/**
+	 * Getter für das Gestorben-Property
+	 * 
+	 * @return Gestorben-Property
+	 */
 	public SimpleBooleanProperty getDieded() {
 		return dieded;
 	}
 
+	/**
+	 * Getter für das Gewonnen-Property
+	 * 
+	 * @return Gewonnen-Property
+	 */
 	public SimpleBooleanProperty getWon() {
 		return won;
 	}
 
+	/**
+	 * Getter für die Spielfigur im Level
+	 * 
+	 * @return Spielfigur
+	 */
 	public Player getPlayer() {
 		return player;
 	}
 
+	/**
+	 * Setter für die Spielfigur im Level
+	 * 
+	 * @param player Spielfigur
+	 */
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
 
+	/**
+	 * Setzt den Spieler und das Level-Layout auf die Spawn-Position des Spielers
+	 */
 	public void resetPlayer() {
 		if (!level.getChildren().contains(player))
 			level.getChildren().add(player);
@@ -144,21 +229,34 @@ public class LevelController {
 		dieded.set(false);
 	}
 
+	/**
+	 * Setzt die Tastatur-HashMap wieder auf false
+	 */
 	public void resetKeys() {
 		keybinds.forEach((key, value) -> {
 			value = false;
 		});
 	}
 
+	/**
+	 * Stopt die Musik und den Animation-Timer
+	 */
 	public void stopMusic() {
 		music.stopMusic();
 		timer.stop();
 	}
 
+	/**
+	 * Startet die Musik
+	 */
 	public void playMusic() {
 		music.playMusic();
 	}
 
+	/**
+	 * Fügt nötige Listener und Handler hinzu und kümmert sich mithilfe des
+	 * Animationtimers um die Eingaben des Users
+	 */
 	public void init() {
 		/**
 		 * KEYBINDS Verwendete Knöpfe
@@ -183,11 +281,9 @@ public class LevelController {
 				keybinds.put(event.getCode(), true);
 
 				switch (event.getCode()) {
-//				case ESCAPE:
-//					level.getScene().setRoot(levelSelectView);
-//					levelSelectView.requestFocus();
-//					stopMusic();
-//					break;
+				case ESCAPE:
+					paused.set(true);
+					break;
 				case W:
 					jump();
 					break;
@@ -210,9 +306,9 @@ public class LevelController {
 				keybinds.put(event.getCode(), false);
 			}
 		});
-		
+
 		/**
-		 * SET_LAYOUT Damit die "Kamera" dem Spieler folgt
+		 * SET_LAYOUT-X Damit die "Kamera" dem Spieler folgt
 		 */
 		player.translateXProperty().addListener((obs, oldValue, newValue) -> {
 			if (!won.get() && !dieded.get()) {
@@ -223,6 +319,9 @@ public class LevelController {
 				}
 			}
 		});
+		/**
+		 * SET_LAYOUT-Y Damit die "Kamera" dem Spieler folgt
+		 */
 		player.translateYProperty().addListener((obs, oldValue, newValue) -> {
 			if (!won.get() && !dieded.get()) {
 				int playerPosY = newValue.intValue();
@@ -231,10 +330,16 @@ public class LevelController {
 				}
 			}
 		});
-		
+
+		/**
+		 * BEAT_BORDER Bindet den Beat-Rahmen an das Layout, damit es sich mit bewegt
+		 */
 		music.translateXProperty().bind(playView.layoutXProperty().multiply(-1));
 		music.translateYProperty().bind(playView.layoutYProperty().multiply(-1));
 
+		/**
+		 * DIEDED Zählt den Todes-Counter hoch wenn der Spieler beim spielen stirbt
+		 */
 		dieded.addListener(e -> {
 			if (dieded.get() && !won.get()) {
 				deathCount++;
@@ -247,16 +352,25 @@ public class LevelController {
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				/**
+				 * AUTOJUMP ohne Rhythmus
+				 */
 				if (!Config.getRhythmEnabled() && Config.getAutoJump()) {
 					jump();
 				}
 
+				/**
+				 * DEATH Kollision mit Tod
+				 */
 				for (Node death : deathArea) {
 					if (player.getBoundsInParent().intersects(death.getBoundsInParent())) {
 						dieded.set(true);
 					}
 				}
 
+				/**
+				 * WIN Kollision mit Sieg
+				 */
 				for (Node win : winArea) {
 					if (player.getBoundsInParent().intersects(win.getBoundsInParent())) {
 						won.set(true);
@@ -264,14 +378,14 @@ public class LevelController {
 				}
 
 //				/**
-//				 * JUMPING
+//				 * JUMPING -> nicht mehr verwendet, damit Sprungtaste nicht gehalten werden kann
 //				 */
 //				if (keybinds.get(KeyCode.SPACE) || keybinds.get(KeyCode.W) || keybinds.get(KeyCode.UP)) {
 //					jump();
 //				}
 
 				/**
-				 * RESPAWN
+				 * RESPAWN manuelles Respawnen
 				 */
 				if (keybinds.get(KeyCode.R)) {
 					player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
@@ -284,18 +398,17 @@ public class LevelController {
 				/**
 				 * MOVING X Seitliches Bewegen
 				 */
-				if ((keybinds.get(KeyCode.RIGHT) || keybinds.get(KeyCode.D))
-				/*
-				 * && player.getTranslateX() + Config.PLAYER_SIZE <= level.getLevelLength() - 5
-				 */) {
-					if (player.getTranslateX() + player.getLayoutBounds().getWidth() >= level.getLevelLength() - Config.BLOCK_SIZE - 1) {
+				if ((keybinds.get(KeyCode.RIGHT) || keybinds.get(KeyCode.D))) {
+					if (player.getTranslateX() + player.getLayoutBounds().getWidth() >= level.getLevelLength()
+							- Config.BLOCK_SIZE - 1 && level.getAllowTeleport()) {
 						player.setTranslateX(Config.BLOCK_SIZE + 2);
 					}
 					movePlayerX(Config.getPlayerSpeed());
 				}
-				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))/* && player.getTranslateX() >= 5 */) {
-					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1) {
-						player.setTranslateX(level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getLayoutBounds().getWidth());
+				if ((keybinds.get(KeyCode.LEFT) || keybinds.get(KeyCode.A))) {
+					if (player.getTranslateX() <= Config.BLOCK_SIZE + 1 && level.getAllowTeleport()) {
+						player.setTranslateX(
+								level.getLevelLength() - Config.BLOCK_SIZE - 2 - player.getLayoutBounds().getWidth());
 					}
 					movePlayerX(-(Config.getPlayerSpeed()));
 				}
@@ -315,7 +428,8 @@ public class LevelController {
 	}
 
 	/**
-	 * JUMP Springen Methode
+	 * JUMP Springen Methode -> Wenn Rhythmus aktiv: onBeat = normaler Sprung;
+	 * offBeat = 1/5 Sprung; -> Wenn Rhythmus deaktiviert: normaler Sprung
 	 */
 	public void jump() {
 		if (Config.getRhythmEnabled()) {
@@ -376,10 +490,11 @@ public class LevelController {
 
 		for (int i = 0; i < Math.abs(value); i++) {
 			for (Node obstacle : obstacles) {
-				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent())
-						|| player.getTranslateY() + player.getLayoutBounds().getHeight() >= level.getLevelHeight() - 5) {
+				if (player.getBoundsInParent().intersects(obstacle.getBoundsInParent()) || player.getTranslateY()
+						+ player.getLayoutBounds().getHeight() >= level.getLevelHeight() - 5) {
 					if (movingDown) {
-						if (player.getTranslateY() + (player.getLayoutBounds().getHeight()) == obstacle.getTranslateY()) {
+						if (player.getTranslateY() + (player.getLayoutBounds().getHeight()) == obstacle
+								.getTranslateY()) {
 							player.setTranslateY(player.getTranslateY() - 1);
 							player.setVelocity(1.25); // "laggy" wenn unter 1.25 da wert nicht konstant bleibt
 							if (!keybinds.get(KeyCode.SPACE) && !keybinds.get(KeyCode.W) && !keybinds.get(KeyCode.UP))

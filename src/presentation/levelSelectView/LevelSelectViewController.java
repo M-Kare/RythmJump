@@ -2,6 +2,7 @@ package presentation.levelSelectView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class LevelSelectViewController {
 	private Button selectButton;
 	private Button circle;
 
-	public LevelSelectViewController(ArrayList<Level> levelArray, HomeScreen homeScreen) {
+	public LevelSelectViewController(HashMap<String, Level> levelArray, HomeScreen homeScreen) {
 		root = new LevelSelectView(levelArray);
 		this.homeScreen = homeScreen;
 

@@ -13,9 +13,12 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
+/**
+ * Zuständig für den Rhythmus und die Musik
+ */
 public class BeatControlls extends HBox {
 	LevelController levelController;
-	
+
 	private SimpleMinim minim;
 	private AudioPlayer audioPlayer;
 	private BeatDetect beat;
@@ -26,7 +29,7 @@ public class BeatControlls extends HBox {
 
 	private Thread beatThread;
 	private boolean onBeat;
-	
+
 	private int beatCount;
 
 	private HBox beatBorder;
@@ -35,11 +38,17 @@ public class BeatControlls extends HBox {
 	private final Border OFF_BEAT_BORDER = new Border(
 			new BorderStroke(Color.PINK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(20, 0, 0, 0)));
 
+	/**
+	 * Erzeugt AudioPlayer (und BeatDetection wenn benötigt)
+	 * 
+	 * @param songPath        Pfad zum abzuspielenden Song
+	 * @param levelController Controller des aktuellen Levels (für AutoJump)
+	 */
 	public BeatControlls(String songPath, LevelController levelController) {
 		super();
 		beatBorder = this;
 		this.levelController = levelController;
-		
+
 		beatCount = 0;
 
 		minim = new SimpleMinim(false);
@@ -54,15 +63,23 @@ public class BeatControlls extends HBox {
 			frameCounter = 0;
 			beatBorder.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 			beatBorder.setBorder(OFF_BEAT_BORDER);
-			
+
 			initMusic();
 		}
 	}
-	
+
+	/**
+	 * Getter für die Beat-Anzahl
+	 * 
+	 * @return vergangene Beats
+	 */
 	public int getBeatCount() {
 		return beatCount;
 	}
 
+	/**
+	 * Timer und Thread für den Rhythmus / den Beat
+	 */
 	public void initMusic() {
 		detect = new AnimationTimer() {
 			@Override
@@ -114,10 +131,18 @@ public class BeatControlls extends HBox {
 		};
 	}
 
+	/**
+	 * Ist true für 12 Frames nach einem Beat
+	 * 
+	 * @return Beat getroffen
+	 */
 	public boolean getOnBeat() {
 		return onBeat;
 	}
 
+	/**
+	 * Stopt Musik (AudioPlayer und Minim), sowie Thread und Timer wenn nötig
+	 */
 	public void stopMusic() {
 		if (audioPlayer == null)
 			return;
@@ -131,6 +156,9 @@ public class BeatControlls extends HBox {
 		minim.stop();
 	}
 
+	/**
+	 * Startet Musik, sowie timer wenn nötig
+	 */
 	public void playMusic() {
 		if (audioPlayer == null)
 			return;

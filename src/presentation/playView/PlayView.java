@@ -27,12 +27,21 @@ public class PlayView extends StackPane {
 		levelController.resetPlayer();
 		backButton = new Button("Back");
 		backButton.setFocusTraversable(false);
+		
+		String bgPath = null;
+		if(this.level.getBackgroundPath() == null) {
+			bgPath = Config.STD_BACKGROUND;
+		} else {
+			bgPath = this.level.getBackgroundPath();
+		}
 		try {
-			background = new Image(Config.findFile("background-islandshore_enlarged.png", "./assets/textures/backgrounds").toURI().toURL().toExternalForm());
+				background = new Image(Config.findFile(bgPath, Config.BACKGROUNDS_FOLDER)
+						.toURI().toURL().toExternalForm());				
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		bgFrame = new ImageView(background);
 		this.getChildren().addAll(bgFrame, this.level, backButton);
 		this.setAlignment(Pos.TOP_LEFT);

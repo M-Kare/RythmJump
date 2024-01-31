@@ -6,11 +6,15 @@ import presentation.playView.PlayViewController;
 import presentation.settingsView.SettingsView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import business.level.Level;
 import business.level.LevelController;
 import javafx.scene.control.Button;
 
+/**
+ * Controller für die HomeScreen-Klasse
+ */
 public class HomeScreenController {
 
 	private HomeScreen root;
@@ -22,9 +26,14 @@ public class HomeScreenController {
 
 	private Button settingsButton;
 	private SettingsView settingsView;
-	private ArrayList<Level> levelArray;
+	private HashMap<String, Level> levelArray;
 
-	public HomeScreenController(ArrayList<Level> levelArray) {
+	/**
+	 * Logik für die Buttons des HomeScreen-Menues
+	 * 
+	 * @param levelArray Liste der verfügbaren Level zum laden.
+	 */
+	public HomeScreenController(HashMap<String, Level> levelArray) {
 		root = new HomeScreen();
 		play = root.play;
 		levelSelect = root.levelSelect;
@@ -41,6 +50,9 @@ public class HomeScreenController {
 		init();
 	}
 
+	/**
+	 * Setzt Listener und Handler für die Buttons
+	 */
 	public void init() {
 
 		play.setOnMouseClicked(e -> {
@@ -53,15 +65,9 @@ public class HomeScreenController {
 		});
 
 		tutorial.setOnMouseClicked(e -> {
-			Level selectedLevel = null;
-			for (Level level : this.levelArray) {
-				if (level.getLevelName().contains("tutorial")) {
-					selectedLevel = level;
-					break;
-				}
-			}
-			PlayViewController playViewController = new PlayViewController(levelSelectView, root, selectedLevel);
+			Level tutorialLevel = levelArray.get("tutorial.lvl");
 
+			PlayViewController playViewController = new PlayViewController(levelSelectView, root, tutorialLevel);
 			playViewController.getLevelController().resetPlayer();
 			root.getScene().setRoot(playViewController.getRoot());
 			playViewController.getLevelController().getRoot().requestFocus();
@@ -73,6 +79,11 @@ public class HomeScreenController {
 
 	}
 
+	/**
+	 * Getter für HomeScreen (Root)
+	 * 
+	 * @return root (HomesScreen)
+	 */
 	public HomeScreen getRoot() {
 		return root;
 	}
