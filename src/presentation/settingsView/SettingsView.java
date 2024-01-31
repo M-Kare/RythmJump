@@ -1,6 +1,6 @@
 package presentation.settingsView;
 
-import Application.Config;
+import business.Config;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -29,6 +29,7 @@ public class SettingsView extends GridPane {
 
 	protected Button cancelButton;
 	protected Button saveButton;
+	protected Button resetButton;
 	private HBox buttonsBox;
 
 	public SettingsView() {
@@ -57,15 +58,15 @@ public class SettingsView extends GridPane {
 
 		saveButton = new Button("Save");
 		cancelButton = new Button("Cancel");
+		resetButton = new Button("Default");
 		saveButton.setMinWidth(60);
-		buttonsBox = new HBox(saveButton, cancelButton);
+		buttonsBox = new HBox(saveButton, resetButton, cancelButton);
 		this.add(buttonsBox, 1, 8);
 
 		this.setVgap(5);
 		this.setHgap(5);
 		this.setAlignment(Pos.CENTER);
-		this.setBackground(new Background(new BackgroundFill(Color.BEIGE, null, null)));
-		this.setMaxSize(300, 200);
+		this.setBackground(new Background(new BackgroundFill(new Color(0.1, 0.1, 0.1, 0.8), null, null)));
 	}
 
 }

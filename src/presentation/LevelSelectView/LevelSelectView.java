@@ -1,9 +1,9 @@
-package presentation.LevelSelectView;
+package presentation.levelSelectView;
 
 import java.util.ArrayList;
 
-import Level.Level;
-import Player.Player;
+import business.level.Level;
+import business.player.Player;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,8 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import presentation.betterSelector.LevelTilePane;
-import presentation.betterSelector.LevelTilePaneController;
+import presentation.levelSelectView.levelTilePane.LevelTilePane;
+import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
 
 public class LevelSelectView extends BorderPane {
 	protected LevelTilePaneController levelTilePaneController;

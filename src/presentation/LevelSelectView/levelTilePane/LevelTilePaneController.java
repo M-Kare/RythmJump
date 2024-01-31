@@ -1,8 +1,8 @@
-package presentation.betterSelector;
+package presentation.levelSelectView.levelTilePane;
 
 import java.util.ArrayList;
 
-import Level.Level;
+import business.level.Level;
 
 public class LevelTilePaneController {
 	private LevelTilePane root;

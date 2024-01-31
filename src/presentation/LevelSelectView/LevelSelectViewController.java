@@ -1,20 +1,22 @@
-package presentation.LevelSelectView;
+package presentation.levelSelectView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import Level.Level;
-import Level.LevelController;
+import business.level.Level;
+import business.level.LevelController;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import presentation.betterSelector.LevelTilePane;
-import presentation.betterSelector.LevelTilePaneController;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.levelTilePane.LevelTilePane;
+import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
+import presentation.playView.PlayView;
+import presentation.playView.PlayViewController;
 
 public class LevelSelectViewController {
 	private LevelSelectView root;
@@ -45,13 +47,10 @@ public class LevelSelectViewController {
 
 	public void loadLevel() {
 		Level selectedLevel = levelTilePaneController.getSelected().getLevel();
-		LevelController selectedLevelController = new LevelController(selectedLevel, root, homeScreen);
+		PlayViewController playViewController = new PlayViewController(root, homeScreen, selectedLevel);
 
-		selectedLevelController.resetPlayer();
-		root.getScene().setRoot(selectedLevelController.getRoot());
-		selectedLevelController.getRoot().requestFocus();
-
-		selectedLevelController.playMusic();
+		root.getScene().setRoot(playViewController.getRoot());
+		playViewController.getLevelController().getRoot().requestFocus();
 	}
 
 	public void init() {
@@ -88,7 +87,9 @@ public class LevelSelectViewController {
 				loadLevel();
 				break;
 			case ESCAPE:
-//				root.getScene().setRoot();	Home
+				root.getScene().setRoot(homeScreen);
+				homeScreen.requestFocus();
+				break;
 			}
 		});
 

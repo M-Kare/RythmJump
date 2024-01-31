@@ -1,4 +1,4 @@
-package Level;
+package business.level;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Application.Config;
-import Application.Dimensions;
+import business.Config;
+import business.Dimensions;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -24,8 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
 
-public class Level extends StackPane {
-	private Pane levelRoot;
+public class Level extends Pane {
 	private int[] dimensions;
 	private char[][] levelArray;
 	private File levelFile;
@@ -33,11 +32,6 @@ public class Level extends StackPane {
 	private int levelHeight;
 	private int[] playerSpawn;
 	private String levelName;
-
-	private int jumpCount;
-	private int missedJumpCount;
-	private int beatCount;
-	private int deathCount;
 
 	private Image thumbnail;
 
@@ -47,11 +41,9 @@ public class Level extends StackPane {
 
 	private String songPath;
 
-	protected HBox beatBorder;
-
 	public Level(File level, String songPath) {
 		super();
-		levelRoot = new Pane();
+//		levelRoot = new Pane();
 		this.levelFile = level;
 		levelName = level.getName().split(".lvl")[0];
 
@@ -61,8 +53,8 @@ public class Level extends StackPane {
 		this.winArea = new ArrayList<>();
 		this.deathArea = new ArrayList<>();
 
-		jumpCount = 0;
-		deathCount = 0;
+//		jumpCount = 0;
+//		deathCount = 0;
 
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
@@ -73,24 +65,25 @@ public class Level extends StackPane {
 		playerSpawn = new int[2];
 
 		addChildren(levelArray);
-		levelRoot.getChildren().addAll(obstacles);
-		levelRoot.getChildren().addAll(winArea);
-		levelRoot.getChildren().addAll(deathArea);
+//		levelRoot.getChildren().addAll(obstacles);
+//		levelRoot.getChildren().addAll(winArea);
+//		levelRoot.getChildren().addAll(deathArea);
+
+		this.getChildren().addAll(obstacles);
+		this.getChildren().addAll(winArea);
+		this.getChildren().addAll(deathArea);
+		this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
 		takeThumbnail();
-		beatBorder = new HBox();
-		beatBorder.setMinSize(Config.WINDOW_WIDTH - 10, Config.WINDOW_HEIGHT - 10);
-		this.getChildren().addAll(levelRoot, beatBorder);
-		this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 
 	public Level(File level) {
 		this(level, Config.STD_SONG);
 	}
 
-	public Pane getLevelRoot() {
-		return levelRoot;
-	}
+//	public Pane getLevelRoot() {
+//		return levelRoot;
+//	}
 
 	public String getSong() {
 		return songPath;
@@ -107,54 +100,54 @@ public class Level extends StackPane {
 	public File getFile() {
 		return levelFile;
 	}
-	
-	public int getMissedJumpCount() {
-		return missedJumpCount;
-	}
-	
-	public void setMissedJumpCount(int count) {
-		missedJumpCount = count;
-	}
-	
-	public void addMissedJumpCount(int value) {
-		missedJumpCount += value;
-	}
-	
-	public int getBeatCount() {
-		return beatCount;
-	}
-	
-	public void setBeatCount(int count) {
-		beatCount = count;
-	}
-	
-	public void addBeatCount(int value) {
-		beatCount += value;
-	}
 
-	public int getJumpCount() {
-		return jumpCount;
-	}
-
-	public int getDeathCount() {
-		return deathCount;
-	}
-
-	public void setDeathCount(int count) {
-		deathCount = count;
-	}
-
-	public void addDeathCount(int value) {
-		deathCount += value;
-	}
-
-	public void setJumpCount(int count) {
-		jumpCount = count;
-	}
-
-	public void addJumpCount(int value) {
-		jumpCount += value;
-	}
+//	public int getMissedJumpCount() {
+//		return missedJumpCount;
+//	}
+//	
+//	public void setMissedJumpCount(int count) {
+//		missedJumpCount = count;
+//	}
+//	
+//	public void addMissedJumpCount(int value) {
+//		missedJumpCount += value;
+//	}
+//	
+//	public int getBeatCount() {
+//		return beatCount;
+//	}
+//	
+//	public void setBeatCount(int count) {
+//		beatCount = count;
+//	}
+//	
+//	public void addBeatCount(int value) {
+//		beatCount += value;
+//	}
+//
+//	public int getJumpCount() {
+//		return jumpCount;
+//	}
+//
+//	public int getDeathCount() {
+//		return deathCount;
+//	}
+//
+//	public void setDeathCount(int count) {
+//		deathCount = count;
+//	}
+//
+//	public void addDeathCount(int value) {
+//		deathCount += value;
+//	}
+//
+//	public void setJumpCount(int count) {
+//		jumpCount = count;
+//	}
+//
+//	public void addJumpCount(int value) {
+//		jumpCount += value;
+//	}
 
 	public Image getThumbnail() {
 		return thumbnail;
@@ -195,7 +188,8 @@ public class Level extends StackPane {
 			vpWidth = levelLength * 0.31;
 
 		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
-		thumbnail = levelRoot.snapshot(sp, null);
+//		thumbnail = levelRoot.snapshot(sp, null);
+		thumbnail = snapshot(sp, null);
 	}
 
 	private char[][] readLevelFromFile(File level) {

@@ -1,6 +1,6 @@
-package Player;
+package business.player;
 
-import Application.Config;
+import business.Config;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 

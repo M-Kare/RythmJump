@@ -1,4 +1,4 @@
-package Application;
+package business;
 
 public enum Dimensions {
 	Y(1), X(0);

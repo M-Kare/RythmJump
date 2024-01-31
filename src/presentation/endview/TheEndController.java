@@ -1,9 +1,10 @@
 package presentation.endview;
 
-import Level.LevelController;
+import business.level.LevelController;
 import javafx.scene.control.Button;
-import presentation.LevelSelectView.LevelSelectView;
 import presentation.homeView.HomeScreen;
+import presentation.levelSelectView.LevelSelectView;
+import presentation.playView.PlayViewController;
 
 public class TheEndController {
 
@@ -43,11 +44,10 @@ public class TheEndController {
 
 		repeat.setOnMouseClicked(e -> {
 			currentLevelController.stopMusic();
-			LevelController repeatLevelController = new LevelController(currentLevelController.getRoot(), levelSelectView, homeScreen);
-			repeatLevelController.resetPlayer();
-			root.getScene().setRoot(repeatLevelController.getRoot());
-			repeatLevelController.getRoot().requestFocus();
-			repeatLevelController.playMusic();
+			PlayViewController repeatPlayViewController = new PlayViewController(levelSelectView, homeScreen, currentLevelController.getRoot());
+			repeatPlayViewController.getLevelController().resetPlayer();
+			root.getScene().setRoot(repeatPlayViewController.getRoot());
+			repeatPlayViewController.getLevelController().getRoot().requestFocus();
 		});
 	}
 

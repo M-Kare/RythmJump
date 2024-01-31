@@ -1,5 +1,6 @@
 package presentation.settingsView;
 
+import business.Config;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -10,70 +11,34 @@ public class SettingsViewController {
 	private HomeScreen homeScreen;
 
 	private TextField speed;
-	private int speedValue;
-
 	private TextField jumpHeight;
-	private int jumpHeightValue;
-
 	private TextField coyote;
-	private int coyoteValue;
-	
 	private CheckBox autoJump;
-	private boolean autoJumpValue;
-	
 	private CheckBox rhythmEnabled;
-	private boolean rhythmEnabledValue;
 
 	private Button saveButton;
 	private Button cancelButton;
+	private Button resetButton;
 
 	public SettingsViewController(HomeScreen homeScreen) {
 		root = new SettingsView();
 		this.homeScreen = homeScreen;
 		
 		speed = root.speed;
-		speedValue = Integer.parseInt(speed.getText());
-
 		jumpHeight = root.jumpHeight;
-		jumpHeightValue = Integer.parseInt(jumpHeight.getText());
-
 		coyote = root.coyote;
-		coyoteValue = Integer.parseInt(coyote.getText());
-
 		autoJump = root.autoJump;
-		autoJumpValue = autoJump.isSelected();
-		
 		rhythmEnabled = root.rhythmEnabled;
-		rhythmEnabledValue = rhythmEnabled.isSelected();
 		
 		saveButton = root.saveButton;
 		cancelButton = root.cancelButton;
+		resetButton = root.resetButton;
 
 		init();
 	}
 
 	public SettingsView getRoot() {
 		return root;
-	}
-
-	public int getCoyoteValue() {
-		return coyoteValue;
-	}
-
-	public int getJumpHeightValue() {
-		return jumpHeightValue;
-	}
-
-	public int getSpeedValue() {
-		return speedValue;
-	}
-	
-	public boolean getAutoJump() {
-		return autoJumpValue;
-	}
-	
-	public boolean getRhythmEnabled() {
-		return rhythmEnabledValue;
 	}
 
 	public void init() {
@@ -96,23 +61,37 @@ public class SettingsViewController {
 		});
 
 		saveButton.setOnMouseClicked(e -> {
-			speedValue = Integer.parseInt(speed.getText());
-			jumpHeightValue = Integer.parseInt(jumpHeight.getText());
-			coyoteValue = Integer.parseInt(coyote.getText());
-			autoJumpValue = autoJump.isSelected();
-			rhythmEnabledValue = rhythmEnabled.isSelected();
+			Config.setPlayerSpeed(Integer.parseInt(speed.getText()));
+			Config.setJumpHeight(Integer.parseInt(jumpHeight.getText()));
+			Config.setCoyote(Integer.parseInt(coyote.getText()));
+			Config.setAutoJump(autoJump.isSelected());
+			Config.setRhythmEnabled(rhythmEnabled.isSelected());
 			
 			homeScreen.getChildren().remove(root);
 		});
 		
 		cancelButton.setOnMouseClicked(e -> {
-			speed.setText(Integer.toString(speedValue));
-			jumpHeight.setText(Integer.toString(jumpHeightValue));
-			coyote.setText(Integer.toString(coyoteValue));
-			autoJump.setSelected(autoJumpValue);
-			rhythmEnabled.setSelected(rhythmEnabledValue);
+			speed.setText(Integer.toString(Config.getPlayerSpeed()));
+			jumpHeight.setText(Integer.toString(Config.getJumpHeight()));
+			coyote.setText(Integer.toString(Config.getCoyote()));
+			autoJump.setSelected(Config.getAutoJump());
+			rhythmEnabled.setSelected(Config.getRhythmEnabled());
 			
 			homeScreen.getChildren().remove(root);
+		});
+		
+		resetButton.setOnMouseClicked(e -> {
+			Config.setPlayerSpeed(Config.PLAYER_SPEED);
+			Config.setJumpHeight(Config.JUMP_HEIGHT);
+			Config.setCoyote(Config.COYOTE_TIME);
+			Config.setAutoJump(Config.AUTO_JUMP);
+			Config.setRhythmEnabled(Config.RHYTHM_ENABLED);
+			
+			speed.setText(Integer.toString(Config.getPlayerSpeed()));
+			jumpHeight.setText(Integer.toString(Config.getJumpHeight()));
+			coyote.setText(Integer.toString(Config.getCoyote()));
+			autoJump.setSelected(Config.getAutoJump());
+			rhythmEnabled.setSelected(Config.getRhythmEnabled());
 		});
 	}
 }

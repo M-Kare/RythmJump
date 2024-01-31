@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Level.Level;
-import Level.LevelGenerator;
+import business.Config;
+import business.level.Level;
+import business.level.LevelGenerator;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
