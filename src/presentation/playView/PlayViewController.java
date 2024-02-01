@@ -26,8 +26,6 @@ public class PlayViewController {
 	private LevelController levelController;
 	private SimpleBooleanProperty paused;
 
-	private Button backButton;
-
 	private ImageView bgFrame;
 
 	/**
@@ -48,8 +46,6 @@ public class PlayViewController {
 		levelController.playMusic();
 
 		paused = levelController.getPaused();
-
-		backButton = root.backButton;
 
 		bgFrame = root.bgFrame;
 
@@ -113,12 +109,6 @@ public class PlayViewController {
 		bgFrame.translateYProperty().bind(root.layoutYProperty().multiply(-1));
 
 		/**
-		 * Damit der Button sich mit dem Spieler / Layout bewegt
-		 */
-		backButton.translateXProperty().bind(root.layoutXProperty().multiply(-1));
-		backButton.translateYProperty().bind(root.layoutYProperty().multiply(-1));
-
-		/**
 		 * Property-Listener, der zum LevelSelect navigiert, wenn paused gesetzt wird
 		 */
 		paused.addListener(e -> {
@@ -145,15 +135,6 @@ public class PlayViewController {
 			if (levelController.getWon().get()) {
 				showEnd();
 			}
-		});
-
-		/**
-		 * Navigiert zum LevelSelectView, wenn der BackButton gedrückt wird
-		 */
-		backButton.setOnMouseClicked(e -> {
-			levelController.stopMusic();
-			root.getScene().setRoot(levelSelectView);
-			levelSelectView.requestFocus();
 		});
 	}
 }

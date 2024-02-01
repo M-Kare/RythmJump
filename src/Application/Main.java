@@ -42,11 +42,10 @@ public class Main extends Application {
 
 		scene = new Scene(homeScreen, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		homeScreen.requestFocus();
-		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("RythmJump");
-		primaryStage.setResizable(false);
+//		primaryStage.setResizable(false);
 		primaryStage.show();
 
 		primaryStage.setOnCloseRequest(e -> {

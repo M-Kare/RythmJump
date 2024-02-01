@@ -30,7 +30,10 @@ public class SettingsView extends GridPane {
 	private Label beatFramesText;
 	protected TextField beatFrames;
 
+	private Label autoJumpText;
 	protected CheckBox autoJump;
+	
+	private Label rhythmEnabledText;
 	protected CheckBox rhythmEnabled;
 
 	protected Button cancelButton;
@@ -62,11 +65,15 @@ public class SettingsView extends GridPane {
 		beatFrames = new TextField(Integer.toString(Config.ONBEAT_FRAMES));
 		this.add(beatFrames, 1, 4);
 
-		rhythmEnabled = new CheckBox("Rhythm Enabled:");
+		rhythmEnabledText = new Label("Rhythm-Mode:");
+		this.add(rhythmEnabledText, 0, 5);
+		rhythmEnabled = new CheckBox();
 		rhythmEnabled.setSelected(Config.RHYTHM_ENABLED);
 		this.add(rhythmEnabled, 1, 5);
 
-		autoJump = new CheckBox("Auto-jumping:");
+		autoJumpText = new Label("Auto-Jumping:");
+		this.add(autoJumpText, 0, 6);
+		autoJump = new CheckBox();
 		autoJump.setSelected(Config.AUTO_JUMP);
 		this.add(autoJump, 1, 6);
 
@@ -78,9 +85,8 @@ public class SettingsView extends GridPane {
 		this.add(buttonsBox, 1, 9);
 
 		this.setVgap(5);
-		this.setHgap(5);
+		this.setHgap(8);
 		this.setAlignment(Pos.CENTER);
-		this.setBackground(new Background(new BackgroundFill(new Color(0.1, 0.1, 0.1, 0.8), null, null)));
 	}
 
 }

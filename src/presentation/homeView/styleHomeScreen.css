@@ -11,7 +11,7 @@
  
 * {
 	/* -fx-base: #EBE0CD; */
-	-fx-background-color: #EBE0CD;
+
 }
 
 .root {
@@ -19,54 +19,20 @@
 	-fx-base: #EBE0CD; */
 	
 	-fx-font-size: 1.2em;
+	-fx-background-color: #EBE0CD;
 	/* -fx-font-weight: 600; */
 	/* -fx-font-family Futura, sans-serif; */
+}
+
+.menuTitle {
+    -fx-font-size: 8em;
+    -fx-font-weight: bold;
 }
 
 .button {
 	-fx-background-color: #1E1E1E;
 	-fx-text-fill: #EBE0CD;
-	
-	-fx-font-size: 1.5em;
-	-fx-font-weight: bold;
-}
-
-.selected {
-	-fx-background-color: #EF6936;
-    -fx-border-color: #EF6936;
-}
-
-.oddTile {
-    -fx-background-color: #B1BA75;
-}
-
-.evenTile {
-    -fx-background-color: #80C9AB;
-}
-
-.tileNode {
-    -fx-border-width: 5px;
-    -fx-border-color: rgba(0, 0, 0, 0);
-}
-
-#menuTitle {
-	
-}
-
-#circle {
-	-fx-min-width: 50.0;
-    -fx-min-height: 50.0;
-	-fx-padding: 10 0 0 0;
-	-fx-background-color: transparent;
-	-fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-	-fx-background-size: 48.0;
-	-fx-background-image: url("../../pics/circle@0.75x.png");
-}
-
-#levelSelectButton {
-	-fx-background-color: #1E1E1E;
-	-fx-text-fill: #EBE0CD;
+	-fx-pref-width: 8em;
 	
 	-fx-font-size: 1.5em;
 	-fx-font-weight: bold;
@@ -78,7 +44,15 @@
 	transition-duration: 0.4s;
 }
 
-#levelSelectButton:hover {
+.button:hover {
 	-fx-background-color: #EF6936;
-	
+}
+
+#settings {
+	-fx-background-color: rgba(33, 33, 33, 0.9);	
+	-fx-font-weight: bold;
+}
+
+#settings .label {
+	-fx-text-fill: #FFFFFF;
 }

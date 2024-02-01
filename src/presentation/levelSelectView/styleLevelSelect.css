@@ -17,19 +17,33 @@
 .root {
 	/* -fx-background-color: #EBE0CD;
 	-fx-base: #EBE0CD; */
-	
 	-fx-font-size: 1.2em;
+
 	/* -fx-font-weight: 600; */
 	/* -fx-font-family Futura, sans-serif; */
 }
 
-.button {
-	-fx-background-color: #1E1E1E;
-	-fx-text-fill: #EBE0CD;
-	
-	-fx-font-size: 1.5em;
-	-fx-font-weight: bold;
+.scroll-pane {
+	-fx-border-width: 1px;
+	-fx-border-color: #DAC9BC;
 }
+
+.scroll-bar:horizontal, .scroll-bar:vertical {
+	-fx-background-color: transparent;
+	-fx-pref-width: 0.8em;
+	-fx-pref-height: 0.8em;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal .thumb ,.scroll-bar:vertical .thumb {
+    -fx-background-color: #1E1E1E;
+    -fx-background-radius: 5em;
+}
+
 
 .selected {
 	-fx-background-color: #EF6936;
@@ -50,7 +64,7 @@
 }
 
 #menuTitle {
-	
+	-fx-graphic: url("../../../assets/pics/menu_title_alt@0.75x.png");
 }
 
 #circle {
@@ -61,10 +75,14 @@
 	-fx-background-repeat: no-repeat;
     -fx-background-position: center;
 	-fx-background-size: 48.0;
-	-fx-background-image: url("../../pics/circle@0.75x.png");
+	-fx-background-image: url("../../../assets/pics/circle_black@0.75x.png");
 }
 
-#levelSelectButton {
+#circle:hover {
+	-fx-background-image: url("../../../assets/pics/circle_onhover@0.75x.png");
+}
+
+.button {
 	-fx-background-color: #1E1E1E;
 	-fx-text-fill: #EBE0CD;
 	
@@ -78,7 +96,7 @@
 	transition-duration: 0.4s;
 }
 
-#levelSelectButton:hover {
+.button:hover {
 	-fx-background-color: #EF6936;
 	
 }

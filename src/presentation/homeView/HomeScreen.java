@@ -56,7 +56,7 @@ public class HomeScreen extends StackPane {
 		buttons = new VBox(play, levelSelect, tutorial, settingButton);
 		buttons.setAlignment(Pos.CENTER);
 		buttons.setSpacing(40);
-		root.setBottomAnchor(buttons, 250.00);
+		root.setBottomAnchor(buttons, 200.00);
 		root.setLeftAnchor(buttons, 50.00);
 		root.setRightAnchor(buttons, 50.00);
 
@@ -79,5 +79,8 @@ public class HomeScreen extends StackPane {
 
 		settingsController = new SettingsViewController(this);
 		settingsView = settingsController.getRoot();
+		settingsView.setId("settings");
+		
+		this.getStylesheets().add(getClass().getResource("styleHomeScreen.css").toExternalForm());
 	}
 }

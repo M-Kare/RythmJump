@@ -21,7 +21,6 @@ public class PlayView extends StackPane {
 	protected Level level;
 	protected ImageView bgFrame;
 	protected Image background;
-	protected Button backButton;
 
 	/**
 	 * Lädt das Level und fügt Hintergrund und Buttons hinzu
@@ -33,8 +32,6 @@ public class PlayView extends StackPane {
 		levelController = new LevelController(level, this);
 		this.level = levelController.getRoot();
 		levelController.resetPlayer();
-		backButton = new Button("Back");
-		backButton.setFocusTraversable(false);
 
 		String bgPath = null;
 		if (this.level.getBackgroundPath() == null) {
@@ -50,7 +47,7 @@ public class PlayView extends StackPane {
 		}
 
 		bgFrame = new ImageView(background);
-		this.getChildren().addAll(bgFrame, this.level, backButton);
+		this.getChildren().addAll(bgFrame, this.level);
 		this.setAlignment(Pos.TOP_LEFT);
 	}
 

@@ -36,7 +36,7 @@ public class TheEnd extends AnchorPane {
 	public TheEnd() {
 		// stats
 		jumpText = new Label("Jumps:");
-		missedText = new Label("Off-Beat Jumps:");
+		missedText = new Label("Missed:");
 		beatsText = new Label("Beats:");
 		deathText = new Label("Deaths:");
 		leftBox = new VBox(jumpText, missedText, beatsText, deathText);
@@ -51,22 +51,26 @@ public class TheEnd extends AnchorPane {
 		stats.setSpacing(5);
 
 		this.getChildren().add(stats);
-		this.setTopAnchor(stats, 20.00);
-		this.setRightAnchor(stats, 20.00);
+		this.setTopAnchor(stats, 30.00);
+		this.setRightAnchor(stats, 30.00);
 
 		// Middle-Box
 		title = new Label("Level Clear");
 		title.setId("clearText");
 
-		home = new Button("Home");
+		home = new Button();
+		home.getStyleClass().add("iconButton");
 		home.setId("homeButton");
-		levelSelect = new Button("Level Select");
+		levelSelect = new Button();
+		levelSelect.getStyleClass().add("iconButton");
 		levelSelect.setId("levelSelectButton");
-		repeat = new Button("Repeat");
+		repeat = new Button();
+		repeat.getStyleClass().add("iconButton");
 		repeat.setId("repeatLevelButton");
 
 		navigation = new HBox(home, levelSelect, repeat);
 		navigation.setAlignment(Pos.CENTER);
+		navigation.setSpacing(10);
 
 		middle = new VBox(title, navigation);
 		middle.setAlignment(Pos.CENTER);
@@ -80,6 +84,8 @@ public class TheEnd extends AnchorPane {
 
 		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("theEndView");
+		
+		this.getStylesheets().add(getClass().getResource("styleTheEnd.css").toExternalForm());
 	}
 
 	/**

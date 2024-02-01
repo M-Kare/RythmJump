@@ -41,17 +41,14 @@ public class LevelSelectView extends BorderPane {
 	public LevelSelectView(HashMap<String, Level> levelArray) {
 		levelTilePaneController = new LevelTilePaneController(levelArray);
 		levelTilePane = levelTilePaneController.getRoot();
+		levelTilePane.setId("levelTilePane");
 		levelBox = new HBox(levelTilePane);
+		levelBox.setId("levelBox");
 
-		Image menuTextImg = new Image("/pics/menu_title_alt@0.75x.png"); // menu title as png file instead of plain text
-		ImageView menuTextView = new ImageView(menuTextImg);
-		menuTextView.setPreserveRatio(true);
 		menuText = new Label();
-		menuText.setGraphic(menuTextView);
-
 		menuText.setId("menuTitle");
 
-		designElement_circle = new Button("←");
+		designElement_circle = new Button("B");
 		designElement_circle.getStyleClass().add("button");
 
 		designElement_circle.setId("circle");
@@ -59,7 +56,7 @@ public class LevelSelectView extends BorderPane {
 		selectButton = new Button("Select");
 
 		selectButton.getStyleClass().add("button"); // general styling for all buttons
-		selectButton.setId("levelSelectButton"); // button specific styling
+		selectButton.setId("selectButton"); // button specific styling
 
 		Player player = new Player();
 		player.setScaleX(4);
@@ -94,6 +91,6 @@ public class LevelSelectView extends BorderPane {
 		this.setBottom(bottomBox);
 		this.setCenter(levelBox);
 
-		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+		this.getStylesheets().add(getClass().getResource("styleLevelSelect.css").toExternalForm());
 	}
 }

@@ -7,7 +7,13 @@ import business.level.Level;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 
 /**
  * Eine ScrollPane, in der die Level mit Thumnbnails dargestellt werden.
@@ -37,7 +43,6 @@ public class LevelTilePane extends ScrollPane {
 		nodes = new ArrayList<>();
 
 		tilePane = new TilePane();
-
 		tilePane.setVgap(100);
 		tilePane.setHgap(100);
 		tilePane.setPrefColumns(3);

@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 public class DeathView extends AnchorPane {
 	private VBox middle;
 	private Label hauptText;
-	private Label discription;
+	private Label description;
 	protected Button levelSelectButton;
 	protected Button repeat;
 
@@ -25,13 +25,19 @@ public class DeathView extends AnchorPane {
 	 */
 	public DeathView() {
 		hauptText = new Label("You Dieded");
-		discription = new Label("Press any key");
-		levelSelectButton = new Button("LevelSelect");
-		repeat = new Button("repeat");
+		hauptText.setId("mainText");
+		description = new Label("Press any key");
+		description.setId("description");
+		levelSelectButton = new Button();
+		levelSelectButton.getStyleClass().add("iconButton");
+		levelSelectButton.setId("backButton");
+		repeat = new Button();
+		repeat.getStyleClass().add("iconButton");
+		repeat.setId("repeat");
 
-		middle = new VBox(hauptText, discription, repeat);
+		middle = new VBox(hauptText, description, repeat);
 		middle.setAlignment(Pos.CENTER);
-		middle.setSpacing(50);
+		middle.setSpacing(80);
 
 		this.getChildren().addAll(middle, levelSelectButton);
 
@@ -44,7 +50,8 @@ public class DeathView extends AnchorPane {
 		this.setBottomAnchor(middle, 10.00);
 
 		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-		this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		this.setId("DeathView");
+		
+		this.getStylesheets().add(getClass().getResource("styleDeathView.css").toExternalForm());
 	}
 }
