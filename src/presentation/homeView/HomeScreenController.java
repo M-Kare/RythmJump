@@ -8,6 +8,7 @@ import presentation.settingsView.SettingsView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import business.Config;
 import business.level.Level;
 import business.level.LevelController;
 import javafx.scene.control.Button;
@@ -55,8 +56,18 @@ public class HomeScreenController {
 	 */
 	public void init() {
 
+		/**
+		 * Sucht sich ein zufälliges Level aus der LevelListe und läd es
+		 */
 		play.setOnMouseClicked(e -> {
-			// TODO select first level or random level
+			ArrayList<Level> levelList = new ArrayList<>(levelArray.values());
+			int randomIndex = Config.getRandomNumber(0, levelList.size() - 1);
+
+			PlayViewController playViewController = new PlayViewController(levelSelectView, root,
+					levelList.get(randomIndex));
+			playViewController.getLevelController().resetPlayer();
+			root.getScene().setRoot(playViewController.getRoot());
+			playViewController.getLevelController().getRoot().requestFocus();
 		});
 
 		levelSelect.setOnMouseClicked(e -> {

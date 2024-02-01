@@ -18,8 +18,8 @@ import javafx.scene.paint.Color;
  */
 public class BeatControlls extends HBox {
 	private final int BEAT_FREQ = 599;
-	private final double FRAME_SECONDS = 16.00+(2/3);
-	
+	private final double FRAME_SECONDS = 16.00 + (2 / 3);
+
 	LevelController levelController;
 
 	private SimpleMinim minim;
@@ -93,7 +93,8 @@ public class BeatControlls extends HBox {
 						beatThread = new Thread() {
 							public void run() {
 								try {
-									sleep((int)(BEAT_FREQ - (Config.getOnBeatFrames() * FRAME_SECONDS))); // 499 for 100bpm
+									sleep((int) (BEAT_FREQ - (Config.getOnBeatFrames() * FRAME_SECONDS))); // 499 for
+																											// 100bpm
 								} catch (InterruptedException e) {
 									this.interrupt();
 								}
@@ -120,7 +121,7 @@ public class BeatControlls extends HBox {
 				}
 				frameCounter++;
 
-				if (frameCounter > (Config.getOnBeatFrames()*2)) {
+				if (frameCounter > (Config.getOnBeatFrames() * 2)) {
 					beatBorder.setBorder(OFF_BEAT_BORDER);
 					onBeat = false;
 				}
@@ -150,8 +151,9 @@ public class BeatControlls extends HBox {
 		if (audioPlayer == null)
 			return;
 		if (Config.getRhythmEnabled()) {
-			beatThread.interrupt();
 			detect.stop();
+			if (beatThread != null)
+				beatThread.interrupt();
 		}
 		audioPlayer.pause();
 		if (minim == null)
