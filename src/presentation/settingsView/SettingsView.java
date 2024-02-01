@@ -24,6 +24,9 @@ public class SettingsView extends GridPane {
 	private Label coyoteText;
 	protected TextField coyote;
 
+	private Label beatFramesText;
+	protected TextField beatFrames;
+
 	protected CheckBox autoJump;
 	protected CheckBox rhythmEnabled;
 
@@ -47,21 +50,26 @@ public class SettingsView extends GridPane {
 		this.add(coyoteText, 0, 3);
 		coyote = new TextField(Integer.toString(Config.COYOTE_TIME));
 		this.add(coyote, 1, 3);
+		
+		beatFramesText = new Label("OnBeat-Frames:");
+		this.add(beatFramesText, 0, 4);
+		beatFrames = new TextField(Integer.toString(Config.ONBEAT_FRAMES));
+		this.add(beatFrames, 1, 4);
 
 		rhythmEnabled = new CheckBox("Rhythm Enabled:");
 		rhythmEnabled.setSelected(Config.RHYTHM_ENABLED);
-		this.add(rhythmEnabled, 1, 4);
+		this.add(rhythmEnabled, 1, 5);
 
 		autoJump = new CheckBox("Auto-jumping:");
 		autoJump.setSelected(Config.AUTO_JUMP);
-		this.add(autoJump, 1, 5);
+		this.add(autoJump, 1, 6);
 
 		saveButton = new Button("Save");
 		cancelButton = new Button("Cancel");
 		resetButton = new Button("Default");
 		saveButton.setMinWidth(60);
 		buttonsBox = new HBox(saveButton, resetButton, cancelButton);
-		this.add(buttonsBox, 1, 8);
+		this.add(buttonsBox, 1, 9);
 
 		this.setVgap(5);
 		this.setHgap(5);

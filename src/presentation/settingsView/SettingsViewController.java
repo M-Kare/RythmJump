@@ -13,6 +13,7 @@ public class SettingsViewController {
 	private TextField speed;
 	private TextField jumpHeight;
 	private TextField coyote;
+	private TextField beatFrames;
 	private CheckBox autoJump;
 	private CheckBox rhythmEnabled;
 
@@ -27,6 +28,7 @@ public class SettingsViewController {
 		speed = root.speed;
 		jumpHeight = root.jumpHeight;
 		coyote = root.coyote;
+		beatFrames = root.beatFrames;
 		autoJump = root.autoJump;
 		rhythmEnabled = root.rhythmEnabled;
 		
@@ -59,11 +61,18 @@ public class SettingsViewController {
 				coyote.setText(newValue.replaceAll("[\\D+]", ""));
 			}
 		});
+		
+		beatFrames.textProperty().addListener((obs, oldValue, newValue) -> {
+			if (!newValue.matches("\\d*")) {
+				beatFrames.setText(newValue.replaceAll("[\\D+]", ""));
+			}
+		});
 
 		saveButton.setOnMouseClicked(e -> {
 			Config.setPlayerSpeed(Integer.parseInt(speed.getText()));
 			Config.setJumpHeight(Integer.parseInt(jumpHeight.getText()));
 			Config.setCoyote(Integer.parseInt(coyote.getText()));
+			Config.setOnBeatFrames(Integer.parseInt(beatFrames.getText()));
 			Config.setAutoJump(autoJump.isSelected());
 			Config.setRhythmEnabled(rhythmEnabled.isSelected());
 			
@@ -74,6 +83,7 @@ public class SettingsViewController {
 			speed.setText(Integer.toString(Config.getPlayerSpeed()));
 			jumpHeight.setText(Integer.toString(Config.getJumpHeight()));
 			coyote.setText(Integer.toString(Config.getCoyote()));
+			beatFrames.setText(Integer.toString(Config.getOnBeatFrames()));
 			autoJump.setSelected(Config.getAutoJump());
 			rhythmEnabled.setSelected(Config.getRhythmEnabled());
 			
@@ -84,6 +94,7 @@ public class SettingsViewController {
 			Config.setPlayerSpeed(Config.PLAYER_SPEED);
 			Config.setJumpHeight(Config.JUMP_HEIGHT);
 			Config.setCoyote(Config.COYOTE_TIME);
+			Config.setOnBeatFrames(Config.ONBEAT_FRAMES);
 			Config.setAutoJump(Config.AUTO_JUMP);
 			Config.setRhythmEnabled(Config.RHYTHM_ENABLED);
 			

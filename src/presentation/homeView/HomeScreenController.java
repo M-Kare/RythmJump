@@ -65,7 +65,7 @@ public class HomeScreenController {
 		});
 
 		tutorial.setOnMouseClicked(e -> {
-			Level tutorialLevel = levelArray.get("tutorial.lvl");
+			Level tutorialLevel = levelArray.get("tutorial");
 
 			PlayViewController playViewController = new PlayViewController(levelSelectView, root, tutorialLevel);
 			playViewController.getLevelController().resetPlayer();

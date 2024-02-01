@@ -47,6 +47,7 @@ public class Config {
 	public static final int JUMP_HEIGHT = 19; // 19
 	public static final int COYOTE_TIME = 5;
 	public static final int MAX_GRAVITY = 20;
+	public static final int ONBEAT_FRAMES = 6;
 
 	/**
 	 * Standartwerte für Modi
@@ -60,6 +61,7 @@ public class Config {
 	private static int playerSpeed = PLAYER_SPEED;
 	private static int jumpHeight = JUMP_HEIGHT;
 	private static int coyote = COYOTE_TIME;
+	private static int onBeatFrames = ONBEAT_FRAMES;
 	private static boolean autoJump = AUTO_JUMP;
 	private static boolean rhythmEnabled = RHYTHM_ENABLED;
 
@@ -73,6 +75,10 @@ public class Config {
 
 	public static int getCoyote() {
 		return coyote;
+	}
+	
+	public static int getOnBeatFrames() {
+		return onBeatFrames;
 	}
 
 	public static boolean getAutoJump() {
@@ -93,6 +99,10 @@ public class Config {
 
 	public static void setCoyote(int value) {
 		coyote = value;
+	}
+	
+	public static void setOnBeatFrames(int value) {
+		onBeatFrames = value;
 	}
 
 	public static void setAutoJump(boolean value) {

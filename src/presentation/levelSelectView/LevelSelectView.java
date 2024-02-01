@@ -1,6 +1,5 @@
 package presentation.levelSelectView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import business.level.Level;
@@ -57,7 +56,7 @@ public class LevelSelectView extends BorderPane {
 		Player player = new Player();
 		player.setScaleX(4);
 		player.setScaleY(4);
-		
+
 		rightBox = new VBox(player, selectButton);
 		rightBox.setAlignment(Pos.BOTTOM_CENTER);
 		rightBox.setSpacing(200);
