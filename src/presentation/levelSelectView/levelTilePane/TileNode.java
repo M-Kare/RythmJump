@@ -9,21 +9,29 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * Klasse eines einzelnen Tile-Elements der TilePane (vergleich ListCell)
+ */
 public class TileNode extends VBox {
 	private ImageView imageView;
 	private Label levelName;
 	private StackPane stack;
-//	private Rectangle background;
 
 	private Level level;
 
-	public TileNode(Level level, int width, int height, Color color) {
+	/**
+	 * Fügt Name und Thumbnail des Levels hinzu
+	 * 
+	 * @param level  Level
+	 * @param width  Breite der Node
+	 * @param height Höhe der Node
+	 */
+	public TileNode(Level level, int width, int height) {
 		super();
 		this.level = level;
 		levelName = new Label(this.level.getLevelName());
 		imageView = new ImageView(level.getThumbnail());
 		stack = new StackPane();
-//		background = new Rectangle(width, height, color);
 
 		imageView.setPreserveRatio(true);
 		imageView.setFitHeight(height);
@@ -39,27 +47,30 @@ public class TileNode extends VBox {
 		this.setSpacing(3);
 	}
 
+	/**
+	 * Konstruktor für mit Standart-Größen
+	 * 
+	 * @param level Level
+	 */
 	public TileNode(Level level) {
-		this(level, 200, 200, Color.WHITE);
+		this(level, 200, 200);
 	}
 
-	public TileNode(Level level, int width, int height) {
-		this(level, width, height, Color.WHITE);
-	}
-
+	/**
+	 * Getter für den StackPane, der das Thumbnail enthält
+	 * 
+	 * @return StackPane
+	 */
 	public Pane getImagePane() {
 		return stack;
 	}
 
+	/**
+	 * Getter für das hinterlegte Level
+	 * 
+	 * @return Level
+	 */
 	public Level getLevel() {
 		return level;
 	}
-
-//	public Rectangle getTileBackground() {
-//		return background;
-//	}
-//	
-//	public void setBackgroundColor(Color color) {
-//		background.setFill(color);
-//	}	
 }

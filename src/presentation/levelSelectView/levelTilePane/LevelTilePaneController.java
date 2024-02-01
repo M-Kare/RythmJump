@@ -5,12 +5,20 @@ import java.util.HashMap;
 
 import business.level.Level;
 
+/**
+ * Controller für die LevelTilePane, der die Selection verwaltet
+ */
 public class LevelTilePaneController {
 	private LevelTilePane root;
 
 	private ArrayList<TileNode> tileNodes;
 	private TileNode selectedNode;
 
+	/**
+	 * Erzeugt die LevelTilePane und holt sich die Liste der Nodes
+	 * 
+	 * @param levelArray Level-Liste
+	 */
 	public LevelTilePaneController(HashMap<String, Level> levelArray) {
 		root = new LevelTilePane(levelArray);
 		tileNodes = root.nodes;
@@ -20,14 +28,27 @@ public class LevelTilePaneController {
 		init();
 	}
 
+	/**
+	 * Getter für die LevelTilePane
+	 * 
+	 * @return LevelTilePane
+	 */
 	public LevelTilePane getRoot() {
 		return root;
 	}
 
+	/**
+	 * Getter für den ausgewählten Node
+	 * 
+	 * @return Level-Node
+	 */
 	public TileNode getSelected() {
 		return selectedNode;
 	}
 
+	/**
+	 * Fügt den Level-Nodes einen Eventhandler hinzu für die Selections-Logik
+	 */
 	public void init() {
 		for (TileNode node : tileNodes) {
 			node.setOnMouseClicked(e -> {
@@ -42,6 +63,11 @@ public class LevelTilePaneController {
 
 	}
 
+	/**
+	 * Zum Scrollen durch die Level-Nodes
+	 * 
+	 * @return next Level-Node
+	 */
 	public TileNode nextSelected() {
 		int index;
 		if (selectedNode == null) {
@@ -56,6 +82,11 @@ public class LevelTilePaneController {
 		return selectNode(tileNodes.get(index));
 	}
 
+	/**
+	 * Zum Scrollen durch die Level-Nodes
+	 * 
+	 * @return prev Level-Node
+	 */
 	public TileNode prevSelected() {
 		int index;
 		if (selectedNode == null) {
@@ -70,6 +101,11 @@ public class LevelTilePaneController {
 		return selectNode(tileNodes.get(index));
 	}
 
+	/**
+	 * Fügt eine neue Level-Node hinzu und setzt das Styling und die Handler
+	 * 
+	 * @param level
+	 */
 	public void addTileNode(Level level) {
 		root.oddTile = !root.oddTile;
 
@@ -95,6 +131,9 @@ public class LevelTilePaneController {
 		});
 	}
 
+	/**
+	 * Setzt die ausgewählte Node zurück auf Null
+	 */
 	public void clearSelection() {
 		if (selectedNode == null)
 			return;
@@ -102,6 +141,12 @@ public class LevelTilePaneController {
 		selectedNode = null;
 	}
 
+	/**
+	 * Setzt den ausgewählten Node
+	 * 
+	 * @param node auszuwählender Node
+	 * @return ausgewählter Node
+	 */
 	public TileNode selectNode(TileNode node) {
 		node.getStyleClass().add("selected");
 		selectedNode = node;

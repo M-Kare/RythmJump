@@ -233,9 +233,7 @@ public class LevelController {
 	 * Setzt die Tastatur-HashMap wieder auf false
 	 */
 	public void resetKeys() {
-		keybinds.forEach((key, value) -> {
-			value = false;
-		});
+		keybinds.replaceAll((k, v) -> false);
 	}
 
 	/**

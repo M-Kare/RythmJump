@@ -3,24 +3,7 @@
     -fx-font-weight: bold;
 }
 
-.oddTile {
-    -fx-background-color: white;
-}
 
-.evenTile {
-    -fx-background-color: rgb(230, 230, 230);
-}
-
-.tileNode {
-    -fx-border-width: 5px;
-    -fx-border-color: rgba(0, 0, 0, 0);
-}
-
-.selected {
-    -fx-background-color: rgb(95, 216, 244);
-    -fx-border-width: 5px;
-    -fx-border-color: pink;
-}
 
 #levelSelectButton {
 

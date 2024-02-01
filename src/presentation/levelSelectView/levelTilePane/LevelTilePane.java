@@ -9,6 +9,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.TilePane;
 
+/**
+ * Eine ScrollPane, in der die Level mit Thumnbnails dargestellt werden.
+ */
 public class LevelTilePane extends ScrollPane {
 	protected int nodeWidth;
 	protected int nodeHeight;
@@ -20,6 +23,14 @@ public class LevelTilePane extends ScrollPane {
 	SimpleObjectProperty<TileNode>[] no;
 	protected boolean oddTile = true;
 
+	/**
+	 * Ein Level besteht aus einer TilePane, welche ein Bild des Levels und deren
+	 * Namen enthalten. Es werden drei Level pro Reihe dargestellt.
+	 * 
+	 * @param levelArray Alles geladenen Level
+	 * @param nodeWidth  Breite einer Node
+	 * @param nodeHeight Höhe einer Node
+	 */
 	public LevelTilePane(HashMap<String, Level> levelArray, int nodeWidth, int nodeHeight) {
 		super();
 		this.levelArray = levelArray;
@@ -41,14 +52,29 @@ public class LevelTilePane extends ScrollPane {
 		this.setContent(tilePane);
 	}
 
+	/**
+	 * Konstruktor, der die Standart-Größen für die Nodes verwendet
+	 * 
+	 * @param levelArray
+	 */
 	public LevelTilePane(HashMap<String, Level> levelArray) {
 		this(levelArray, 200, 200);
 	}
 
+	/**
+	 * Getter für die Liste, die alle Level-Nodes enthält
+	 * 
+	 * @return Level-Node List
+	 */
 	public ArrayList<TileNode> getTileNodes() {
 		return nodes;
 	}
 
+	/**
+	 * Fügt einen neuen Level-Node hinzu
+	 * 
+	 * @param level
+	 */
 	public void addTileNode(Level level) {
 		oddTile = !oddTile;
 

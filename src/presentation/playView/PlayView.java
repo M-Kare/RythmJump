@@ -13,6 +13,9 @@ import javafx.scene.layout.StackPane;
 import presentation.homeView.HomeScreen;
 import presentation.levelSelectView.LevelSelectView;
 
+/**
+ * Klasse die Level und Overlays enthält, falls nötig. View während des Spielens
+ */
 public class PlayView extends StackPane {
 	protected LevelController levelController;
 	protected Level level;
@@ -20,6 +23,11 @@ public class PlayView extends StackPane {
 	protected Image background;
 	protected Button backButton;
 
+	/**
+	 * Lädt das Level und fügt Hintergrund und Buttons hinzu
+	 * 
+	 * @param level
+	 */
 	public PlayView(Level level) {
 		super();
 		levelController = new LevelController(level, this);
@@ -27,21 +35,20 @@ public class PlayView extends StackPane {
 		levelController.resetPlayer();
 		backButton = new Button("Back");
 		backButton.setFocusTraversable(false);
-		
+
 		String bgPath = null;
-		if(this.level.getBackgroundPath() == null) {
+		if (this.level.getBackgroundPath() == null) {
 			bgPath = Config.STD_BACKGROUND;
 		} else {
 			bgPath = this.level.getBackgroundPath();
 		}
 		try {
-				background = new Image(Config.findFile(bgPath, Config.BACKGROUNDS_FOLDER)
-						.toURI().toURL().toExternalForm());				
+			background = new Image(Config.findFile(bgPath, Config.BACKGROUNDS_FOLDER).toURI().toURL().toExternalForm());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		bgFrame = new ImageView(background);
 		this.getChildren().addAll(bgFrame, this.level, backButton);
 		this.setAlignment(Pos.TOP_LEFT);

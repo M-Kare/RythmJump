@@ -31,6 +31,7 @@ public class DeathViewController {
 		repeat = root.repeat;
 		levelSelectButton = root.levelSelectButton;
 
+		currentPlayViewController.getLevelController().resetKeys();
 		init();
 	}
 
@@ -54,7 +55,6 @@ public class DeathViewController {
 			currentPlayViewController.getLevelController().resetPlayer();
 			currentPlayViewController.getRoot().getChildren().remove(root);
 			currentPlayViewController.getLevelController().getRoot().requestFocus();
-			currentPlayViewController.getLevelController().resetKeys();
 		});
 
 		/**
@@ -64,7 +64,6 @@ public class DeathViewController {
 			currentPlayViewController.getLevelController().resetPlayer();
 			currentPlayViewController.getRoot().getChildren().remove(root);
 			currentPlayViewController.getLevelController().getRoot().requestFocus();
-			currentPlayViewController.getLevelController().resetKeys();
 		});
 
 		/**
