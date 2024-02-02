@@ -28,15 +28,6 @@ public class HomeScreen extends StackPane {
 	protected Button tutorial;
 	protected Button settingButton;
 	
-	protected ImageView playImgView;
-	protected ImageView playImgView_hover;
-	protected ImageView selectImgView;
-	protected ImageView selectImgView_hover;
-	protected ImageView tutorialImgView;
-	protected ImageView tutorialImgView_hover;
-	protected ImageView settingsImgView;
-	protected ImageView settingsImgView_hover;
-
 	private HBox playerPreview;
 	protected Player player;
 
@@ -57,44 +48,29 @@ public class HomeScreen extends StackPane {
 		root.setLeftAnchor(title, 50.00);
 		root.setRightAnchor(title, 50.00);
 		
-		Image playImg = new Image("/pics/button_newGame.png");
-		playImgView = new ImageView(playImg);
-		Image playImg_hover = new Image("/pics/button_newGame_onhover.png");
-		playImgView_hover = new ImageView(playImg_hover);
 		play = new Button();
-		play.setGraphic(playImgView);
 		play.getStyleClass().add("button_menu");
+		play.setId("playButton");
 		
-		Image selectLevelImg = new Image("/pics/button_selectLevel.png");
-		selectImgView = new ImageView(selectLevelImg);
-		Image selectLevelImg_hover = new Image("/pics/button_selectLevel_onhover.png");
-		selectImgView_hover = new ImageView(selectLevelImg_hover);
 		levelSelect = new Button();
-		levelSelect.setGraphic(selectImgView);
 		levelSelect.getStyleClass().add("button_menu");
+		levelSelect.setId("levelSelectButton");
 		
-		Image tutorialImg = new Image("/pics/button_tutorial.png");
-		tutorialImgView = new ImageView(tutorialImg);
-		Image tutorialImg_hover = new Image("/pics/button_tutorial_onhover.png");
-		tutorialImgView_hover = new ImageView(tutorialImg_hover);
 		tutorial = new Button();
-		tutorial.setGraphic(tutorialImgView);
 		tutorial.getStyleClass().add("button_menu");
+		tutorial.setId("tutorialButton");
 
-		Image settingsImg = new Image("/pics/button_settings.png");
-		settingsImgView = new ImageView(settingsImg);
-		Image settingsImg_hover = new Image("pics/button_settings_onhover.png");
-		settingsImgView_hover = new ImageView(settingsImg_hover);
 		settingButton = new Button();
-		settingButton.setGraphic(settingsImgView);
 		settingButton.getStyleClass().add("button_menu");
+		settingButton.setId("settingButton");
 		
 		buttons = new VBox(play, levelSelect, tutorial, settingButton);
-		buttons.setAlignment(Pos.CENTER_LEFT);
-		buttons.setSpacing(5);
+		buttons.setAlignment(Pos.CENTER);
+		buttons.setSpacing(20);
 		
+		root.setTopAnchor(buttons, 50.00);
 		root.setBottomAnchor(buttons, 100.00);
-		root.setLeftAnchor(buttons, 650.00);
+		root.setLeftAnchor(buttons, 100.00);
 		root.setRightAnchor(buttons, 50.00);
 
 		player = new Player();
@@ -104,7 +80,7 @@ public class HomeScreen extends StackPane {
 		playerPreview = new HBox(player);
 		playerPreview.setAlignment(Pos.BOTTOM_CENTER);
 		root.setLeftAnchor(playerPreview, 300.00);
-		root.setBottomAnchor(playerPreview, 300.00);
+		root.setBottomAnchor(playerPreview, 480.00);
 		root.setTopAnchor(playerPreview, 50.00);
 
 		root.getChildren().addAll(title, buttons, playerPreview);

@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  */
 public class HomeScreenController {
 	private Stage stage;
-	
+
 	private HomeScreen root;
 	private Button play;
 	private Button levelSelect;
@@ -73,17 +73,11 @@ public class HomeScreenController {
 			root.getScene().setRoot(playViewController.getRoot());
 			playViewController.getLevelController().getRoot().requestFocus();
 		});
-		
-        play.setOnMouseEntered(e -> play.setGraphic(root.playImgView_hover));
-        play.setOnMouseExited(e -> play.setGraphic(root.playImgView));
 
 		levelSelect.setOnMouseClicked(e -> {
 			root.getScene().setRoot(levelSelectView);
 			levelSelectView.requestFocus();
 		});
-		
-		levelSelect.setOnMouseEntered(e -> levelSelect.setGraphic(root.selectImgView_hover));
-        levelSelect.setOnMouseExited(e -> levelSelect.setGraphic(root.selectImgView));
 
 		tutorial.setOnMouseClicked(e -> {
 			Level tutorialLevel = levelArray.get("tutorial");
@@ -93,17 +87,10 @@ public class HomeScreenController {
 			root.getScene().setRoot(playViewController.getRoot());
 			playViewController.getLevelController().getRoot().requestFocus();
 		});
-		
-		tutorial.setOnMouseEntered(e -> tutorial.setGraphic(root.tutorialImgView_hover));
-	    tutorial.setOnMouseExited(e -> tutorial.setGraphic(root.tutorialImgView));
 
 		settingsButton.setOnMouseClicked(e -> {
 			root.getChildren().add(settingsView);
 		});
-		
-		settingsButton.setOnMouseEntered(e -> settingsButton.setGraphic(root.settingsImgView_hover));
-	    settingsButton.setOnMouseExited(e -> settingsButton.setGraphic(root.settingsImgView));
-	    
 	}
 
 	/**

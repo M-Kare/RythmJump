@@ -4,11 +4,43 @@
 
 
 .button_menu {
-	-fx-background-color: transparent;
-	
+	-fx-min-width: 12.1em;
+    -fx-min-height: 4em;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 12em;
+    -fx-background-position: left;
 }
 
 #playButton {
-	
+	-fx-background-image: url("../../../assets/pics/button_newGame.png");
 }
 
+#playButton:hover {
+	-fx-background-image: url("../../../assets/pics/button_newGame_onhover.png");
+}
+
+#levelSelectButton {
+	-fx-background-image: url("../../../assets/pics/button_selectLevel.png");
+
+}
+
+#levelSelectButton:hover {
+	-fx-background-image: url("../../../assets/pics/button_selectLevel_onhover.png");
+}
+
+#tutorialButton {
+	-fx-background-image: url("../../../assets/pics/button_tutorial.png");
+}
+
+#tutorialButton:hover {
+	-fx-background-image: url("../../../assets/pics/button_tutorial_onhover.png");
+}
+
+#settingButton {
+	-fx-background-image: url("../../../assets/pics/button_settings.png");
+}
+
+#settingButton:hover {
+	-fx-background-image: url("../../../assets/pics/button_settings_onhover.png");
+}
