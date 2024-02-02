@@ -47,7 +47,7 @@ public class Level extends Pane {
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> deathArea;
 
-	private static HashMap<String, File> blockTextures;
+	private static HashMap<String, File> blockTextures = new HashMap<>();
 	private String songPath;
 	private String background;
 	private boolean allowTeleport = false;
@@ -67,8 +67,6 @@ public class Level extends Pane {
 		this.winArea = new ArrayList<>();
 		this.deathArea = new ArrayList<>();
 
-		blockTextures = new HashMap<>();
-
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
 
@@ -80,7 +78,6 @@ public class Level extends Pane {
 		try {
 			addChildren(levelArray);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -415,8 +412,9 @@ public class Level extends Pane {
 	}
 
 	public Node loadBlockTexture(String texture, int x, int y) {
+		HashMap<String, File> test = blockTextures;
 		if (!blockTextures.containsKey(texture)) {
-			blockTextures.put(texture, Config.findFile(texture, "./assets/textures/blocks"));
+			blockTextures.put(texture, Config.findFile(texture, Config.BLOCKS_FOLDER));
 		}
 		Node newNode = null;
 		try {
