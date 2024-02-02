@@ -5,6 +5,7 @@ import business.level.LevelController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
@@ -15,6 +16,7 @@ import presentation.levelSelectView.LevelSelectView;
  * Controller für die PlayView
  */
 public class PlayViewController {
+	private Stage stage;
 	private PlayView root;
 
 	private LevelSelectView levelSelectView;
@@ -35,9 +37,10 @@ public class PlayViewController {
 	 * @param homeScreen
 	 * @param level
 	 */
-	public PlayViewController(LevelSelectView levelSelect, HomeScreen homeScreen, Level level) {
+	public PlayViewController(LevelSelectView levelSelect, HomeScreen homeScreen, Level level, Stage stage) {
 		super();
-		root = new PlayView(level);
+		this.stage = stage;
+		root = new PlayView(level, stage);
 		this.levelSelectView = levelSelect;
 		this.homeScreen = homeScreen;
 
@@ -74,7 +77,7 @@ public class PlayViewController {
 	 * Methode zum erstellen und anzeigen des Sieges- / EndScreens. Setzt die Stats
 	 */
 	public void showEnd() {
-		theEndController = new TheEndController(levelSelectView, levelController, homeScreen);
+		theEndController = new TheEndController(levelSelectView, levelController, homeScreen, stage);
 		theEndScreen = theEndController.getRoot();
 
 		theEndScreen.setBeats(levelController.getBeatCount());
@@ -107,6 +110,12 @@ public class PlayViewController {
 		 */
 		bgFrame.translateXProperty().bind(root.layoutXProperty().multiply(-1));
 		bgFrame.translateYProperty().bind(root.layoutYProperty().multiply(-1));
+		stage.heightProperty().addListener((obs, oldValue, newValue) -> {
+			bgFrame.setFitHeight(newValue.doubleValue());
+		});
+		stage.widthProperty().addListener((obs, oldValue, newValue) -> {
+			bgFrame.setFitWidth(newValue.doubleValue());
+		});
 
 		/**
 		 * Property-Listener, der zum LevelSelect navigiert, wenn paused gesetzt wird

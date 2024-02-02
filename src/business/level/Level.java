@@ -26,6 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
+import javafx.stage.Stage;
 
 /**
  * Level werden aus txt-Dateien (.lvl) eingelesen und zusammengebaut und
@@ -233,7 +234,6 @@ public class Level extends Pane {
 			vpHeight = levelHeight * 0.31;
 		if (levelLength < (400 / 0.31))
 			vpWidth = levelLength * 0.31;
-
 		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
 		thumbnail = snapshot(sp, null);
 	}
@@ -262,7 +262,7 @@ public class Level extends Pane {
 						String[] temp = line.split(":");
 						songPath = Config.findFile(temp[1], Config.MUSIC_FOLDER).getCanonicalPath();
 					}
-				} else {
+				} else if (line.length() >= 1) {
 					levelArray[lineCounter++] = toSimpleCharArray(line.split(""));
 				}
 			}
@@ -406,6 +406,9 @@ public class Level extends Pane {
 					nodeToAdd = loadBlockTexture(Config.DEATH_TEXTURE, x, y);
 					deathArea.add(nodeToAdd);
 					break;
+				case Config.DEATH_FLIPPED:
+					nodeToAdd = loadBlockTexture(Config.DEATH_FLIPPED_TEXTURE, x, y);
+					deathArea.add(nodeToAdd);
 				}
 			}
 		}

@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import presentation.homeView.HomeScreen;
 import presentation.levelSelectView.LevelSelectView;
 
@@ -27,9 +28,9 @@ public class PlayView extends StackPane {
 	 * 
 	 * @param level
 	 */
-	public PlayView(Level level) {
+	public PlayView(Level level, Stage stage) {
 		super();
-		levelController = new LevelController(level, this);
+		levelController = new LevelController(level, this, stage);
 		this.level = levelController.getRoot();
 		levelController.resetPlayer();
 
@@ -47,6 +48,9 @@ public class PlayView extends StackPane {
 		}
 
 		bgFrame = new ImageView(background);
+		bgFrame.setFitHeight(stage.getHeight());
+		bgFrame.setFitWidth(stage.getWidth());
+		bgFrame.preserveRatioProperty();
 		this.getChildren().addAll(bgFrame, this.level);
 		this.setAlignment(Pos.TOP_LEFT);
 	}

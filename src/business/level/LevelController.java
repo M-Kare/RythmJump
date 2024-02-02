@@ -25,6 +25,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import presentation.deathView.DeathViewController;
 import presentation.endview.TheEnd;
 import presentation.endview.TheEndController;
@@ -37,6 +38,7 @@ import presentation.settingsView.SettingsViewController;
  * Controller für die Level - Setzt die Logik für die Bewegung des Spielers um
  */
 public class LevelController {
+	private Stage stage;
 	private Level level;
 	private PlayView playView;
 
@@ -67,7 +69,8 @@ public class LevelController {
 	 * @param songPath Song-Pfad
 	 * @param playView Root des Level
 	 */
-	public LevelController(File level, String songPath, PlayView playView) {
+	public LevelController(File level, String songPath, PlayView playView, Stage stage) {
+		this.stage = stage;
 		this.playView = playView;
 
 		this.keybinds = new HashMap<>();
@@ -78,7 +81,7 @@ public class LevelController {
 		obstacles = new ArrayList<>(this.level.getObstacles());
 		deathArea = new ArrayList<>(this.level.getDeathArea());
 
-		music = new BeatControlls(songPath, this);
+		music = new BeatControlls(songPath, this, stage);
 		if (Config.getRhythmEnabled()) {
 			this.level.getChildren().add(music);
 		}
@@ -99,8 +102,8 @@ public class LevelController {
 	 * @param level    Fertiges Level
 	 * @param playView Root des Levels
 	 */
-	public LevelController(Level level, PlayView playView) {
-		this(level.getFile(), level.getSong(), playView);
+	public LevelController(Level level, PlayView playView, Stage stage) {
+		this(level.getFile(), level.getSong(), playView, stage);
 	}
 
 	/**
@@ -217,10 +220,15 @@ public class LevelController {
 	public void resetPlayer() {
 		if (!level.getChildren().contains(player))
 			level.getChildren().add(player);
-		playView.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
+		
+		if(level.getPlayerSpawn()[Dimensions.Y.getIndex()] < level.getLevelHeight() - (stage.getHeight() / 100 * 50)) {
+			playView.setLayoutY(-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (stage.getHeight() / 100 * 50)));
+		} else {
+			playView.setLayoutY(-(level.getLevelHeight()-stage.getHeight() + Config.PLAYER_SIZE));				
+		}
 
-		if (level.getPlayerSpawn()[Dimensions.X.getIndex()] > Config.WINDOW_WIDTH / 3) {
-			playView.setLayoutX(-(level.getPlayerSpawn()[Dimensions.X.getIndex()] - (Config.WINDOW_WIDTH / 100 * 13)));
+		if (level.getPlayerSpawn()[Dimensions.X.getIndex()] > stage.getWidth() / 3) {
+			playView.setLayoutX(-(level.getPlayerSpawn()[Dimensions.X.getIndex()] - (stage.getWidth() / 100 * 13)));
 		} else {
 			playView.setLayoutX(0);
 		}
@@ -291,6 +299,10 @@ public class LevelController {
 				case UP:
 					jump();
 					break;
+				case R:
+					resetPlayer();
+					deathCount++;
+					break;
 				}
 			}
 		});
@@ -310,21 +322,39 @@ public class LevelController {
 		 */
 		player.translateXProperty().addListener((obs, oldValue, newValue) -> {
 			if (!won.get() && !dieded.get()) {
-				int playerPosX = newValue.intValue();
-				if (playerPosX > Config.WINDOW_WIDTH / 3
-						&& playerPosX < level.getLevelLength() - Config.WINDOW_WIDTH / 100 * 66) {
-					playView.setLayoutX(-(playerPosX - Config.WINDOW_WIDTH / 3));
+				double playerPosX = newValue.doubleValue();
+				if (playerPosX > stage.getWidth() / 3
+						&& playerPosX < level.getLevelLength() - stage.getWidth() / 100 * 66) {
+					playView.setLayoutX(-(playerPosX - stage.getWidth() / 3));
 				}
 			}
 		});
+		stage.widthProperty().addListener((obs, oldValue, newValue) -> {
+			if (!won.get() && !dieded.get()) {
+				double playerPosX = player.getTranslateX();
+				if (playerPosX > stage.getWidth() / 3
+						&& playerPosX < level.getLevelLength() - newValue.doubleValue() / 100 * 66) {
+					playView.setLayoutX(-(playerPosX - newValue.doubleValue() / 3));
+				}
+			}
+		});
+
 		/**
 		 * SET_LAYOUT-Y Damit die "Kamera" dem Spieler folgt
 		 */
 		player.translateYProperty().addListener((obs, oldValue, newValue) -> {
 			if (!won.get() && !dieded.get()) {
-				int playerPosY = newValue.intValue();
-				if (playerPosY > 0 && playerPosY < level.getLevelHeight() - (Config.WINDOW_HEIGHT / 100 * 55)) {
-					playView.setLayoutY(-(playerPosY - (Config.WINDOW_HEIGHT / 2)));
+				double playerPosY = newValue.doubleValue();
+				if (playerPosY > 0 && playerPosY < level.getLevelHeight() - (stage.getHeight() / 100 * 50) + Config.PLAYER_SIZE) {
+					playView.setLayoutY(-(playerPosY - (stage.getHeight() / 2)));
+				}
+			}
+		});
+		stage.heightProperty().addListener((obs, oldValue, newValue) -> {
+			if (!won.get() && !dieded.get()) {
+				double playerPosY = player.getTranslateY();
+				if (playerPosY > 0 && playerPosY < level.getLevelHeight() - (newValue.doubleValue() / 100 * 50) + Config.PLAYER_SIZE) {
+					playView.setLayoutY(-(playerPosY - (newValue.doubleValue() / 2)));
 				}
 			}
 		});
@@ -381,17 +411,6 @@ public class LevelController {
 //				if (keybinds.get(KeyCode.SPACE) || keybinds.get(KeyCode.W) || keybinds.get(KeyCode.UP)) {
 //					jump();
 //				}
-
-				/**
-				 * RESPAWN manuelles Respawnen
-				 */
-				if (keybinds.get(KeyCode.R)) {
-					player.setTranslateX(level.getPlayerSpawn()[Dimensions.X.getIndex()]);
-					player.setTranslateY(level.getPlayerSpawn()[Dimensions.Y.getIndex()]);
-					level.setLayoutX(-(level.getPlayerSpawn()[Dimensions.X.getIndex()] - (Config.BLOCK_SIZE * 2)));
-					level.setLayoutY(
-							-(level.getPlayerSpawn()[Dimensions.Y.getIndex()] - (Config.WINDOW_HEIGHT / 100 * 75)));
-				}
 
 				/**
 				 * MOVING X Seitliches Bewegen

@@ -15,6 +15,7 @@ public class Config {
 	public static final char PLAYER = 'P';
 	public static final char WIN = 'W';
 	public static final char DEATH = 'D';
+	public static final char DEATH_FLIPPED = 'd';
 	public static final char STD_WALL = '*';
 	public static final char STONE = 's';
 	public static final char RED = 'R';
@@ -42,6 +43,7 @@ public class Config {
 	
 	public static final String GOAL_TEXTURE = "block-win.png";
 	public static final String DEATH_TEXTURE = "hazard-spike.png";
+	public static final String DEATH_FLIPPED_TEXTURE = "hazard-spike-flipped.png";
 	public static final String BLOCK_DARKBLUE = "block-darkblue.png";
 	public static final String BLOCK_BLUE = "block-blue.png";
 	public static final String BLOCK_BLACKGOLD = "block-blackgold.png";
