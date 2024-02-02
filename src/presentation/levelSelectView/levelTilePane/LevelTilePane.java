@@ -63,7 +63,7 @@ public class LevelTilePane extends ScrollPane {
 	 * @param levelArray
 	 */
 	public LevelTilePane(HashMap<String, Level> levelArray) {
-		this(levelArray, 200, 200);
+		this(levelArray, 220, 200);
 	}
 
 	/**

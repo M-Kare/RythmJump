@@ -1,6 +1,5 @@
 package presentation.endview;
 
-import business.Config;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -48,43 +47,44 @@ public class TheEnd extends AnchorPane {
 		rightBox = new VBox(jumps, missedJumps, beats, deaths);
 
 		stats = new HBox(leftBox, rightBox);
-		stats.setSpacing(5);
+		stats.setSpacing(20);
+		stats.setAlignment(Pos.CENTER);
 
-		this.getChildren().add(stats);
-		this.setTopAnchor(stats, 30.00);
-		this.setRightAnchor(stats, 30.00);
+		//this.getChildren().add(stats);
+		//this.setTopAnchor(stats, 20.00);
+		//this.setRightAnchor(stats, 20.00);
 
 		// Middle-Box
 		title = new Label("Level Clear");
 		title.setId("clearText");
 
-		home = new Button();
-		home.getStyleClass().add("iconButton");
-		home.setId("homeButton");
-		levelSelect = new Button();
-		levelSelect.getStyleClass().add("iconButton");
-		levelSelect.setId("levelSelectButton");
-		repeat = new Button();
-		repeat.getStyleClass().add("iconButton");
-		repeat.setId("repeatLevelButton");
+		home = new Button("Main Menu");
+		home.getStyleClass().add("endButton");
+		
+		levelSelect = new Button("Level Select");
+		levelSelect.getStyleClass().add("endButton");
+		
+		repeat = new Button("Repeat");
+		repeat.getStyleClass().add("endButton");
 
 		navigation = new HBox(home, levelSelect, repeat);
+		navigation.setSpacing(20);
 		navigation.setAlignment(Pos.CENTER);
 		navigation.setSpacing(10);
 
-		middle = new VBox(title, navigation);
+		middle = new VBox(title, stats, navigation);
 		middle.setAlignment(Pos.CENTER);
-		middle.setSpacing(200);
+		middle.setSpacing(150);
 
 		this.getChildren().addAll(middle);
 		this.setBottomAnchor(middle, 10.00);
 		this.setTopAnchor(middle, 10.00);
 		this.setRightAnchor(middle, 10.00);
 		this.setLeftAnchor(middle, 10.00);
-
+		
 		this.setId("theEndView");
 		
-		this.getStylesheets().add(getClass().getResource("styleTheEnd.css").toExternalForm());
+		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 
 	/**

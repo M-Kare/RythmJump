@@ -40,7 +40,7 @@ public class Main extends Application {
 		homeScreenController = new HomeScreenController(levelArray, primaryStage);
 		homeScreen = homeScreenController.getRoot();
 
-		scene = new Scene(homeScreen);
+		scene = new Scene(homeScreen, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		homeScreen.requestFocus();
 
 		primaryStage.setScene(scene);
@@ -52,6 +52,8 @@ public class Main extends Application {
 		primaryStage.setOnCloseRequest(e -> {
 			System.exit(0);
 		});
+		
+		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 
 	public static void main(String[] args) {

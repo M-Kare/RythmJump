@@ -94,7 +94,7 @@ public class PlayViewController {
 	 * Methode zum erzeugen und anzeigen des DeathScreens
 	 */
 	public void showDeathView() {
-		DeathViewController dvc = new DeathViewController(this, levelSelectView);
+		DeathViewController dvc = new DeathViewController(this, levelSelectView, homeScreen);
 		root.getChildren().add(dvc.getRoot());
 		root.setLayoutX(0);
 		root.setLayoutY(0);

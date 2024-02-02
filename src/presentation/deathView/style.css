@@ -1,0 +1,16 @@
+
+.label {
+	-fx-text-fill: white;
+	-fx-font-size: 1.2em;
+	-fx-font-weight: 600;
+}
+
+#deathText {
+	-fx-text-fill: rgb(153, 45, 40);
+	-fx-font-size: 8em;
+	-fx-font-weight: 600;
+}
+
+#deathView {
+	-fx-background-color: rgba(10, 10, 10, 1.0);
+}

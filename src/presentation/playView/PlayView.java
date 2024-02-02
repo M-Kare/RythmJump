@@ -33,7 +33,6 @@ public class PlayView extends StackPane {
 		levelController = new LevelController(level, this, stage);
 		this.level = levelController.getRoot();
 		levelController.resetPlayer();
-
 		String bgPath = null;
 		if (this.level.getBackgroundPath() == null) {
 			bgPath = Config.STD_BACKGROUND;
