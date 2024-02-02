@@ -29,9 +29,6 @@ public class Config {
 	public static final char LILA = 'L';
 	public static final char BROWN = 'K';
 	
-	
-	
-	
 	public static final String LEVEL_TELEPORT = "teleport";
 	public static final String LEVEL_BACKGROUND = "background:";
 	public static final String LEVEL_MUSIC = "music:";
@@ -67,7 +64,7 @@ public class Config {
 	 */
 	public static final String LEVEL_SUFFIX = ".lvl";
 	public static final String STD_SONG = "/assets/mp3/tombtorial.mp3";
-	public static final String STD_BACKGROUND = "background-islandshore_enlarged.png";
+	public static final String STD_BACKGROUND = "background-islandshore.png";
 	public static final String STD_SKIN = "player-trashcan.png";
 
 	/**
