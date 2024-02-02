@@ -42,7 +42,7 @@ public class LevelTilePane extends ScrollPane {
 	}
 
 	public LevelTilePane(HashMap<String, Level> levelArray) {
-		this(levelArray, 200, 200);
+		this(levelArray, 220, 200);
 	}
 
 	public ArrayList<TileNode> getTileNodes() {

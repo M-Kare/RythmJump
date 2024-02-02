@@ -1,31 +1,25 @@
 .menuTitle {
-    -fx-font-size: 8em;
+    -fx-font-size: 6em;
     -fx-font-weight: bold;
+    -fx-font-color: rgb(30, 30, 30);
 }
 
-.oddTile {
-    -fx-background-color: white;
+.button {
+	-fx-background-color: rgb(235, 224, 205);
+	-fx-text-fill: rgb(30, 30, 30);
+	-fx-font-size: 1.5em;
+	-fx-font-weight: bold;
+	-fx-font-alignment: center;
 }
 
-.evenTile {
-    -fx-background-color: rgb(230, 230, 230);
+.endButton {
+	-fx-background-radius: 5em;
+	-fx-font-alignment: center;
+	-fx-padding: 5px 20px 5px 20px;
+	
+	-fx-transition-duration: 0.4s;
 }
 
-.tileNode {
-    -fx-border-width: 5px;
-    -fx-border-color: rgba(0, 0, 0, 0);
-}
-
-.selected {
-    -fx-background-color: rgb(95, 216, 244);
-    -fx-border-width: 5px;
-    -fx-border-color: pink;
-}
-
-#levelSelectButton {
-
-}
-
-#theEndView {
-    -fx-background-color: rgba(10,10,10,0.7);
+.endButton:hover {
+	-fx-background-color: rgb(239, 105, 54);
 }

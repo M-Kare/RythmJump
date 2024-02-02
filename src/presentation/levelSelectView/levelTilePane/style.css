@@ -1,0 +1,19 @@
+.tileNode {
+	-fx-border-width: 5px;
+	-fx-border-color: rgba(30, 30, 30, 0.0);
+}
+
+.selected {
+    -fx-border-width: 5px;
+    -fx-border-color: rgb(239, 105, 54);
+}
+
+#levelName {
+	/* -fx-text-fill: rgb(235, 224, 205); */
+	-fx-padding: 0px 10px 0px 10px;
+	-fx-text-fill: rgb(30, 30, 30);
+	-fx-font-size: 1.2em;
+	-fx-font-weight: 700;
+	/* -fx-background-color: rgb(30, 30, 30); */
+}
+

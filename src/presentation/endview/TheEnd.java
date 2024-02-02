@@ -48,38 +48,44 @@ public class TheEnd extends AnchorPane {
 		rightBox = new VBox(jumps, missedJumps, beats, deaths);
 
 		stats = new HBox(leftBox, rightBox);
-		stats.setSpacing(5);
+		stats.setSpacing(20);
+		stats.setAlignment(Pos.CENTER);
 
-		this.getChildren().add(stats);
-		this.setTopAnchor(stats, 20.00);
-		this.setRightAnchor(stats, 20.00);
+		//this.getChildren().add(stats);
+		//this.setTopAnchor(stats, 20.00);
+		//this.setRightAnchor(stats, 20.00);
 
 		// Middle-Box
 		title = new Label("Level Clear");
 		title.setId("clearText");
 
-		home = new Button("Home");
-		home.setId("homeButton");
+		home = new Button("Main Menu");
+		home.getStyleClass().add("endButton");
+		
 		levelSelect = new Button("Level Select");
-		levelSelect.setId("levelSelectButton");
+		levelSelect.getStyleClass().add("endButton");
+		
 		repeat = new Button("Repeat");
-		repeat.setId("repeatLevelButton");
+		repeat.getStyleClass().add("endButton");
 
 		navigation = new HBox(home, levelSelect, repeat);
+		navigation.setSpacing(20);
 		navigation.setAlignment(Pos.CENTER);
 
-		middle = new VBox(title, navigation);
+		middle = new VBox(title, stats, navigation);
 		middle.setAlignment(Pos.CENTER);
-		middle.setSpacing(200);
+		middle.setSpacing(150);
 
 		this.getChildren().addAll(middle);
 		this.setBottomAnchor(middle, 10.00);
 		this.setTopAnchor(middle, 10.00);
 		this.setRightAnchor(middle, 10.00);
 		this.setLeftAnchor(middle, 10.00);
-
+		
 		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("theEndView");
+		
+		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 
 	/**

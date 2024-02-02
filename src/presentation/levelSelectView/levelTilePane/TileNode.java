@@ -8,11 +8,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class TileNode extends VBox {
 	private ImageView imageView;
 	private Label levelName;
 	private StackPane stack;
+	private Rectangle rect1, rect2, rect3;
 //	private Rectangle background;
 
 	private Level level;
@@ -21,8 +23,12 @@ public class TileNode extends VBox {
 		super();
 		this.level = level;
 		levelName = new Label(this.level.getLevelName());
+		levelName.setId("levelName");
 		imageView = new ImageView(level.getThumbnail());
 		stack = new StackPane();
+		rect1 = new Rectangle(width, 3, Color.rgb(235, 224, 205));
+		rect2 = new Rectangle(width, 8, Color.rgb(40, 153, 112));
+		rect3 = new Rectangle(width, 8, Color.rgb(16, 101, 180));
 //		background = new Rectangle(width, height, color);
 
 		imageView.setPreserveRatio(true);
@@ -33,10 +39,11 @@ public class TileNode extends VBox {
 		this.setAlignment(Pos.CENTER);
 		stack.setPrefSize(width, height);
 		stack.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
-
 		stack.getChildren().addAll(imageView);
-		this.getChildren().addAll(stack, levelName);
-		this.setSpacing(3);
+		this.getChildren().addAll(stack, levelName, rect2, rect3);
+		this.setSpacing(0);
+		
+		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 
 	public TileNode(Level level) {

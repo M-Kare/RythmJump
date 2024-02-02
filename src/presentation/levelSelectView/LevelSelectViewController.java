@@ -37,7 +37,7 @@ public class LevelSelectViewController {
 		levelTilePane = root.levelTilePane;
 
 		selectButton = root.selectButton;
-		circle = root.designElement_circle;
+		circle = root.backButton;
 
 		init();
 	}

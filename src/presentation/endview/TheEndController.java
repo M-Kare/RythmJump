@@ -13,8 +13,8 @@ public class TheEndController {
 
 	private TheEnd root;
 	private Button home;
-	private Button levelSelect;
 	private Button repeat;
+	private Button levelSelect;
 	private LevelSelectView levelSelectView;
 	private HomeScreen homeScreen;
 	private LevelController currentLevelController;
@@ -30,8 +30,8 @@ public class TheEndController {
 			HomeScreen homeScreen) {
 		root = new TheEnd();
 		home = root.home;
-		levelSelect = root.levelSelect;
 		repeat = root.repeat;
+		levelSelect = root.levelSelect;
 		this.levelSelectView = levelSelectView;
 		this.homeScreen = homeScreen;
 

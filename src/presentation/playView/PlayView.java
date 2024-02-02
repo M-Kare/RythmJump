@@ -25,7 +25,8 @@ public class PlayView extends StackPane {
 		levelController = new LevelController(level, this);
 		this.level = levelController.getRoot();
 		levelController.resetPlayer();
-		backButton = new Button("Back");
+		backButton = new Button("🡸");
+		backButton.setId("backButton");
 		backButton.setFocusTraversable(false);
 		
 		String bgPath = null;
@@ -45,6 +46,8 @@ public class PlayView extends StackPane {
 		bgFrame = new ImageView(background);
 		this.getChildren().addAll(bgFrame, this.level, backButton);
 		this.setAlignment(Pos.TOP_LEFT);
+		
+		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 
 }
