@@ -12,19 +12,48 @@ public class Config {
 	 * Konstanten zum Level einlesen
 	 */
 	public static final char COMMENT = '#';
-	public static final char WALL = '*';
 	public static final char PLAYER = 'P';
 	public static final char WIN = 'W';
 	public static final char DEATH = 'D';
+	public static final char STD_WALL = '*';
+	public static final char STONE = 's';
+	public static final char RED = 'R';
+	public static final char ORANGE = 'O';
+	public static final char SCHWARZ = 'S';
+	public static final char GOLD = 'G';
+	public static final char YELLOW = 'Y';
+	public static final char GREEN = 'g';
+	public static final char BLUE = 'b';
+	public static final char DARKBLUE = 'B';
+	public static final char LILA = 'L';
+	public static final char BROWN = 'K';
+	
+	
+	
 	
 	public static final String LEVEL_TELEPORT = "teleport";
 	public static final String LEVEL_BACKGROUND = "background:";
 	public static final String LEVEL_MUSIC = "music:";
 	
-	public static final String MUSIC_FOLDER = "./assets/mp3/";
+	public static final String MUSIC_FOLDER = "assets/mp3";
 	public static final String BACKGROUNDS_FOLDER = "./assets/textures/backgrounds/";
 	public static final String BLOCKS_FOLDER = "./assets/textures/blocks/";
 	public static final String SKINS_FOLDER = "./assets/textures/skins/";
+	
+	public static final String GOAL_TEXTURE = "block-win.png";
+	public static final String DEATH_TEXTURE = "hazard-spike.png";
+	public static final String BLOCK_DARKBLUE = "block-darkblue.png";
+	public static final String BLOCK_BLUE = "block-blue.png";
+	public static final String BLOCK_BLACKGOLD = "block-blackgold.png";
+	public static final String BLOCK_BROWN = "block-brown.png";
+	public static final String BLOCK_BLACK = "block-black.png";
+	public static final String BLOCK_GREEN = "block-green.png";
+	public static final String BLOCK_RED = "block-red.png";
+	public static final String BLOCK_YELLOW = "block-yellow.png";
+	public static final String BLOCK_PURPLE = "block-purple.png";
+	public static final String BLOCK_ORANGE = "block-orange.png";
+	public static final String BLOCK_STONE = "block-stonebrick.png";
+	
 
 	public static final int BLOCK_SIZE = 40;
 

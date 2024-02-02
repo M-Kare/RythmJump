@@ -54,8 +54,8 @@ public class LevelGenerator {
 	 */
 	public void addSideWalls() {
 		for (int i = 0; i < levelArray.length; i++) {
-			levelArray[i][0] = Config.WALL;
-			levelArray[i][levelArray[i].length - 1] = Config.WALL;
+			levelArray[i][0] = Config.STD_WALL;
+			levelArray[i][levelArray[i].length - 1] = Config.STD_WALL;
 		}
 	}
 
@@ -99,7 +99,7 @@ public class LevelGenerator {
 		int max, min;
 		int position = levelArray[0].length / 2;
 		for (int i = 0; i < levelArray[0].length; i++) {
-			levelArray[levelArray.length - 2][i] = Config.WALL;
+			levelArray[levelArray.length - 2][i] = Config.STD_WALL;
 		}
 		for (int i = 0; i < levelArray[0].length; i++) {
 			levelArray[0][i] = Config.WIN;
@@ -132,7 +132,7 @@ public class LevelGenerator {
 			position = Config.getRandomNumber(1, areaSize - platformLength);
 
 			for (int i = 0; i < platformLength; i++) {
-				levelArray[y][(areaSize * (sektor - 1)) + position + i] = Config.WALL;
+				levelArray[y][(areaSize * (sektor - 1)) + position + i] = Config.STD_WALL;
 			}
 		}
 	}
