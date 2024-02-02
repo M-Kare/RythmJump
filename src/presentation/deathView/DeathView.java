@@ -59,7 +59,6 @@ public class DeathView extends AnchorPane {
 		this.setTopAnchor(middle, 10.00);
 		this.setBottomAnchor(middle, 10.00);
 
-		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("deathView");
 		
 		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());

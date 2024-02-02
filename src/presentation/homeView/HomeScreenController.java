@@ -8,16 +8,19 @@ import presentation.settingsView.SettingsView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import business.Config;
 import business.level.Level;
 import business.level.LevelController;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 /**
  * Controller für die HomeScreen-Klasse
  */
 public class HomeScreenController {
-
+	private Stage stage;
+	
 	private HomeScreen root;
 	private Button play;
 	private Button levelSelect;
@@ -34,7 +37,8 @@ public class HomeScreenController {
 	 * 
 	 * @param levelArray Liste der verfügbaren Level zum laden.
 	 */
-	public HomeScreenController(HashMap<String, Level> levelArray) {
+	public HomeScreenController(HashMap<String, Level> levelArray, Stage stage) {
+		this.stage = stage;
 		root = new HomeScreen();
 		play = root.play;
 		levelSelect = root.levelSelect;
@@ -43,7 +47,7 @@ public class HomeScreenController {
 
 		this.levelArray = levelArray;
 
-		levelSelectViewController = new LevelSelectViewController(levelArray, root);
+		levelSelectViewController = new LevelSelectViewController(levelArray, root, stage);
 		levelSelectView = levelSelectViewController.getRoot();
 
 		settingsView = root.settingsView;
@@ -56,8 +60,18 @@ public class HomeScreenController {
 	 */
 	public void init() {
 
+		/**
+		 * Sucht sich ein zufälliges Level aus der LevelListe und läd es
+		 */
 		play.setOnMouseClicked(e -> {
-			// TODO select first level or random level
+			ArrayList<Level> levelList = new ArrayList<>(levelArray.values());
+			int randomIndex = Config.getRandomNumber(0, levelList.size() - 1);
+
+			PlayViewController playViewController = new PlayViewController(levelSelectView, root,
+					levelList.get(randomIndex), stage);
+			playViewController.getLevelController().resetPlayer();
+			root.getScene().setRoot(playViewController.getRoot());
+			playViewController.getLevelController().getRoot().requestFocus();
 		});
 		
         play.setOnMouseEntered(e -> play.setGraphic(root.playImgView_hover));
@@ -74,7 +88,7 @@ public class HomeScreenController {
 		tutorial.setOnMouseClicked(e -> {
 			Level tutorialLevel = levelArray.get("tutorial");
 
-			PlayViewController playViewController = new PlayViewController(levelSelectView, root, tutorialLevel);
+			PlayViewController playViewController = new PlayViewController(levelSelectView, root, tutorialLevel, stage);
 			playViewController.getLevelController().resetPlayer();
 			root.getScene().setRoot(playViewController.getRoot());
 			playViewController.getLevelController().getRoot().requestFocus();

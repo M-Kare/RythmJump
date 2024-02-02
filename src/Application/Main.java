@@ -37,21 +37,23 @@ public class Main extends Application {
 		new LevelGenerator(500, 18);
 		initLevel();
 
-		homeScreenController = new HomeScreenController(levelArray);
+		homeScreenController = new HomeScreenController(levelArray, primaryStage);
 		homeScreen = homeScreenController.getRoot();
 
 		scene = new Scene(homeScreen, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		homeScreen.requestFocus();
-		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("RythmJump");
-		primaryStage.setResizable(false);
+		primaryStage.setMaximized(true);
+//		primaryStage.setResizable(false);
 		primaryStage.show();
 
 		primaryStage.setOnCloseRequest(e -> {
 			System.exit(0);
 		});
+		
+		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 
 	public static void main(String[] args) {
@@ -77,7 +79,7 @@ public class Main extends Application {
 	 * hinzu
 	 */
 	public void initSongs() {
-		ArrayList<File> songFiles = findFilesBySuffix(".mp3", "./assets/mp3");
+		ArrayList<File> songFiles = findFilesBySuffix(".mp3", Config.MUSIC_FOLDER);
 //		songFiles.add(findFile("loop.wav", "."));
 		for (File song : songFiles) {
 			try {

@@ -12,14 +12,15 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * Zuständig für den Rhythmus und die Musik
  */
 public class BeatControlls extends HBox {
 	private final int BEAT_FREQ = 599;
-	private final double FRAME_SECONDS = 16.00+(2/3);
-	
+	private final double FRAME_SECONDS = 16.00 + (2 / 3);
+
 	LevelController levelController;
 
 	private SimpleMinim minim;
@@ -47,7 +48,7 @@ public class BeatControlls extends HBox {
 	 * @param songPath        Pfad zum abzuspielenden Song
 	 * @param levelController Controller des aktuellen Levels (für AutoJump)
 	 */
-	public BeatControlls(String songPath, LevelController levelController) {
+	public BeatControlls(String songPath, LevelController levelController, Stage stage) {
 		super();
 		beatBorder = this;
 		this.levelController = levelController;
@@ -64,7 +65,7 @@ public class BeatControlls extends HBox {
 			onBeat = false;
 			firstBeat = true;
 			frameCounter = 0;
-			beatBorder.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+			beatBorder.setMinSize(stage.getWidth(), stage.getHeight());
 			beatBorder.setBorder(OFF_BEAT_BORDER);
 
 			initMusic();
@@ -93,7 +94,8 @@ public class BeatControlls extends HBox {
 						beatThread = new Thread() {
 							public void run() {
 								try {
-									sleep((int)(BEAT_FREQ - (Config.getOnBeatFrames() * FRAME_SECONDS))); // 499 for 100bpm
+									sleep((int) (BEAT_FREQ - (Config.getOnBeatFrames() * FRAME_SECONDS))); // 499 for
+																											// 100bpm
 								} catch (InterruptedException e) {
 									this.interrupt();
 								}
@@ -120,7 +122,7 @@ public class BeatControlls extends HBox {
 				}
 				frameCounter++;
 
-				if (frameCounter > (Config.getOnBeatFrames()*2)) {
+				if (frameCounter > (Config.getOnBeatFrames() * 2)) {
 					beatBorder.setBorder(OFF_BEAT_BORDER);
 					onBeat = false;
 				}
@@ -150,8 +152,9 @@ public class BeatControlls extends HBox {
 		if (audioPlayer == null)
 			return;
 		if (Config.getRhythmEnabled()) {
-			beatThread.interrupt();
 			detect.stop();
+			if (beatThread != null)
+				beatThread.interrupt();
 		}
 		audioPlayer.pause();
 		if (minim == null)

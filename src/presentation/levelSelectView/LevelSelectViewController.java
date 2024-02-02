@@ -13,13 +13,18 @@ import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.Stage;
 import presentation.homeView.HomeScreen;
 import presentation.levelSelectView.levelTilePane.LevelTilePane;
 import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
 import presentation.playView.PlayView;
 import presentation.playView.PlayViewController;
 
+/**
+ * Controller für die LevelSelectView
+ */
 public class LevelSelectViewController {
+	private Stage stage;
 	private LevelSelectView root;
 	private HomeScreen homeScreen;
 
@@ -29,7 +34,14 @@ public class LevelSelectViewController {
 	private Button selectButton;
 	private Button circle;
 
-	public LevelSelectViewController(HashMap<String, Level> levelArray, HomeScreen homeScreen) {
+	/**
+	 * Navigation und Level-Selektierung
+	 * 
+	 * @param levelArray Level-Liste
+	 * @param homeScreen HomeScreen zum Navigieren
+	 */
+	public LevelSelectViewController(HashMap<String, Level> levelArray, HomeScreen homeScreen, Stage stage) {
+		this.stage = stage;
 		root = new LevelSelectView(levelArray);
 		this.homeScreen = homeScreen;
 
@@ -42,19 +54,33 @@ public class LevelSelectViewController {
 		init();
 	}
 
+	/**
+	 * Getter für die LevelSelectView
+	 * 
+	 * @return LevelSelectView
+	 */
 	public LevelSelectView getRoot() {
 		return root;
 	}
 
+	/**
+	 * Lädt das ausgewählte Level, indem es die PlayView mit dem Level erzeugt
+	 */
 	public void loadLevel() {
 		Level selectedLevel = levelTilePaneController.getSelected().getLevel();
-		PlayViewController playViewController = new PlayViewController(root, homeScreen, selectedLevel);
+		PlayViewController playViewController = new PlayViewController(root, homeScreen, selectedLevel, stage);
 
 		root.getScene().setRoot(playViewController.getRoot());
 		playViewController.getLevelController().getRoot().requestFocus();
 	}
 
+	/**
+	 * Fügt Listener und Handler für die Buttons und Panes hinzu
+	 */
 	public void init() {
+		/**
+		 * Navigation über die Tastatur
+		 */
 		root.setOnKeyPressed(e -> {
 			switch (e.getCode()) {
 			case LEFT:
@@ -94,6 +120,9 @@ public class LevelSelectViewController {
 			}
 		});
 
+		/**
+		 * Select-Button -> Lädt Level
+		 */
 		selectButton.setOnMouseClicked(e -> {
 			if (levelTilePaneController.getSelected() == null)
 				return;
@@ -101,11 +130,18 @@ public class LevelSelectViewController {
 			loadLevel();
 		});
 
+		/**
+		 * Back-button -> Navigiert zum HomeScreen
+		 */
 		circle.setOnMouseClicked(e -> {
 			root.getScene().setRoot(homeScreen);
 			homeScreen.requestFocus();
 		});
 
+		/**
+		 * Prüft ob Drag'n Drop Datei kopierbar ist und die richtige Datei-Endung
+		 * enthält
+		 */
 		levelTilePane.setOnDragOver(new EventHandler<DragEvent>() {
 			public void handle(DragEvent event) {
 				boolean dropSupported = true;
@@ -133,6 +169,9 @@ public class LevelSelectViewController {
 			}
 		});
 
+		/**
+		 * Fügt eine neue TileNode für das neue Level hinzu
+		 */
 		levelTilePane.setOnDragDropped(new EventHandler<DragEvent>() {
 
 			public void handle(DragEvent event) {
@@ -143,7 +182,6 @@ public class LevelSelectViewController {
 					levelTilePaneController.addTileNode(new Level(file));
 				}
 				event.setDropCompleted(true);
-
 				event.consume();
 			}
 

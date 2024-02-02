@@ -10,9 +10,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * View für die Einstellungen. (In Verbindung mit Config)
+ */
 public class SettingsView extends GridPane {
 
 	private Label speedText;
@@ -28,6 +30,7 @@ public class SettingsView extends GridPane {
 	protected TextField beatFrames;
 
 	protected CheckBox autoJump;
+	
 	protected CheckBox rhythmEnabled;
 
 	protected Button cancelButton;
@@ -35,6 +38,9 @@ public class SettingsView extends GridPane {
 	protected Button resetButton;
 	private HBox buttonsBox;
 
+	/**
+	 * Setzt die verschiedenen Einstellungen in einem GridPane
+	 */
 	public SettingsView() {
 		speedText = new Label("Player Speed:");
 		this.add(speedText, 0, 1);
@@ -50,7 +56,7 @@ public class SettingsView extends GridPane {
 		this.add(coyoteText, 0, 3);
 		coyote = new TextField(Integer.toString(Config.COYOTE_TIME));
 		this.add(coyote, 1, 3);
-		
+
 		beatFramesText = new Label("OnBeat-Frames:");
 		this.add(beatFramesText, 0, 4);
 		beatFrames = new TextField(Integer.toString(Config.ONBEAT_FRAMES));

@@ -16,6 +16,9 @@ import javafx.scene.layout.VBox;
 import presentation.levelSelectView.levelTilePane.LevelTilePane;
 import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
 
+/**
+ * Klasse für das LevelSelect-Menue
+ */
 public class LevelSelectView extends BorderPane {
 	protected LevelTilePaneController levelTilePaneController;
 	protected LevelTilePane levelTilePane;
@@ -30,10 +33,17 @@ public class LevelSelectView extends BorderPane {
 	private HBox topBox;
 	private HBox bottomBox;
 
+	/**
+	 * Enthält die Level in Form der LevelTilePane, sowie Titel und Spieler-Preview
+	 * 
+	 * @param levelArray Level-Liste
+	 */
 	public LevelSelectView(HashMap<String, Level> levelArray) {
 		levelTilePaneController = new LevelTilePaneController(levelArray);
 		levelTilePane = levelTilePaneController.getRoot();
+		levelTilePane.setId("levelTilePane");
 		levelBox = new HBox(levelTilePane);
+		levelBox.setId("levelBox");
 
 		menuText = new Label("Level Select");
 		menuText.getStyleClass().add("menuTitle");
@@ -76,7 +86,6 @@ public class LevelSelectView extends BorderPane {
 		this.setTop(topBox);
 		this.setBottom(bottomBox);
 		this.setCenter(levelBox);
-		
 		
 		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}

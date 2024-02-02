@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import business.Config;
 import business.Dimensions;
@@ -25,6 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
+import javafx.stage.Stage;
 
 /**
  * Level werden aus txt-Dateien (.lvl) eingelesen und zusammengebaut und
@@ -45,6 +47,7 @@ public class Level extends Pane {
 	private ArrayList<Node> winArea;
 	private ArrayList<Node> deathArea;
 
+	private static HashMap<String, File> blockTextures;
 	private String songPath;
 	private String background;
 	private boolean allowTeleport = false;
@@ -63,6 +66,8 @@ public class Level extends Pane {
 		this.obstacles = new ArrayList<>();
 		this.winArea = new ArrayList<>();
 		this.deathArea = new ArrayList<>();
+
+		blockTextures = new HashMap<>();
 
 		this.dimensions = getLevelDimensions(levelFile);
 		this.levelArray = readLevelFromFile(levelFile);
@@ -229,7 +234,6 @@ public class Level extends Pane {
 			vpHeight = levelHeight * 0.31;
 		if (levelLength < (400 / 0.31))
 			vpWidth = levelLength * 0.31;
-
 		sp.setViewport(new Rectangle2D(0, 0, vpWidth, vpHeight));
 		thumbnail = snapshot(sp, null);
 	}
@@ -256,9 +260,9 @@ public class Level extends Pane {
 						background = temp[1];
 					} else if (line.contains(Config.LEVEL_MUSIC)) {
 						String[] temp = line.split(":");
-						songPath = Config.findFile(temp[1], Config.MUSIC_FOLDER).toURI().toURL().toExternalForm();
+						songPath = Config.findFile(temp[1], Config.MUSIC_FOLDER).getCanonicalPath();
 					}
-				} else {
+				} else if (line.length() >= 1) {
 					levelArray[lineCounter++] = toSimpleCharArray(line.split(""));
 				}
 			}
@@ -338,48 +342,90 @@ public class Level extends Pane {
 	 * @throws MalformedURLException
 	 */
 	private void addChildren(char[][] levelArray) throws MalformedURLException {
-		String wallTexture = null, winTexture = null, deathTexture = null;
-
+		Node nodeToAdd;
 		for (int y = 0; y < levelArray.length; y++) {
 			for (int x = 0; x < levelArray[y].length; x++) {
 				switch (levelArray[y][x]) {
-				case Config.WALL:
-					if (wallTexture == null) {
-						wallTexture = Config.findFile("block-blackgold.png", "./assets/textures/blocks").toURI().toURL()
-								.toExternalForm();
-					}
-					Node newWall = new ImageView(new Image(wallTexture));
-					newWall.setTranslateX(x * Config.BLOCK_SIZE);
-					newWall.setTranslateY(y * Config.BLOCK_SIZE);
-					obstacles.add(newWall);
+				case Config.STD_WALL:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_BLACK, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.BLUE:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_BLUE, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.DARKBLUE:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_DARKBLUE, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.BROWN:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_BROWN, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.YELLOW:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_YELLOW, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.GREEN:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_GREEN, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.GOLD:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_BLACKGOLD, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.SCHWARZ:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_BLACK, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.LILA:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_PURPLE, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.ORANGE:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_ORANGE, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.RED:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_RED, x, y);
+					obstacles.add(nodeToAdd);
+					break;
+				case Config.STONE:
+					nodeToAdd = loadBlockTexture(Config.BLOCK_STONE, x, y);
+					obstacles.add(nodeToAdd);
 					break;
 				case Config.PLAYER:
 					playerSpawn[Dimensions.X.getIndex()] = x * Config.BLOCK_SIZE;
 					playerSpawn[Dimensions.Y.getIndex()] = (y - 2) * Config.BLOCK_SIZE;
 					break;
 				case Config.WIN:
-					if (winTexture == null) {
-						winTexture = Config.findFile("block-win.png", "./assets/textures/blocks")
-								.toURI().toURL().toExternalForm();
-					}
-					Node newWin = new ImageView(new Image(winTexture));
-					newWin.setTranslateX(x * Config.BLOCK_SIZE);
-					newWin.setTranslateY(y * Config.BLOCK_SIZE);
-					winArea.add(newWin);
+					nodeToAdd = loadBlockTexture(Config.GOAL_TEXTURE, x, y);
+					winArea.add(nodeToAdd);
 					break;
 				case Config.DEATH:
-					if (deathTexture == null) {
-						deathTexture = Config.findFile("hazard-spike.png", "./assets/textures/blocks").toURI().toURL()
-								.toExternalForm();
-					}
-					Node newDeath = new ImageView(
-							new Image(deathTexture));
-					newDeath.setTranslateX(x * Config.BLOCK_SIZE);
-					newDeath.setTranslateY(y * Config.BLOCK_SIZE);
-					deathArea.add(newDeath);
+					nodeToAdd = loadBlockTexture(Config.DEATH_TEXTURE, x, y);
+					deathArea.add(nodeToAdd);
 					break;
+				case Config.DEATH_FLIPPED:
+					nodeToAdd = loadBlockTexture(Config.DEATH_FLIPPED_TEXTURE, x, y);
+					deathArea.add(nodeToAdd);
 				}
 			}
 		}
+	}
+
+	public Node loadBlockTexture(String texture, int x, int y) {
+		if (!blockTextures.containsKey(texture)) {
+			blockTextures.put(texture, Config.findFile(texture, "./assets/textures/blocks"));
+		}
+		Node newNode = null;
+		try {
+			newNode = new ImageView(new Image(blockTextures.get(texture).toURI().toURL().toExternalForm()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		newNode.setTranslateX(x * Config.BLOCK_SIZE);
+		newNode.setTranslateY(y * Config.BLOCK_SIZE);
+		return newNode;
 	}
 }

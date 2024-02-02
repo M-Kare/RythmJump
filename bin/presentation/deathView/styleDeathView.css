@@ -1,0 +1,43 @@
+* {
+    -fx-font-weight: bold;
+}
+
+#DeathView {
+    -fx-background-color: rgba(235, 224, 205, 0.99);
+}
+
+#mainText {
+    -fx-font-size: 8em;
+}
+
+#description {
+    -fx-font-size: 4em;
+}
+
+.iconButton {
+    -fx-min-width: 50;
+    -fx-min-height: 50;
+    -fx-background-size: 48;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#backButton {
+    -fx-background-image: url("../../../assets/pics/arrowBackBlack.png");
+}
+
+#backButton:hover {
+    -fx-background-image: url("../../../assets/pics/arrowBackOrange.png");
+}
+
+#repeat {
+    -fx-pref-width: 10em;
+    -fx-pref-height: 10em;
+    -fx-background-image: url("../../../assets/pics/loopBlack.png");
+    -fx-background-size: 8em;
+}
+
+#repeat:hover {
+    -fx-background-image: url("../../../assets/pics/loopOrange.png");
+}

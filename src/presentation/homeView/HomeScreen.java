@@ -108,7 +108,6 @@ public class HomeScreen extends StackPane {
 		root.setTopAnchor(playerPreview, 50.00);
 
 		root.getChildren().addAll(title, buttons, playerPreview);
-		root.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 
 		this.getChildren().addAll(root);
 		this.setAlignment(Pos.CENTER);

@@ -2,6 +2,7 @@ package presentation.endview;
 
 import business.level.LevelController;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import presentation.homeView.HomeScreen;
 import presentation.levelSelectView.LevelSelectView;
 import presentation.playView.PlayViewController;
@@ -10,7 +11,7 @@ import presentation.playView.PlayViewController;
  * Controller für den End-View
  */
 public class TheEndController {
-
+	private Stage stage;
 	private TheEnd root;
 	private Button home;
 	private Button repeat;
@@ -27,7 +28,8 @@ public class TheEndController {
 	 * @param homeScreen             zum Navigieren
 	 */
 	public TheEndController(LevelSelectView levelSelectView, LevelController currentLevelController,
-			HomeScreen homeScreen) {
+			HomeScreen homeScreen, Stage stage) {
+		this.stage = stage;
 		root = new TheEnd();
 		home = root.home;
 		repeat = root.repeat;
@@ -69,7 +71,7 @@ public class TheEndController {
 		repeat.setOnMouseClicked(e -> {
 			currentLevelController.stopMusic();
 			PlayViewController repeatPlayViewController = new PlayViewController(levelSelectView, homeScreen,
-					currentLevelController.getRoot());
+					currentLevelController.getRoot(), stage);
 			repeatPlayViewController.getLevelController().resetPlayer();
 			root.getScene().setRoot(repeatPlayViewController.getRoot());
 			repeatPlayViewController.getLevelController().getRoot().requestFocus();

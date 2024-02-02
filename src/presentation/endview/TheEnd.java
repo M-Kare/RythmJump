@@ -1,6 +1,5 @@
 package presentation.endview;
 
-import business.Config;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,7 +35,7 @@ public class TheEnd extends AnchorPane {
 	public TheEnd() {
 		// stats
 		jumpText = new Label("Jumps:");
-		missedText = new Label("Off-Beat Jumps:");
+		missedText = new Label("Missed:");
 		beatsText = new Label("Beats:");
 		deathText = new Label("Deaths:");
 		leftBox = new VBox(jumpText, missedText, beatsText, deathText);
@@ -71,6 +70,7 @@ public class TheEnd extends AnchorPane {
 		navigation = new HBox(home, levelSelect, repeat);
 		navigation.setSpacing(20);
 		navigation.setAlignment(Pos.CENTER);
+		navigation.setSpacing(10);
 
 		middle = new VBox(title, stats, navigation);
 		middle.setAlignment(Pos.CENTER);
@@ -82,7 +82,6 @@ public class TheEnd extends AnchorPane {
 		this.setRightAnchor(middle, 10.00);
 		this.setLeftAnchor(middle, 10.00);
 		
-		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("theEndView");
 		
 		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
