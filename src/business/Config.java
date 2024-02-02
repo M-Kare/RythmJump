@@ -29,9 +29,6 @@ public class Config {
 	public static final char LILA = 'L';
 	public static final char BROWN = 'K';
 	
-	
-	
-	
 	public static final String LEVEL_TELEPORT = "teleport";
 	public static final String LEVEL_BACKGROUND = "background:";
 	public static final String LEVEL_MUSIC = "music:";
