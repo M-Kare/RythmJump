@@ -82,7 +82,6 @@ public class TheEnd extends AnchorPane {
 		this.setRightAnchor(middle, 10.00);
 		this.setLeftAnchor(middle, 10.00);
 
-		this.setMinSize(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 		this.setId("theEndView");
 		
 		this.getStylesheets().add(getClass().getResource("styleTheEnd.css").toExternalForm());

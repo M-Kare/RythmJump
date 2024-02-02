@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.Stage;
 import presentation.homeView.HomeScreen;
 import presentation.levelSelectView.levelTilePane.LevelTilePane;
 import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
@@ -23,6 +24,7 @@ import presentation.playView.PlayViewController;
  * Controller für die LevelSelectView
  */
 public class LevelSelectViewController {
+	private Stage stage;
 	private LevelSelectView root;
 	private HomeScreen homeScreen;
 
@@ -38,7 +40,8 @@ public class LevelSelectViewController {
 	 * @param levelArray Level-Liste
 	 * @param homeScreen HomeScreen zum Navigieren
 	 */
-	public LevelSelectViewController(HashMap<String, Level> levelArray, HomeScreen homeScreen) {
+	public LevelSelectViewController(HashMap<String, Level> levelArray, HomeScreen homeScreen, Stage stage) {
+		this.stage = stage;
 		root = new LevelSelectView(levelArray);
 		this.homeScreen = homeScreen;
 
@@ -65,7 +68,7 @@ public class LevelSelectViewController {
 	 */
 	public void loadLevel() {
 		Level selectedLevel = levelTilePaneController.getSelected().getLevel();
-		PlayViewController playViewController = new PlayViewController(root, homeScreen, selectedLevel);
+		PlayViewController playViewController = new PlayViewController(root, homeScreen, selectedLevel, stage);
 
 		root.getScene().setRoot(playViewController.getRoot());
 		playViewController.getLevelController().getRoot().requestFocus();
