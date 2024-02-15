@@ -77,6 +77,10 @@ public class LevelSelectViewController {
 	public LevelSelectView getRoot() {
 		return root;
 	}
+	
+	public SimpleBooleanProperty getTransStarted() {
+		return transStarted;
+	}
 
 	/**
 	 * Lädt das ausgewählte Level, indem es die PlayView mit dem Level erzeugt

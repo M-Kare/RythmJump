@@ -68,6 +68,10 @@ public class HomeScreenController {
 		
 		init();
 	}
+	
+	public SimpleBooleanProperty getTransStarted() {
+		return transStarted;
+	}
 
 	/**
 	 * Setzt Listener und Handler für die Buttons
@@ -91,7 +95,9 @@ public class HomeScreenController {
 		levelSelect.setOnMouseClicked(e -> {
 //			root.getScene().setRoot(levelSelectView);
 //			levelSelectView.requestFocus();
-			transStarted.set(true);
+			if(!levelSelectViewController.getTransStarted().get()) {
+				transStarted.set(true);
+			}
 		});
 
 		tutorial.setOnMouseClicked(e -> {
