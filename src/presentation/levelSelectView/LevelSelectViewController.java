@@ -8,12 +8,22 @@ import java.util.Set;
 
 import business.level.Level;
 import business.level.LevelController;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import presentation.homeView.HomeScreen;
 import presentation.levelSelectView.levelTilePane.LevelTilePane;
 import presentation.levelSelectView.levelTilePane.LevelTilePaneController;
@@ -114,8 +124,9 @@ public class LevelSelectViewController {
 				loadLevel();
 				break;
 			case ESCAPE:
-				root.getScene().setRoot(homeScreen);
-				homeScreen.requestFocus();
+//				root.getScene().setRoot(homeScreen);
+//				homeScreen.requestFocus();
+				transitionAnimation();
 				break;
 			}
 		});
@@ -134,8 +145,9 @@ public class LevelSelectViewController {
 		 * Back-button -> Navigiert zum HomeScreen
 		 */
 		circle.setOnMouseClicked(e -> {
-			root.getScene().setRoot(homeScreen);
-			homeScreen.requestFocus();
+//			root.getScene().setRoot(homeScreen);
+//			homeScreen.requestFocus();
+			transitionAnimation();
 		});
 
 		/**
@@ -186,5 +198,32 @@ public class LevelSelectViewController {
 			}
 
 		});
+	}
+	
+	public void transitionAnimation() {
+		StackPane animtationPane = new StackPane();
+		Rectangle bg = new Rectangle(root.getWidth(), root.getHeight(), Color.rgb(235, 224, 205));
+		
+		animtationPane.getChildren().addAll(root, bg, homeScreen);
+		homeScreen.setTranslateX(stage.getWidth()-503);
+		bg.setTranslateX(stage.getWidth()-503);
+		stage.getScene().setRoot(animtationPane);
+		
+		TranslateTransition moveAnimation = new TranslateTransition();
+		moveAnimation.setNode(animtationPane);
+		moveAnimation.setDuration(Duration.millis(700));
+		moveAnimation.setInterpolator(Interpolator.EASE_OUT);
+		moveAnimation.setToX((-stage.getWidth())+503);
+		
+		moveAnimation.setOnFinished(e -> {
+			animtationPane.getChildren().removeAll(homeScreen, root, bg);
+			stage.getScene().setRoot(homeScreen);
+			homeScreen.requestFocus();
+			
+			homeScreen.setTranslateX(0);
+			bg.setTranslateX(0);
+		});
+		
+		moveAnimation.playFromStart();
 	}
 }
