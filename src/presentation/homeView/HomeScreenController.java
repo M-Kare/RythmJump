@@ -14,6 +14,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
@@ -41,6 +42,8 @@ public class HomeScreenController {
 	private Button settingsButton;
 	private SettingsView settingsView;
 	private HashMap<String, Level> levelArray;
+	
+	private SimpleBooleanProperty transStarted;
 
 	/**
 	 * Logik für die Buttons des HomeScreen-Menues
@@ -61,7 +64,8 @@ public class HomeScreenController {
 		levelSelectView = levelSelectViewController.getRoot();
 
 		settingsView = root.settingsView;
-
+		transStarted = new SimpleBooleanProperty(false);
+		
 		init();
 	}
 
@@ -87,7 +91,7 @@ public class HomeScreenController {
 		levelSelect.setOnMouseClicked(e -> {
 //			root.getScene().setRoot(levelSelectView);
 //			levelSelectView.requestFocus();
-			transitionAnimation();
+			transStarted.set(true);
 		});
 
 		tutorial.setOnMouseClicked(e -> {
@@ -101,6 +105,12 @@ public class HomeScreenController {
 
 		settingsButton.setOnMouseClicked(e -> {
 			root.getChildren().add(settingsView);
+		});
+		
+		transStarted.addListener(e -> {
+			if(transStarted.get()) {
+				transitionAnimation();
+			}
 		});
 	}
 	
@@ -125,6 +135,7 @@ public class HomeScreenController {
 			levelSelectView.requestFocus();
 			
 			levelSelectView.setTranslateX(0);
+			transStarted.set(false);
 		});
 		
 		moveAnimation.playFromStart();

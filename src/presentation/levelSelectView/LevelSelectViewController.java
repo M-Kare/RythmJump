@@ -10,6 +10,7 @@ import business.level.Level;
 import business.level.LevelController;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -43,6 +44,8 @@ public class LevelSelectViewController {
 
 	private Button selectButton;
 	private Button circle;
+	
+	private SimpleBooleanProperty transStarted;
 
 	/**
 	 * Navigation und Level-Selektierung
@@ -60,6 +63,8 @@ public class LevelSelectViewController {
 
 		selectButton = root.selectButton;
 		circle = root.backButton;
+		
+		transStarted = new SimpleBooleanProperty(false);
 
 		init();
 	}
@@ -126,8 +131,14 @@ public class LevelSelectViewController {
 			case ESCAPE:
 //				root.getScene().setRoot(homeScreen);
 //				homeScreen.requestFocus();
-				transitionAnimation();
+				transStarted.set(true);
 				break;
+			}
+		});
+		
+		transStarted.addListener(e -> {
+			if(transStarted.get()) {
+				transitionAnimation();
 			}
 		});
 
@@ -147,7 +158,7 @@ public class LevelSelectViewController {
 		circle.setOnMouseClicked(e -> {
 //			root.getScene().setRoot(homeScreen);
 //			homeScreen.requestFocus();
-			transitionAnimation();
+			transStarted.set(true);
 		});
 
 		/**
@@ -222,6 +233,7 @@ public class LevelSelectViewController {
 			
 			homeScreen.setTranslateX(0);
 			bg.setTranslateX(0);
+			transStarted.set(false);
 		});
 		
 		moveAnimation.playFromStart();
