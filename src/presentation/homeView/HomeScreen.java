@@ -1,12 +1,9 @@
 package presentation.homeView;
 
-import business.Config;
 import business.player.Player;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -27,7 +24,7 @@ public class HomeScreen extends StackPane {
 	protected Button levelSelect;
 	protected Button tutorial;
 	protected Button settingButton;
-	
+
 	private HBox playerPreview;
 	protected Player player;
 
@@ -39,23 +36,23 @@ public class HomeScreen extends StackPane {
 	 */
 	public HomeScreen() {
 		root = new AnchorPane();
-		
-		title = new Label("Main menu");
+
+		title = new Label("Rhythm Jumper");
 		title.getStyleClass().add("menuTitle");
-		
+
 		title.setAlignment(Pos.CENTER);
-		root.setTopAnchor(title, 40.00);
+		root.setTopAnchor(title, 80.00);
 		root.setLeftAnchor(title, 50.00);
 		root.setRightAnchor(title, 50.00);
-		
+
 		play = new Button();
 		play.getStyleClass().add("button_menu");
 		play.setId("playButton");
-		
+
 		levelSelect = new Button();
 		levelSelect.getStyleClass().add("button_menu");
 		levelSelect.setId("levelSelectButton");
-		
+
 		tutorial = new Button();
 		tutorial.getStyleClass().add("button_menu");
 		tutorial.setId("tutorialButton");
@@ -63,13 +60,13 @@ public class HomeScreen extends StackPane {
 		settingButton = new Button();
 		settingButton.getStyleClass().add("button_menu");
 		settingButton.setId("settingButton");
-		
+
 		buttons = new VBox(play, levelSelect, tutorial, settingButton);
 		buttons.setAlignment(Pos.CENTER);
 		buttons.setSpacing(20);
-		
+
 		root.setTopAnchor(buttons, 50.00);
-		root.setBottomAnchor(buttons, 100.00);
+		root.setBottomAnchor(buttons, 50.00);
 		root.setLeftAnchor(buttons, 100.00);
 		root.setRightAnchor(buttons, 50.00);
 
@@ -88,10 +85,10 @@ public class HomeScreen extends StackPane {
 		this.getChildren().addAll(root);
 		this.setAlignment(Pos.CENTER);
 		this.setId("homeView");
-		
+
 		settingsController = new SettingsViewController(this);
 		settingsView = settingsController.getRoot();
-		
+
 		this.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	}
 }

@@ -34,7 +34,7 @@ public class Main extends Application {
 
 		initSongs();
 
-		new LevelGenerator(500, 18);
+		new LevelGenerator(500, 21);//500, 18
 		initLevel();
 
 		homeScreenController = new HomeScreenController(levelArray, primaryStage);
