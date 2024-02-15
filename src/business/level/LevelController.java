@@ -80,8 +80,8 @@ public class LevelController {
 		winArea = new ArrayList<>(this.level.getWinArea());
 		obstacles = new ArrayList<>(this.level.getObstacles());
 		deathArea = new ArrayList<>(this.level.getDeathArea());
-
-		music = new BeatControlls(songPath, this, stage);
+		System.out.println(this.level.getSong());
+		music = new BeatControlls(this.level.getSong(), this, stage);
 		if (Config.getRhythmEnabled()) {
 			this.level.getChildren().add(music);
 		}
