@@ -2,6 +2,7 @@
     -fx-font-size: 8em;
     -fx-font-weight: bold;
     -fx-font-color: rgb(30, 30, 30);
+	-fx-background-color: transparent;
 }
 
 .button {

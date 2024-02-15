@@ -10,10 +10,20 @@ import java.util.HashMap;
 
 import business.Config;
 import business.level.Level;
-import business.level.LevelController;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * Controller für die HomeScreen-Klasse
@@ -75,8 +85,9 @@ public class HomeScreenController {
 		});
 
 		levelSelect.setOnMouseClicked(e -> {
-			root.getScene().setRoot(levelSelectView);
-			levelSelectView.requestFocus();
+//			root.getScene().setRoot(levelSelectView);
+//			levelSelectView.requestFocus();
+			transitionAnimation();
 		});
 
 		tutorial.setOnMouseClicked(e -> {
@@ -91,6 +102,32 @@ public class HomeScreenController {
 		settingsButton.setOnMouseClicked(e -> {
 			root.getChildren().add(settingsView);
 		});
+	}
+	
+	public void transitionAnimation() {
+		StackPane animtationPane = new StackPane();
+		animtationPane.setBackground(new Background(new BackgroundFill(Color.rgb(235, 224, 205), CornerRadii.EMPTY, Insets.EMPTY)));
+//		Rectangle bg = new Rectangle(root.getWidth(), root.getHeight(), Color.rgb(235, 224, 205));
+		
+		animtationPane.getChildren().addAll(levelSelectView, root);
+		levelSelectView.setTranslateX((-stage.getWidth())+503);
+		stage.getScene().setRoot(animtationPane);
+		
+		TranslateTransition moveAnimation = new TranslateTransition();
+		moveAnimation.setNode(animtationPane);
+		moveAnimation.setDuration(Duration.millis(700));
+		moveAnimation.setInterpolator(Interpolator.EASE_OUT);
+		moveAnimation.setToX(stage.getWidth()-503);
+		
+		moveAnimation.setOnFinished(e -> {
+			animtationPane.getChildren().removeAll(root, levelSelectView);
+			stage.getScene().setRoot(levelSelectView);
+			levelSelectView.requestFocus();
+			
+			levelSelectView.setTranslateX(0);
+		});
+		
+		moveAnimation.playFromStart();
 	}
 
 	/**

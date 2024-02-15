@@ -37,7 +37,7 @@ public class HomeScreen extends StackPane {
 	public HomeScreen() {
 		root = new AnchorPane();
 
-		title = new Label("Rhythm Jumper");
+		title = new Label("Rhythm Jumper.");
 		title.getStyleClass().add("menuTitle");
 
 		title.setAlignment(Pos.CENTER);
